@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Profesional - Sistema Nutricional</title>
+    <meta name="description" content="Panel de control profesional del sistema de gestión nutricional">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="professional-dashboard.css?v=3">
+    <link rel="stylesheet" href="home/home.css?v=1">
+</head>
+<body class="dashboard-body">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-leaf me-2"></i>Sistema Nutricional
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-md me-2"></i>
+                            <span id="professionalName">Profesional</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="showProfileBtn">
+                                <i class="fas fa-user-circle me-2"></i>Mi Perfil
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" id="showSettingsBtn">
+                                <i class="fas fa-cog me-2"></i>Configuración
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid dashboard-container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <!-- Sidebar Header -->
+                    <div class="sidebar-header">
+                        <div class="professional-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h5 class="text-white mb-1">Panel Profesional</h5>
+                        <small class="text-light opacity-75">Dr. <span id="professionalNameSidebar">Profesional</span></small>
+                    </div>
+                    
+                    <!-- Sidebar Navigation -->
+                    <nav class="sidebar-nav">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#dashboard" id="inicioLink">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Inicio</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#pacientes" id="pacientesLink">
+                                    <i class="fas fa-users"></i>
+                                    <span>Mis Pacientes</span>
+                                </a>
+                            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#horarios" id="horariosLink">
+                        <i class="fas fa-clock"></i>
+                        <span>Horarios</span>
+                    </a>
+                </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#agenda" id="agendaLink">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>Agenda</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#planes" id="planesLink">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Planes Alimentarios</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#asistencia" id="asistenciaLink">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Gestión de Asistencia</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    
+                    <!-- Sidebar Footer -->
+                    <div class="sidebar-footer">
+                        <div class="sidebar-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users text-success"></i>
+                                <span id="sidebarPatientCount">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar-check text-warning"></i>
+                                <span id="sidebarAppointmentsToday">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Toggle Button (Mobile) -->
+                <button class="sidebar-toggle d-md-none" id="sidebarToggleBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div class="content-wrapper">
+                    <!-- Dashboard Section -->
+                    <!-- Sección de Inicio del Dashboard Profesional -->
+                    <div id="dashboard-section" class="dashboard-section content-section active">
+                        <div class="container-fluid">
+                            <!-- Header de bienvenida -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="welcome-card bg-gradient-primary text-white p-4 rounded-3 shadow">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-8">
+                                                <h2 class="mb-2" id="welcomeTitle">
+                                                    <i class="fas fa-sun me-2"></i>¡Bienvenido de nuevo!
+                                                </h2>
+                                                <p class="mb-0 opacity-65" id="welcomeSubtitle">
+                                                    Aquí tienes un resumen de tu jornada de trabajo
+                                                </p>
+                                                <div class="mt-3">
+                                                    <span class="badge bg-white bg-opacity-20 fs-6">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        <span id="currentDateTime">--:--</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 text-end">
+                                                <div class="weather-widget">
+                                                    <i class="fas fa-cloud-sun fa-3x opacity-75"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <!-- Columna izquierda -->
+                                <div class="col-lg-8">
+                                    <!-- Actividad reciente -->
+                                    <div class="card activity-card mb-4">
+                                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">
+                                                <i class="fas fa-clock me-2 text-primary"></i>Actividad Reciente
+                                            </h5>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="refreshRecentActivity()">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="activity-container">
+                                                <div class="text-center p-4">
+                                                    <i class="fas fa-spinner fa-spin fa-2x text-primary mb-3"></i>
+                                                    <p class="text-muted mb-0">Cargando actividad reciente...</p>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer bg-light border-top-0 text-center">
+                                                <a href="#" class="text-decoration-none">Ver toda la actividad</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Gráfico de consultas semanales -->
+                                    <div class="card chart-card mb-4">
+                                        <div class="card-header bg-white">
+                                            <h5 class="mb-0">
+                                                <i class="fas fa-chart-bar me-2 text-success"></i>Consultas esta Semana
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="chart-container">
+                                                <canvas id="weeklyConsultationsChart" width="400" height="200"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Columna derecha -->
+                                <div class="col-lg-4">
+                                    <!-- Próximas citas -->
+                                    <div class="card upcoming-appointments-card">
+                                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">
+                                                <i class="fas fa-calendar-alt me-2 text-info"></i>Próximas Citas
+                                            </h5>
+                                            <button class="btn btn-sm btn-outline-success" id="viewAgendaBtn">
+                                                Ver Agenda
+                                            </button>
+                                        </div>
+                                        <div class="card-body p-0">
+                                        <div class="appointments-container">
+                                            <div class="text-center p-4">
+                                                <i class="fas fa-spinner fa-spin fa-2x text-primary mb-3"></i>
+                                                <p class="text-muted mb-0">Cargando próximas citas...</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pacientes Section -->
+                    <div id="pacientes-section" class="content-section">
+                        <div class="section-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="section-title">Mis Pacientes</h2>
+                                    <p class="section-subtitle">Gestión de pacientes activos</p>
+                                </div>
+                                <button class="btn btn-primary" id="nuevoPacienteBtn">
+                                    <i class="fas fa-plus me-2"></i>Nuevo Paciente
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-muted">Lista de pacientes...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Horarios Section -->
+                    <div id="horarios-section" class="content-section">
+                        <div class="section-header ultra-compact-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="section-title ultra-compact-title">Gestión de Horarios</h2>
+                                    <p class="section-subtitle ultra-compact-subtitle">Configura tus horarios de trabajo y días no laborales</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card ultra-compact-card">
+                            <div class="card-body ultra-compact-body">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="schedule-option ultra-compact-option">
+                                            <h6 class="schedule-title ultra-compact-schedule-title">
+                                                <i class="fas fa-clock me-1"></i>Horarios de Trabajo
+                                            </h6>
+                                            <p class="schedule-description ultra-compact-description">Configura tus horarios disponibles para que los pacientes puedan reservar turnos.</p>
+                                            <div class="d-grid">
+                                                <button class="btn btn-outline-primary btn-sm ultra-compact-btn" id="configurarHorariosBtn">
+                                                    <i class="fas fa-cog me-1"></i>Configurar Horarios
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="schedule-option ultra-compact-option">
+                                            <h6 class="schedule-title ultra-compact-schedule-title">
+                                                <i class="fas fa-calendar-times me-1"></i>Días No Laborales
+                                            </h6>
+                                            <p class="schedule-description ultra-compact-description">Marca días de vacaciones, feriados o días que no trabajas.</p>
+                                            <div class="d-grid">
+                                                <button class="btn btn-outline-warning btn-sm ultra-compact-btn" id="gestionarDiasNoLaboralesBtn">
+                                                    <i class="fas fa-calendar-plus me-1"></i>Gestionar Días No Laborales
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agenda Section -->
+                    <div id="agenda-section" class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Agenda</h2>
+                            <p class="section-subtitle">Gestión de turnos y horarios</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-muted">Calendario de turnos...</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Planes Section -->
+                    <div id="planes-section" class="content-section">
+                        <div class="section-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="section-title">Planes Alimentarios</h2>
+                                    <p class="section-subtitle">Creación y gestión de planes nutricionales</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" id="gestionarPlanesBtn">
+                                        <i class="fas fa-utensils me-2"></i>Gestionar Planes
+                                    </button>
+                                    <button class="btn btn-success" id="nuevoPlanBtn">
+                                        <i class="fas fa-plus me-2"></i>Nuevo Plan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-center">
+                                    <div class="card-body mb-3">
+                                        <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                        <h5 class="card-title">Planes Activos</h5>
+                                    </div>
+                                    <div class="card-footer">
+                                        <span class="badge bg-primary fa-2x" id="planesActivosDash">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-center">
+                                    <div class="card-body mb-3">
+                                        <i class="fas fa-target fa-3x text-success mb-3"></i>
+                                        <h5 class="card-title">Objetivo Pérdida</h5>
+                                    </div>
+                                    <div class="card-footer">
+                                        <span class="badge bg-success fa-2x" id="objPerdidaPesoDash">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card text-center">
+                                    <div class="card-body mb-3">
+                                        <i class="fas fa-dumbbell fa-3x text-warning mb-3"></i>
+                                        <h5 class="card-title">Objetivo Ganancia</h5>
+                                    </div>
+                                    <div class="card-footer">
+                                        <span class="badge bg-warning fa-2x" id="objGananciaMasaDash">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-chart-line me-2"></i>Resumen de Planes
+                                </h5>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-outline-primary active" id="vistaResumenBtn">
+                                        <i class="fas fa-th-large me-1"></i>Resumen
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" id="vistaTablaBtn">
+                                        <i class="fas fa-table me-1"></i>Tabla Completa
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Vista Resumen -->
+                                <div id="vistaResumen" class="vista-planes">
+                                    <div class="row" id="planesResumenDash">
+                                        <!-- Resumen se cargará aquí -->
+                                        <div class="col-12 text-center py-3">
+                                            <div class="spinner-border text-primary" role="status">
+                                                <span class="visually-hidden">Cargando datos...</span>
+                                            </div>
+                                            <p class="mt-2">Cargando información de planes...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vista Tabla Completa -->
+                                <div id="vistaTabla" class="vista-planes" style="display: none;">
+                                    <!-- Filtros -->
+                                    <div class="row mb-3">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control form-control-sm" id="buscarPlanes" placeholder="Buscar por plan, objetivo o descripción...">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-select form-select-sm" id="filtroEstadoPlanes">
+                                                <option value="">Todos los estados</option>
+                                                <option value="activo">Activos</option>
+                                                <option value="inactivo">Inactivos</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <select class="form-select form-select-sm" id="filtroTipoPlanes">
+                                                <option value="">Todos los tipos</option>
+                                                <option value="simple">Simple</option>
+                                                <option value="intermedio">Intermedio</option>
+                                                <option value="avanzado">Avanzado</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button class="btn btn-outline-secondary btn-sm w-100" id="limpiarFiltrosPlanes">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Tabla de Planes -->
+                                    <div class="table-responsive">
+                                        <table class="table table-hover" id="tablaPlanesCompleta">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Plan</th>
+                                                    <th>Tipo</th>
+                                                    <th>Objetivo</th>
+                                                    <th>Calorías</th>
+                                                    <th>Estado</th>
+                                                    <th>Fecha Inicio</th>
+                                                    <th>Fecha Fin</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="cuerpoTablaPlanes">
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-4">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Cargando datos...</span>
+                                                        </div>
+                                                        <p class="mt-2 mb-0">Cargando planes alimentarios...</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <!-- Paginación -->
+                                    <nav aria-label="Paginación de planes" class="mt-3">
+                                        <ul class="pagination pagination-sm justify-content-center" id="paginacionPlanes">
+                                            <!-- Se generará dinámicamente -->
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gestión de Asistencia Section -->
+                    <div id="asistencia-section" class="content-section">
+                        <div class="section-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="section-title">
+                                        <i class="fas fa-check-circle me-2 text-success"></i>
+                                        Gestión de Asistencia
+                                    </h2>
+                                    <p class="section-subtitle">Confirmar asistencia de pacientes a consultas</p>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="window.open('../../asistencia/', '_blank')">
+                                        <i class="fas fa-external-link-alt me-2"></i>Abrir en Nueva Pestaña
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estadísticas de Asistencia -->
+                        <div class="row mb-4">
+                            <div class="col-md-3">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 class="card-title" id="asistenciaTotalConsultas">0</h4>
+                                                <p class="card-text">Total Consultas</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="fas fa-calendar-check fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 class="card-title" id="asistenciaAsistieron">0</h4>
+                                                <p class="card-text">Asistieron</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="fas fa-user-check fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-warning">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 class="card-title" id="asistenciaNoAsistieron">0</h4>
+                                                <p class="card-text">No Asistieron</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="fas fa-user-times fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card text-white bg-info">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4 class="card-title" id="asistenciaPendientes">0</h4>
+                                                <p class="card-text">Pendientes</p>
+                                            </div>
+                                            <div class="align-self-center">
+                                                <i class="fas fa-clock fa-2x"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información del Sistema -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2 text-info"></i>
+                                    Información del Sistema de Asistencia
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="text-primary">
+                                            <i class="fas fa-robot me-2"></i>
+                                            Procesamiento Automático
+                                        </h6>
+                                        <p class="text-muted small">
+                                            El sistema procesa automáticamente las consultas pasadas todos los días a las 23:50, 
+                                            marcándolas como "ausentes" por defecto para que puedas confirmar la asistencia real.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="text-success">
+                                            <i class="fas fa-user-md me-2"></i>
+                                            Confirmación Manual
+                                        </h6>
+                                        <p class="text-muted small">
+                                            Puedes modificar el estado de cualquier consulta y agregar notas adicionales 
+                                            sobre la asistencia del paciente.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-12">
+                                        <div class="alert alert-info d-flex align-items-center" role="alert">
+                                            <i class="fas fa-lightbulb me-2"></i>
+                                            <div>
+                                                <strong>Tip:</strong> Usa la sección dedicada de "Gestión de Asistencia" para una experiencia completa 
+                                                con filtros avanzados y mejor organización de las consultas.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Acceso Rápido -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-rocket me-2"></i>
+                                    Acceso Rápido
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-grid">
+                                            <button class="btn btn-outline-primary" onclick="window.open('../../asistencia/', '_blank')">
+                                                <i class="fas fa-check-circle me-2"></i>
+                                                Ver Consultas Pendientes
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-grid">
+                                            <button class="btn btn-outline-success" onclick="loadAsistenciaStats()">
+                                                <i class="fas fa-chart-bar me-2"></i>
+                                                Actualizar Estadísticas
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="d-grid">
+                                            <button class="btn btn-outline-info" onclick="showAsistenciaHelp()">
+                                                <i class="fas fa-question-circle me-2"></i>
+                                                Ayuda
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Professional Profile Modal -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="profileModalLabel">
+                        <i class="fas fa-user-md me-2"></i>Mi Perfil Profesional
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Left Column: Profile Information -->
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-user me-2"></i>Información Personal
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="profileForm">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="profileNombre" class="form-label">Nombre Completo</label>
+                                                    <input type="text" class="form-control" id="profileNombre" name="nombre" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="profileUsuario" class="form-label">Usuario</label>
+                                                    <input type="text" class="form-control" id="profileUsuario" name="usuario" readonly>
+                                                    <div class="form-text">El nombre de usuario no se puede cambiar</div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="profileEmail" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="profileEmail" name="email">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="profileTelefono" class="form-label">Teléfono</label>
+                                                    <input type="tel" class="form-control" id="profileTelefono" name="telefono">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label for="profileEspecialidad" class="form-label">Especialidad</label>
+                                                    <input type="text" class="form-control" id="profileEspecialidad" name="especialidad">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="profileMatricula" class="form-label">Matrícula</label>
+                                                    <input type="text" class="form-control" id="profileMatricula" name="matricula">
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="profileExperiencia" class="form-label">Años de Experiencia</label>
+                                                <select class="form-select" id="profileExperiencia" name="experiencia">
+                                                    <option value="">Seleccionar...</option>
+                                                    <option value="0-2">0-2 años</option>
+                                                    <option value="3-5">3-5 años</option>
+                                                    <option value="6-10">6-10 años</option>
+                                                    <option value="11-15">11-15 años</option>
+                                                    <option value="15+">Más de 15 años</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Clave de Registro Usada</label>
+                                                <input type="text" class="form-control" id="profileClaveRegistro" readonly>
+                                                <div class="form-text">Clave utilizada para tu registro profesional</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="profileDescripcion" class="form-label">Descripción Profesional</label>
+                                                <textarea class="form-control" id="profileDescripcion" name="descripcion" rows="3" placeholder="Describe tu experiencia y enfoque profesional..."></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column: Account Settings -->
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm mb-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="passwordForm">
+                                            <div class="mb-3">
+                                                <label for="registrationKey" class="form-label">Clave de Registro</label>
+                                                <input type="password" class="form-control" id="registrationKey" name="registrationKey" required placeholder="Ingresa tu clave de registro (ej: NUTRI-XXXX)">
+                                                <div class="form-text">Esta es la clave que usaste para registrarte</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                                                <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">
+                                                <i class="fas fa-sync me-2"></i>Actualizar Contraseña
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-header bg-light">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-chart-bar me-2"></i>Estadísticas del Perfil
+                                        </h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center">
+                                            <div class="col-6 mb-3">
+                                                <div class="border-end">
+                                                    <h4 class="text-primary mb-1" id="statPatients">0</h4>
+                                                    <small class="text-muted">Pacientes Activos</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 mb-3">
+                                                <h4 class="text-success mb-1" id="statConsultations">0</h4>
+                                                <small class="text-muted">Consultas Este Mes</small>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="border-end">
+                                                    <h4 class="text-warning mb-1" id="statRating">-</h4>
+                                                    <small class="text-muted">Evaluación</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <h4 class="text-info mb-1" id="statExperience">-</h4>
+                                                <small class="text-muted">Años Experiencia</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Settings can be added here in the future -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveProfileBtn">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuración del Sistema -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="settingsModalLabel">
+                        <i class="fas fa-wrench me-2"></i>Configuración del Sistema
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Configuración de Zona Horaria -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-clock me-2"></i>Configuración de Zona Horaria
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <form id="timezoneForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="selectedTimezone" class="form-label">Zona Horaria Actual</label>
+                                            <input type="text" class="form-control bg-light" id="currentTimezoneDisplay" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="systemTimezone" class="form-label">Hora Actual del Sistema</label>
+                                            <input type="text" class="form-control bg-light" id="currentSystemTime" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="timezoneSelect" class="form-label">Seleccionar Nueva Zona Horaria</label>
+                                    <select class="form-select" id="timezoneSelect" required>
+                                        <option value="">Seleccionar zona horaria...</option>
+                                        <optgroup label="América">
+                                            <option value="America/New_York">Nueva York (GMT-5/-4)</option>
+                                            <option value="America/Chicago">Chicago (GMT-6/-5)</option>
+                                            <option value="America/Denver">Denver (GMT-7/-6)</option>
+                                            <option value="America/Los_Angeles">Los Ángeles (GMT-8/-7)</option>
+                                            <option value="America/Argentina/Buenos_Aires">Buenos Aires (GMT-3)</option>
+                                            <option value="America/Santiago">Santiago (GMT-4/-3)</option>
+                                            <option value="America/Mexico_City">Ciudad de México (GMT-6/-5)</option>
+                                            <option value="America/Lima">Lima (GMT-5)</option>
+                                            <option value="America/Bogota">Bogotá (GMT-5)</option>
+                                            <option value="America/Caracas">Caracas (GMT-4)</option>
+                                        </optgroup>
+                                        <optgroup label="Europa">
+                                            <option value="Europe/Madrid">Madrid (GMT+1/+2)</option>
+                                            <option value="Europe/London">Londres (GMT+0/+1)</option>
+                                            <option value="Europe/Paris">París (GMT+1/+2)</option>
+                                            <option value="Europe/Roma">Roma (GMT+1/+2)</option>
+                                            <option value="Europe/Berlin">Berlín (GMT+1/+2)</option>
+                                        </optgroup>
+                                        <optgroup label="Asia">
+                                            <option value="Asia/Tokyo">Tokio (GMT+9)</option>
+                                            <option value="Asia/Shanghai">Shanghai (GMT+8)</option>
+                                            <option value="Asia/Dubai">Dubái (GMT+4)</option>
+                                        </optgroup>
+                                        <optgroup label="Oceanía">
+                                            <option value="Australia/Sydney">Sídney (GMT+10/+11)</option>
+                                        </optgroup>
+                                        <optgroup label="UTC">
+                                            <option value="UTC">UTC (GMT+0)</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="form-text">Esta configuración afectará todas las fechas y horas del sistema</div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0">
+                                            <i class="fas fa-info-circle"></i>
+                                        </div>
+                                        <div class="flex-grow-1 ms-3">
+                                            <h6 class="alert-heading">Importante</h6>
+                                            <p class="mb-0">
+                                                La zona horaria configurada se aplicará globalmente al sistema. 
+                                                Todas las consultas, citas y registros de tiempo usarán esta configuración.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Vista Previa:</h6>
+                                            <div class="row">
+                                                <div class="col-md-6"> 
+                                                    <strong>Hora Local:</strong>
+                                                    <div id="previewLocalTime">--:--:--</div>
+                                                </div>
+                                                <div class="col-md-6"> 
+                                                    <strong>Fecha:</strong>
+                                                    <div id="previewDate">-----</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Configuración Adicional -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-light">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-cog me-2"></i>Configuración Adicional
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="autoSaveSwitch">
+                                        <label class="form-check-label" for="autoSaveSwitch">
+                                            Autoguardado de formularios
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="notificationsSwitch">
+                                        <label class="form-check-label" for="notificationsSwitch">
+                                            Notificaciones del sistema
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveSettingsBtn">
+                        <i class="fas fa-save me-2"></i>Guardar Configuración
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Logout -->
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="logoutConfirmModalLabel">
+                        <i class="fas fa-sign-out-alt me-2"></i>Confirmar Cierre de Sesión
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="mb-4">
+                        <div class="logout-icon-container">
+                            <i class="fas fa-sign-out-alt fa-3x text-warning mb-3"></i>
+                        </div>
+                        <h4 class="text-gray-700 mb-3">¿Cerrar sesión?</h4>
+                        <p class="text-muted mb-0">
+                            Estás a punto de cerrar tu sesión de trabajo.<br>
+                            Podrás volver a iniciar sesión cuando lo necesites.
+                        </p>
+                    </div>
+                    
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <small>Solo se cerrará tu sesión actual. Toda la información se mantendrá guardada.</small>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <button type="button" class="btn btn-outline-secondary btn-lg" id="cancelLogoutBtn">
+                            <i class="fas fa-times me-2"></i>Cancelar
+                        </button>
+                        <button type="button" class="btn btn-warning btn-lg" id="confirmLogoutBtn">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sí, cerrar sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <!-- Day.js with Timezone -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.7/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/plugin/timezone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.7/plugin/utc.js"></script>
+    <script>
+        // Initialize dayjs plugins
+        dayjs.extend(window.dayjs_plugin_utc)
+        dayjs.extend(window.dayjs_plugin_timezone)
+    </script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="professional-dashboard.js?v=6"></script>
+    <script src="home/home.js?v=1"></script>
+</body>
+</html>

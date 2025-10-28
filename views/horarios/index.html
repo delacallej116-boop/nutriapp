@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Turnos - Nutricionista</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="horarios.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="horarios-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-12">
+                    <div class="d-flex align-items-center">
+                        <a href="/dashboard/professional/?tab=horarios" class="btn btn-outline-secondary me-4" title="Volver al Dashboard">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="d-none d-sm-inline ms-2">Volver</span>
+                        </a>
+                        <div class="header-content">
+                            <h1 class="page-title">Gestión de Horarios</h1>
+                            <p class="page-subtitle">Configura tus horarios de trabajo y días no laborales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="horariosConfigurados">0</h3>
+                        <p>Horarios Configurados</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="diasTrabajo">0</h3>
+                        <p>Días de Trabajo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning">
+                        <i class="fas fa-calendar-times"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="diasNoLaborales">0</h3>
+                        <p>Días No Laborales</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <ul class="nav nav-tabs mb-4" id="horariosTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="horarios-tab" data-bs-toggle="tab" data-bs-target="#horarios" type="button" role="tab">
+                    <i class="fas fa-clock me-2"></i>Horarios de Trabajo
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="dias-no-laborales-tab" data-bs-toggle="tab" data-bs-target="#dias-no-laborales" type="button" role="tab">
+                    <i class="fas fa-calendar-times me-2"></i>Días No Laborales
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="horariosTabsContent">
+            <!-- Horarios Tab -->
+            <div class="tab-pane fade show active" id="horarios" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">Horarios de Trabajo</h5>
+                    <button class="btn btn-primary" id="addHorarioBtn">
+                        <i class="fas fa-plus me-2"></i>Agregar Horario
+                    </button>
+                </div>
+                <div id="horariosContainer">
+                    <div class="text-center py-5">
+                        <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay horarios configurados</h5>
+                        <p class="text-muted">Agrega tus horarios de trabajo para que los pacientes puedan reservar turnos</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Días No Laborales Tab -->
+            <div class="tab-pane fade" id="dias-no-laborales" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">Días No Laborales</h5>
+                    <div>
+                        <button class="btn btn-danger me-2" id="eliminarSeleccionadosBtn" style="display: none;">
+                            <i class="fas fa-trash me-2"></i>Eliminar Seleccionados
+                        </button>
+                        <button class="btn btn-warning" id="addDiaNoLaboralBtn">
+                            <i class="fas fa-plus me-2"></i>Agregar Día No Laboral
+                        </button>
+                    </div>
+                </div>
+                <div id="diasNoLaboralesContainer">
+                    <div class="text-center py-5">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay días no laborales</h5>
+                        <p class="text-muted">Marca días de vacaciones, feriados o días que no trabajas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Agregar Horario -->
+    <div class="modal fade" id="agregarHorarioModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-clock me-2"></i>Agregar Horario de Trabajo
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <!-- Panel de Configuración -->
+                        <div class="col-md-6 p-4">
+                            <form id="agregarHorarioForm">
+                                <!-- Día de la semana -->
+                                <div class="mb-3">
+                                    <label for="diaSemana" class="form-label fw-bold">
+                                        <i class="fas fa-calendar-day me-2 text-primary"></i>Día de la Semana *
+                                    </label>
+                                    <select class="form-select form-select-lg" id="diaSemana" required>
+                                        <option value="">Seleccionar día...</option>
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miércoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sábado</option>
+                                        <option value="domingo">Domingo</option>
+                                    </select>
+                                </div>
+
+                                <!-- Horario de trabajo -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label for="horaInicio" class="form-label fw-bold">
+                                            <i class="fas fa-play me-2 text-success"></i>Inicio *
+                                        </label>
+                                        <input type="time" class="form-control form-control-lg" id="horaInicio" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="horaFin" class="form-label fw-bold">
+                                            <i class="fas fa-stop me-2 text-danger"></i>Fin *
+                                        </label>
+                                        <input type="time" class="form-control form-control-lg" id="horaFin" required>
+                                    </div>
+                                </div>
+
+                                <!-- Duración y Descanso -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label for="duracionTurno" class="form-label fw-bold">
+                                            <i class="fas fa-stopwatch me-2 text-info"></i>Duración *
+                                        </label>
+                                        <select class="form-select form-select-lg" id="duracionTurno" required>
+                                            <option value="">Duración...</option>
+                                            <option value="30">30 min</option>
+                                            <option value="45">45 min</option>
+                                            <option value="60">1 hora</option>
+                                            <option value="90">1.5 horas</option>
+                                            <option value="120">2 horas</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="descansoEntreTurnos" class="form-label fw-bold">
+                                            <i class="fas fa-coffee me-2 text-warning"></i>Descanso
+                                        </label>
+                                        <select class="form-select form-select-lg" id="descansoEntreTurnos">
+                                            <option value="0">Sin descanso</option>
+                                            <option value="5">5 min</option>
+                                            <option value="10">10 min</option>
+                                            <option value="15">15 min</option>
+                                            <option value="30">30 min</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Estado -->
+                                <div class="mb-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="horarioActivo" checked>
+                                        <label class="form-check-label fw-bold" for="horarioActivo">
+                                            <i class="fas fa-toggle-on me-2 text-success"></i>Horario Activo
+                                        </label>
+                                        <div class="form-text">Disponible para reservas de pacientes</div>
+                                    </div>
+                                </div>
+
+                                <!-- Botones de Acción -->
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-primary btn-lg" id="guardarHorarioBtn">
+                                        <i class="fas fa-save me-2"></i>Guardar Horario
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Panel de Vista Previa -->
+                        <div class="col-md-6 bg-light p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-eye me-2 text-primary"></i>
+                                <h6 class="mb-0 fw-bold">Vista Previa de Turnos</h6>
+                            </div>
+                            
+                            <div id="vistaPreviaSlots" class="border rounded p-3 bg-white" style="min-height: 300px;">
+                                <div class="text-center text-muted h-100 d-flex align-items-center justify-content-center">
+                                    <div>
+                                        <i class="fas fa-info-circle fa-2x mb-3"></i>
+                                        <p class="mb-0">Selecciona el día y horario para ver los turnos disponibles</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información adicional -->
+                            <div class="mt-3">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    <small><strong>Tip:</strong> Los turnos se generan automáticamente según la configuración</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Horario -->
+    <div class="modal fade" id="editarHorarioModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Editar Horario de Trabajo
+                        <span id="editarDiaActual" class="badge bg-light text-dark ms-2"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <!-- Panel de Configuración -->
+                        <div class="col-md-6 p-4">
+                            <form id="editarHorarioForm">
+                                <!-- ID oculto -->
+                                <input type="hidden" id="editarHorarioId">
+                                
+                                <!-- Día de la semana -->
+                                <div class="mb-3">
+                                    <label for="editarDiaSemana" class="form-label fw-bold">
+                                        <i class="fas fa-calendar-day me-2 text-primary"></i>Día de la Semana *
+                                    </label>
+                                    <select class="form-select form-select-lg" id="editarDiaSemana" required>
+                                        <option value="">Seleccionar día...</option>
+                                        <option value="lunes">Lunes</option>
+                                        <option value="martes">Martes</option>
+                                        <option value="miercoles">Miércoles</option>
+                                        <option value="jueves">Jueves</option>
+                                        <option value="viernes">Viernes</option>
+                                        <option value="sabado">Sábado</option>
+                                        <option value="domingo">Domingo</option>
+                                    </select>
+                                </div>
+
+                                <!-- Horario de trabajo -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label for="editarHoraInicio" class="form-label fw-bold">
+                                            <i class="fas fa-play me-2 text-success"></i>Inicio *
+                                        </label>
+                                        <input type="time" class="form-control form-control-lg" id="editarHoraInicio" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="editarHoraFin" class="form-label fw-bold">
+                                            <i class="fas fa-stop me-2 text-danger"></i>Fin *
+                                        </label>
+                                        <input type="time" class="form-control form-control-lg" id="editarHoraFin" required>
+                                    </div>
+                                </div>
+
+                                <!-- Duración y Descanso -->
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label for="editarDuracionTurno" class="form-label fw-bold">
+                                            <i class="fas fa-stopwatch me-2 text-info"></i>Duración *
+                                        </label>
+                                        <select class="form-select form-select-lg" id="editarDuracionTurno" required>
+                                            <option value="">Duración...</option>
+                                            <option value="30">30 min</option>
+                                            <option value="45">45 min</option>
+                                            <option value="60">1 hora</option>
+                                            <option value="90">1.5 horas</option>
+                                            <option value="120">2 horas</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="editarDescansoEntreTurnos" class="form-label fw-bold">
+                                            <i class="fas fa-coffee me-2 text-warning"></i>Descanso
+                                        </label>
+                                        <select class="form-select form-select-lg" id="editarDescansoEntreTurnos">
+                                            <option value="0">Sin descanso</option>
+                                            <option value="5">5 min</option>
+                                            <option value="10">10 min</option>
+                                            <option value="15">15 min</option>
+                                            <option value="30">30 min</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Estado -->
+                                <div class="mb-4">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="editarHorarioActivo" checked>
+                                        <label class="form-check-label fw-bold" for="editarHorarioActivo">
+                                            <i class="fas fa-toggle-on me-2 text-success"></i>Horario Activo
+                                        </label>
+                                        <div class="form-text">Disponible para reservas de pacientes</div>
+                                    </div>
+                                </div>
+
+                                <!-- Botones de Acción -->
+                                <div class="d-grid gap-2">
+                                    <button type="button" class="btn btn-info btn-lg" id="actualizarHorarioBtn">
+                                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <i class="fas fa-times me-2"></i>Cancelar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Panel de Vista Previa -->
+                        <div class="col-md-6 bg-light p-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-eye me-2 text-info"></i>
+                                <h6 class="mb-0 fw-bold">Vista Previa de Turnos</h6>
+                            </div>
+                            
+                            <div id="editarVistaPreviaSlots" class="border rounded p-3 bg-white" style="min-height: 300px;">
+                                <div class="text-center text-muted h-100 d-flex align-items-center justify-content-center">
+                                    <div>
+                                        <i class="fas fa-info-circle fa-2x mb-3"></i>
+                                        <p class="mb-0">Selecciona el día y horario para ver los turnos disponibles</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información adicional -->
+                            <div class="mt-3">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    <small><strong>Nota:</strong> Los cambios se aplicarán inmediatamente</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Agregar Día No Laboral -->
+    <div class="modal fade" id="agregarDiaNoLaboralModal" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calendar-times me-2"></i>Agregar Día No Laboral
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Alerta de error dentro del modal -->
+                    <div id="agregarDiaNoLaboralAlert" class="alert alert-danger d-none" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span id="agregarDiaNoLaboralAlertText"></span>
+                    </div>
+                    
+                    <form id="agregarDiaNoLaboralForm">
+                        <!-- Tipo de selección -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-calendar-check me-2 text-primary"></i>Tipo de Selección
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <div class="form-check p-3 border rounded h-100">
+                                        <input class="form-check-input" type="radio" name="tipoSeleccion" id="diaUnico" value="unico" checked>
+                                        <label class="form-check-label fw-medium d-block" for="diaUnico">
+                                            <i class="fas fa-calendar-day me-2"></i>Día Único
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-check p-3 border rounded h-100">
+                                        <input class="form-check-input" type="radio" name="tipoSeleccion" id="rangoFechas" value="rango">
+                                        <label class="form-check-label fw-medium d-block" for="rangoFechas">
+                                            <i class="fas fa-calendar-alt me-2"></i>Rango de Días
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Día único -->
+                        <div id="diaUnicoContainer">
+                            <div class="mb-3">
+                                <label for="fechaNoLaboral" class="form-label fw-bold">
+                                    <i class="fas fa-calendar me-2 text-danger"></i>Fecha *
+                                </label>
+                                <input type="date" class="form-control" id="fechaNoLaboral">
+                            </div>
+                        </div>
+
+                        <!-- Rango de fechas -->
+                        <div id="rangoFechasContainer" style="display: none;">
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <label for="fechaInicio" class="form-label fw-bold">
+                                        <i class="fas fa-calendar-plus me-2 text-danger"></i>Fecha Inicio *
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaInicio">
+                                </div>
+                                <div class="col-6">
+                                    <label for="fechaFin" class="form-label fw-bold">
+                                        <i class="fas fa-calendar-minus me-2 text-danger"></i>Fecha Fin *
+                                    </label>
+                                    <input type="date" class="form-control" id="fechaFin">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Motivo -->
+                        <div class="mb-3">
+                            <label for="motivoNoLaboral" class="form-label fw-bold">
+                                <i class="fas fa-comment me-2 text-info"></i>Motivo *
+                            </label>
+                            <textarea class="form-control" id="motivoNoLaboral" rows="3" placeholder="Ej: Vacaciones, Feriado..." required></textarea>
+                        </div>
+
+                        <!-- Tipo de día -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold mb-2">
+                                <i class="fas fa-tag me-2 text-warning"></i>Tipo de Día
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="tipoDia" id="vacaciones" value="vacaciones" checked>
+                                        <label class="form-check-label fw-medium" for="vacaciones">
+                                            <i class="fas fa-umbrella-beach me-2 text-primary"></i>Vacaciones
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="tipoDia" id="feriado" value="feriado">
+                                        <label class="form-check-label fw-medium" for="feriado">
+                                            <i class="fas fa-calendar-alt me-2 text-success"></i>Feriado
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="tipoDia" id="otro" value="otro">
+                                        <label class="form-check-label fw-medium" for="otro">
+                                            <i class="fas fa-ellipsis-h me-2 text-secondary"></i>Otro
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-3">
+                            <div class="form-check form-switch p-3 bg-light rounded">
+                                <input class="form-check-input" type="checkbox" id="diaNoLaboralActivo" checked>
+                                <label class="form-check-label fw-bold" for="diaNoLaboralActivo">
+                                    <i class="fas fa-toggle-on me-2 text-success"></i>Día No Laboral Activo
+                                </label>
+                                <div class="form-text mt-2">Este día estará marcado como no disponible para turnos</div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="button" class="btn btn-warning btn-lg" id="guardarDiaNoLaboralBtn">
+                                <i class="fas fa-save me-2"></i>Guardar Día No Laboral
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar Eliminación Múltiple -->
+    <div class="modal fade" id="confirmarEliminarMultipleModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>¿Estás seguro?</strong> Se eliminarán <span id="cantidadDiasEliminar">0</span> día(s) no laboral(es).
+                    </div>
+                    <div id="listaDiasEliminar">
+                        <!-- Las fechas se cargarán dinámicamente -->
+                    </div>
+                    <p class="mb-0 text-muted">
+                        <small>Esta acción no se puede deshacer.</small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmarEliminarMultipleBtn">
+                        <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Editar Día No Laboral -->
+    <div class="modal fade" id="editarDiaNoLaboralModal" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Editar Día No Laboral
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Alerta de error dentro del modal -->
+                    <div id="editarDiaNoLaboralAlert" class="alert alert-danger d-none" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <span id="editarDiaNoLaboralAlertText"></span>
+                    </div>
+                    
+                    <form id="editarDiaNoLaboralForm">
+                        <!-- ID oculto -->
+                        <input type="hidden" id="editarDiaNoLaboralId">
+                        
+                        <!-- Fecha -->
+                        <div class="mb-3">
+                            <label for="editarFechaNoLaboral" class="form-label fw-bold">
+                                <i class="fas fa-calendar me-2 text-danger"></i>Fecha *
+                            </label>
+                            <input type="date" class="form-control" id="editarFechaNoLaboral" required>
+                        </div>
+
+                        <!-- Motivo -->
+                        <div class="mb-3">
+                            <label for="editarMotivoNoLaboral" class="form-label fw-bold">
+                                <i class="fas fa-comment me-2 text-info"></i>Motivo *
+                            </label>
+                            <textarea class="form-control" id="editarMotivoNoLaboral" rows="3" placeholder="Ej: Vacaciones, Feriado..." required></textarea>
+                        </div>
+
+                        <!-- Tipo de día -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold mb-2">
+                                <i class="fas fa-tag me-2 text-warning"></i>Tipo de Día
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="editarTipoDia" id="editarVacaciones" value="vacaciones">
+                                        <label class="form-check-label fw-medium" for="editarVacaciones">
+                                            <i class="fas fa-umbrella-beach me-2 text-primary"></i>Vacaciones
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="editarTipoDia" id="editarFeriado" value="feriado">
+                                        <label class="form-check-label fw-medium" for="editarFeriado">
+                                            <i class="fas fa-calendar-alt me-2 text-success"></i>Feriado
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-check p-3 border rounded">
+                                        <input class="form-check-input" type="radio" name="editarTipoDia" id="editarOtro" value="otro">
+                                        <label class="form-check-label fw-medium" for="editarOtro">
+                                            <i class="fas fa-ellipsis-h me-2 text-secondary"></i>Otro
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-3">
+                            <div class="form-check form-switch p-3 bg-light rounded">
+                                <input class="form-check-input" type="checkbox" id="editarDiaNoLaboralActivo" checked>
+                                <label class="form-check-label fw-bold" for="editarDiaNoLaboralActivo">
+                                    <i class="fas fa-toggle-on me-2 text-success"></i>Día No Laboral Activo
+                                </label>
+                                <div class="form-text mt-2">Este día estará marcado como no disponible para turnos</div>
+                            </div>
+                        </div>
+
+                        <!-- Botones de Acción -->
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="button" class="btn btn-warning btn-lg" id="actualizarDiaNoLaboralBtn">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="horarios.js"></script>
+</body>
+</html>

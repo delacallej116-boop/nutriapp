@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Paciente - Sistema Nutricional</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/new-patient/new-patient.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="new-patient-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center">
+                            <a href="/dashboard/professional/?tab=pacientes" class="btn btn-outline-secondary me-4" title="Volver a Mis Pacientes">
+                                <i class="fas fa-arrow-left"></i>
+                                <span class="d-none d-sm-inline ms-2">Volver</span>
+                            </a>
+                            <div class="header-content">
+                                <h1 class="page-title">Nuevo Paciente</h1>
+                                <p class="page-subtitle">Registrar nuevo paciente en el sistema</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex justify-content-end gap-3">
+                            <button type="button" class="btn btn-outline-secondary" id="cancelBtn">
+                                <i class="fas fa-times"></i>
+                                <span class="ms-2">Cancelar</span>
+                            </button>
+                            <button type="button" class="btn btn-primary" id="saveBtn">
+                                <i class="fas fa-save"></i>
+                                <span class="ms-2">Guardar Paciente</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3">Preparando formulario...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="text-center py-5 d-none">
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                <h4>Error</h4>
+                <p id="errorMessage">Ha ocurrido un error inesperado</p>
+                <button class="btn btn-outline-danger" onclick="location.reload()">
+                    <i class="fas fa-refresh me-2"></i>Reintentar
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="mainContent" class="d-none">
+            <form id="newPatientForm" novalidate>
+                <div class="row">
+                    <!-- Información Personal -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-user me-2"></i>Información Personal
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="apellido_nombre" class="form-label">Apellido y Nombre *</label>
+                                        <input type="text" class="form-control" id="apellido_nombre" name="apellido_nombre" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numero_documento" class="form-label">Número de Documento *</label>
+                                        <input type="text" class="form-control" id="numero_documento" name="numero_documento" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="tipo_documento" class="form-label">Tipo de Documento *</label>
+                                        <select class="form-select" id="tipo_documento" name="tipo_documento" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="DNI">DNI</option>
+                                            <option value="Pasaporte">Pasaporte</option>
+                                            <option value="Cédula">Cédula</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numero_historia_clinica" class="form-label">Número de Historia Clínica *</label>
+                                        <input type="text" class="form-control" id="numero_historia_clinica" name="numero_historia_clinica" required>
+                                        <div class="form-text">Acepta cualquier formato. Debe ser único.</div>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento *</label>
+                                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="sexo" class="form-label">Sexo *</label>
+                                        <select class="form-select" id="sexo" name="sexo" required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Masculino">Masculino</option>
+                                            <option value="Femenino">Femenino</option>
+                                            <option value="Otro">Otro</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="grupo_sanguineo" class="form-label">Grupo Sanguíneo</label>
+                                        <select class="form-select" id="grupo_sanguineo" name="grupo_sanguineo">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="estado_civil" class="form-label">Estado Civil</label>
+                                        <select class="form-select" id="estado_civil" name="estado_civil">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Soltero/a">Soltero/a</option>
+                                            <option value="Casado/a">Casado/a</option>
+                                            <option value="Divorciado/a">Divorciado/a</option>
+                                            <option value="Viudo/a">Viudo/a</option>
+                                            <option value="Unión Libre">Unión Libre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información de Contacto -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-address-book me-2"></i>Información de Contacto
+                                </h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="telefono" class="form-label">Teléfono *</label>
+                                        <input type="tel" class="form-control" id="telefono" name="telefono" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ocupacion" class="form-label">Ocupación</label>
+                                        <input type="text" class="form-control" id="ocupacion" name="ocupacion">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <!-- Campo vacío para mantener el layout -->
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-8 mb-3">
+                                        <label for="domicilio" class="form-label">Domicilio *</label>
+                                        <input type="text" class="form-control" id="domicilio" name="domicilio" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="localidad" class="form-label">Localidad *</label>
+                                        <input type="text" class="form-control" id="localidad" name="localidad" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información Médica -->
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-heartbeat me-2"></i>Información Médica
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="obra_social" class="form-label">Obra Social</label>
+                                        <input type="text" class="form-control" id="obra_social" name="obra_social">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="numero_afiliado" class="form-label">Número de Afiliado</label>
+                                        <input type="text" class="form-control" id="numero_afiliado" name="numero_afiliado">
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fecha_ingreso" class="form-label">Fecha de Ingreso *</label>
+                                        <input type="date" class="form-control" id="fecha_ingreso" name="fecha_ingreso" required>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <!-- Campo vacío para mantener el layout -->
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="activo" name="activo" checked>
+                                        <label class="form-check-label" for="activo">
+                                            Paciente Activo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-sticky-note me-2"></i>Observaciones
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="observaciones" class="form-label">Observaciones Generales</label>
+                                    <textarea class="form-control" id="observaciones" name="observaciones" rows="6" placeholder="Ingrese observaciones sobre el paciente..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="/new-patient/new-patient.js"></script>
+</body>
+</html>

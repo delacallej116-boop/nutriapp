@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Planes Alimentarios - Nutricionista App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/views/plan-editor/plan-editor.css">
+</head>
+<body>
+    <div class="plan-editor-body">
+        <!-- Header -->
+        <div class="plan-editor-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <a href="/plan-alimentario" class="btn btn-outline-light btn-sm">
+                            <i class="fas fa-arrow-left me-2"></i>Volver a Planes Alimentarios
+                        </a>
+                    </div>
+                    <div class="col">
+                        <h1 class="plan-editor-title">
+                            <i class="fas fa-edit me-2"></i>Editor de Plan Alimentario
+                        </h1>
+                        <p class="plan-editor-subtitle" id="planInfo">Cargando información del plan...</p>
+                    </div>
+                    <div class="col-auto">
+                        <div class="btn-group">
+                            <button class="btn btn-success" id="verResumenBtn">
+                                <i class="fas fa-chart-bar me-2"></i>Resumen Nutricional
+                            </button>
+                            <button class="btn btn-info" id="copiarPlanBtn">
+                                <i class="fas fa-copy me-2"></i>Copiar Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen Nutricional -->
+        <div class="container-fluid plan-editor-main" id="resumenNutricional" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card summar-card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Resumen Nutricional (Por día típico)
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="resumenNutricionalContent">
+                                <!-- Resumen nutricional se carga aquí dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selector de día -->
+        <div class="container-fluid plan-editor-main">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-calendar-week me-2"></i>Seleccionar Día
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group" id="listaDias">
+                                <!-- Lista de días se carga aquí -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-utensils me-2"></i>Tipos de Comida
+                            </h6>
+                        </div>
+                        <div class="card-body" id="tiposComida">
+                            <!-- Lista de tipos de comida se carga aquí -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Editor del día -->
+                <div class="col-md-9">
+                    <div id="editorDiaContainer">
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Selecciona un día para editar su plan alimentario</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal nueva/formulario comida -->
+    <div class="modal fade" id="comidaModal" tabindex="-1" aria-labelledby="comidaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="comidaModalLabel">Nueva Comida</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="comidaForm">
+                        <input type="hidden" id="comidaId">
+                        <input type="hidden" id="diaSeleccionado">
+                               
+                        <!-- Información básica -->
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label for="nombreComida" class="form-label">Nombre de la Comida</label>
+                                <input type="text" class="form-control" id="nombreComida" placeholder="Ejemplo: Ensalada quinoa con pollo">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tiempoPreparacion" class="form-label">Tiempo de Preparación (min)</label>
+                                <input type="number" class="form-control" id="tiempoPreparacion" placeholder="30">
+                            </div>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-3">
+                            <label for="descripcionComida" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="descripcionComida" rows="2" placeholder="Descripción breve de la comida"></textarea>
+                        </div>
+
+                        <!-- Información nutricional -->
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label for="caloriasComida" class="form-label">Calorías (kcal)</label>
+                                <input type="number" class="form-control" id="caloriasComida" placeholder="400">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="proteinasComida" class="form-label">Proteínas (g)</label>
+                                <input type="number" class="form-control" id="proteinasComida" step=".1" placeholder="25">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="carbohidratosComida" class="form-label">Carbohidratos (g)</label>
+                                <input type="number" class="form-control" id="carbohidratosComida" step=".1" placeholder="45">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="grasasComida" class="form-label">Grasas (g)</label>
+                                <input type="number" class="form-control" id="grasasComida" step=".1" placeholder="15">
+                            </div>
+                        </div>
+
+                        <!-- Micro-nutrientes -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="fibraComida" class="form-label">Fibra (g)</label>
+                                <input type="number" class="form-control" id="fibraComida" step=".1" placeholder="8">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="azucaresComida" class="form-label">Azúcares (g)</label>
+                                <input type="number" class="form-control" id="azucaresComida" step=".1" placeholder="5">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="sodioComida" class="form-label">Sodio (mg)</label>
+                                <input type="number" class="form-control" id="sodioComida" step=".1" placeholder="500">
+                            </div>
+                        </div>
+
+                        <!-- Ingredientes y preparación -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="ingredientesComida" class="form-label">Ingredientes</label>
+                                <textarea class="form-control" id="ingredientesComida" rows="4" placeholder="Lista de ingredientes y cantidades"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="preparacionComida" class="form-label">Instrucciones de Preparación</label>
+                                <textarea class="form-control" id="preparacionComida" rows="4" placeholder="Pasos de preparación"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Configuración adicional -->
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="porcionesComida" class="form-label">Porciones</label>
+                                <input type="number" class="form-control" id="porcionesComida" placeholder="1" min="1">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="dificultadComida" class="form-label">Dificultad</label>
+                                <select class="form-select" id="dificultadComida">
+                                    <option value="facil">Fácil</option>
+                                    <option value="medio">Medio</option>
+                                    <option value="dificil">Difícil</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="notasComida" class="form-label">Notas Adicionales</label>
+                                <input type="text" class="form-control" id="notasComida" placeholder="Notas extra">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="guardarComidaBtn">Guardar Comida</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal copiar plan -->
+    <div class="modal fade" id="copiarPlanModal" tabindex="-1" aria-labelledby="copiarPlanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title" id="copiarPlanModalLabel">Copiar Plan Alimentario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nuevoPlanSelect" class="form-label">Seleccionar Plan Destino</label>
+                        <select class="form-select" id="nuevoPlanSelect">
+                            <option value="">Seleccionar plan...</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Esta acción copiará todas las comidas del plan actual al plan destino seleccionado.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-info" id="confirmarCopiarBtn">Copiar Plan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/views/plan-editor/plan-editor.js"></script>
+</body>
+</html>

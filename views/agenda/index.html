@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda - Nutricionista App</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="agenda.css" rel="stylesheet">
+</head>
+<body class="agenda-body">
+    <!-- Header -->
+    <header class="agenda-header">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <a href="/dashboard/professional" class="btn btn-outline-light me-3">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            <span class="d-none d-md-inline">Volver al Dashboard</span>
+                        </a>
+                        <h1 class="agenda-title mb-0">
+                            <i class="fas fa-calendar-alt me-3"></i>Agenda
+                        </h1>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button class="btn btn-light" id="nuevaConsultaBtn">
+                        <i class="fas fa-plus me-2"></i>Nueva Consulta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="agenda-main">
+        <div class="container-fluid">
+            <!-- Filtros y controles -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <label for="fechaSelector" class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" id="fechaSelector">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="pacienteSelector" class="form-label">Paciente</label>
+                                    <select class="form-select" id="pacienteSelector">
+                                        <option value="">Todos los pacientes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="estadoSelector" class="form-label">Estado</label>
+                                    <select class="form-select" id="estadoSelector">
+                                        <option value="">Todos los estados</option>
+                                        <option value="programada">Programada</option>
+                                        <option value="realizada">Realizada</option>
+                                        <option value="cancelada">Cancelada</option>
+                                        <option value="no_asistio">No asistió</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label">&nbsp;</label>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-primary" id="filtrarBtn">
+                                            <i class="fas fa-search me-2"></i>Filtrar
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="limpiarFiltrosBtn">
+                                            <i class="fas fa-times me-2"></i>Limpiar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="row" id="estadisticasContainer">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon text-primary">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="stats-number text-primary">-</div>
+                                <div class="stats-label">Total Consultas</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon text-warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stats-number text-warning">-</div>
+                                <div class="stats-label">Programadas</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon text-success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stats-number text-success">-</div>
+                                <div class="stats-label">Realizadas</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon text-danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="stats-number text-danger">-</div>
+                                <div class="stats-label">Canceladas/No asistió</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de consultas -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-list me-2"></i>Consultas
+                            </h5>
+                            <span class="badge bg-primary" id="totalConsultasBadge">0</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="consultasContainer">
+                                <div class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Cargando agenda...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Nueva Consulta -->
+    <div class="modal fade" id="nuevaConsultaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-plus me-2"></i>Nueva Consulta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="nuevaConsultaForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nuevaConsultaPaciente" class="form-label">Paciente *</label>
+                                    <select class="form-select" id="nuevaConsultaPaciente" required>
+                                        <option value="">Seleccionar paciente</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nuevaConsultaTipo" class="form-label">Tipo de Consulta *</label>
+                                    <select class="form-select" id="nuevaConsultaTipo" required>
+                                        <option value="">Seleccionar tipo</option>
+                                        <option value="primera_consulta">Primera Consulta</option>
+                                        <option value="control">Control</option>
+                                        <option value="seguimiento">Seguimiento</option>
+                                        <option value="emergencia">Emergencia</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nuevaConsultaFecha" class="form-label">Fecha *</label>
+                                    <input type="date" class="form-control" id="nuevaConsultaFecha" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="nuevaConsultaHora" class="form-label">Hora *</label>
+                                    <select class="form-select" id="nuevaConsultaHora" required>
+                                        <option value="">Seleccionar hora</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevaConsultaMotivo" class="form-label">Motivo de Consulta</label>
+                            <textarea class="form-control" id="nuevaConsultaMotivo" rows="3" placeholder="Describa el motivo de la consulta..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="nuevaConsultaObservaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="nuevaConsultaObservaciones" rows="2" placeholder="Observaciones adicionales..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarConsultaBtn">
+                        <i class="fas fa-save me-2"></i>Guardar Consulta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Consulta -->
+    <div class="modal fade" id="editarConsultaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>Editar Consulta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarConsultaForm">
+                        <input type="hidden" id="editarConsultaId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editarConsultaPaciente" class="form-label">Paciente *</label>
+                                    <select class="form-select" id="editarConsultaPaciente" required>
+                                        <option value="">Seleccionar paciente</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editarConsultaTipo" class="form-label">Tipo de Consulta *</label>
+                                    <select class="form-select" id="editarConsultaTipo" required>
+                                        <option value="">Seleccionar tipo</option>
+                                        <option value="primera_consulta">Primera Consulta</option>
+                                        <option value="control">Control</option>
+                                        <option value="seguimiento">Seguimiento</option>
+                                        <option value="emergencia">Emergencia</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editarConsultaFecha" class="form-label">Fecha *</label>
+                                    <input type="date" class="form-control" id="editarConsultaFecha" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editarConsultaHora" class="form-label">Hora *</label>
+                                    <input type="time" class="form-control" id="editarConsultaHora" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="editarConsultaEstado" class="form-label">Estado *</label>
+                                    <select class="form-select" id="editarConsultaEstado" required>
+                                        <option value="programada">Programada</option>
+                                        <option value="realizada">Realizada</option>
+                                        <option value="cancelada">Cancelada</option>
+                                        <option value="no_asistio">No asistió</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editarConsultaMotivo" class="form-label">Motivo de Consulta</label>
+                            <textarea class="form-control" id="editarConsultaMotivo" rows="3" placeholder="Describa el motivo de la consulta..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editarConsultaObservaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="editarConsultaObservaciones" rows="2" placeholder="Observaciones adicionales..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="actualizarConsultaBtn">
+                        <i class="fas fa-save me-2"></i>Actualizar Consulta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="agenda.js"></script>
+    
+    <!-- Debug Script -->
+    <script>
+        console.log('Página de agenda cargada');
+        console.log('Token en localStorage:', localStorage.getItem('token') ? 'Presente' : 'Ausente');
+        
+        // Verificar si hay token
+        if (!localStorage.getItem('token')) {
+            document.body.innerHTML = `
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="alert alert-warning text-center">
+                                <h4><i class="fas fa-exclamation-triangle me-2"></i>Acceso no autorizado</h4>
+                                <p class="mb-3">Debes iniciar sesión para acceder a la agenda.</p>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a href="/login" class="btn btn-primary">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Ir al Login
+                                    </a>
+                                    <a href="/dashboard/professional" class="btn btn-outline-primary">
+                                        <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            console.log('Token encontrado, inicializando agenda...');
+            // Mostrar mensaje temporal
+            setTimeout(() => {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-info alert-dismissible fade show position-fixed';
+                alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-info-circle me-2"></i>Agenda cargando...
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Remover después de 3 segundos
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.parentNode.removeChild(alertDiv);
+                    }
+                }, 3000);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+

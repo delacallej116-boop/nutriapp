@@ -1,0 +1,19 @@
+# Ignorar dependencias
+node_modules/
+
+# Archivos de entorno
+.env
+
+# Logs y caché
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de compilación (si aplica)
+dist/
+build/

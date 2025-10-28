@@ -1,0 +1,152 @@
+/* Evolution section styles */
+.evolution-stat-card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.evolution-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.evolution-stat-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.evolution-stat-number {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.evolution-stat-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Evolution timeline styles */
+.evolution-timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.evolution-timeline::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e9ecef;
+}
+
+.evolution-timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 2rem;
+}
+
+.evolution-timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background: #007bff;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px #e9ecef;
+}
+
+.evolution-timeline-item.completed::before {
+    background: #28a745;
+}
+
+.evolution-timeline-item.pending::before {
+    background: #ffc107;
+}
+
+.evolution-timeline-content {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.evolution-timeline-date {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.evolution-timeline-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: #212529;
+}
+
+.evolution-timeline-description {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.evolution-timeline-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.evolution-timeline-actions .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Empty state for evolution */
+.evolution-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.evolution-empty-state i {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+.evolution-empty-state h5 {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.evolution-empty-state p {
+    color: #adb5bd;
+}
+
+/* Responsive evolution stats */
+@media (max-width: 768px) {
+    .evolution-stat-card .card-body {
+        padding: 1rem 0.5rem;
+    }
+    
+    .evolution-stat-icon {
+        font-size: 1.5rem;
+    }
+    
+    .evolution-stat-number {
+        font-size: 1.25rem;
+    }
+    
+    .evolution-timeline {
+        padding-left: 1.5rem;
+    }
+    
+    .evolution-timeline-item {
+        padding-left: 1.5rem;
+    }
+}

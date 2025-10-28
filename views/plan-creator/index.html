@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creador de Plan Alimentario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="plan-creator.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="plan-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="btn btn-outline-secondary me-4" id="backBtn" title="Volver">
+                                <i class="fas fa-arrow-left"></i>
+                                <span class="d-none d-sm-inline ms-2">Volver</span>
+                            </a>
+                            <div class="header-content">
+                                <h1 class="page-title" id="pageTitle">Creador de Plan Alimentario</h1>
+                                <p class="page-subtitle" id="pageSubtitle">Configura tu plan nutricional personalizado</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="d-flex justify-content-end gap-3">
+                            <button class="btn btn-outline-light" id="previewBtn" style="display: none;">
+                                <i class="fas fa-eye"></i>
+                                <span class="ms-2">Vista Previa</span>
+                            </button>
+                            <button class="btn btn-success" id="saveBtn">
+                                <i class="fas fa-save"></i>
+                                <span class="ms-2">Guardar Plan</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="content-wrapper">
+                    <!-- Plan Info Section -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>Información del Plan
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="planNombre" class="form-label">Nombre del Plan *</label>
+                                                <input type="text" class="form-control" id="planNombre" placeholder="Ej: Plan de Pérdida de Peso">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="planPaciente" class="form-label">Paciente</label>
+                                                <select class="form-select" id="planPaciente">
+                                                    <option value="">Sin asignar paciente</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="planObjetivo" class="form-label">Objetivo Nutricional *</label>
+                                                <select class="form-select" id="planObjetivo" required>
+                                                    <option value="">Seleccionar objetivo...</option>
+                                                    <option value="perdida_peso">Pérdida de peso</option>
+                                                    <option value="ganancia_masa">Ganancia de masa muscular</option>
+                                                    <option value="mantenimiento">Mantenimiento</option>
+                                                    <option value="deportivo">Rendimiento deportivo</option>
+                                                    <option value="diabetes">Diabetes</option>
+                                                    <option value="hipertension">Hipertensión</option>
+                                                    <option value="otro">Otro</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3" id="objetivoPersonalizadoContainer" style="display: none;">
+                                                <label for="objetivoPersonalizado" class="form-label">Especificar objetivo *</label>
+                                                <input type="text" class="form-control" id="objetivoPersonalizado" placeholder="Escribir objetivo personalizado...">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="planFechaInicio" class="form-label">Fecha de Inicio *</label>
+                                                <input type="date" class="form-control" id="planFechaInicio" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="planFechaFin" class="form-label">Fecha de Fin</label>
+                                                <input type="date" class="form-control" id="planFechaFin">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="planCalorias" class="form-label">Calorías Diarias</label>
+                                                <input type="number" class="form-control" id="planCalorias" placeholder="Ej: 2000">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="planDescripcion" class="form-label">Descripción</label>
+                                        <textarea class="form-control" id="planDescripcion" rows="3" placeholder="Descripción del plan..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Plan Type Specific Content -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="planContent">
+                                <!-- Content will be loaded based on plan type -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="plan-creator.js"></script>
+</body>
+</html>
+

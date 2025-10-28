@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Consulta - Lic. Patricia Fernández | Tu Nutricionista de Confianza</title>
+    
+    <!-- Meta Tags Premium -->
+    <meta name="description" content="Reserva tu consulta nutricional con Lic. Patricia Fernández, tu nutricionista de confianza. Atención personalizada y planes alimentarios profesionales.">
+    <meta name="keywords" content="nutricionista, consulta nutricional, Lic. Patricia Fernández, nutrición clínica, planes alimentarios">
+    <meta name="author" content="Lic. Patricia Fernández">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Reservar Consulta - Lic. Patricia Fernández">
+    <meta property="og:description" content="Tu nutricionista de confianza">
+    <meta property="og:type" content="website">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Fonts Premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Premium Styles -->
+    <link rel="stylesheet" href="reservar-turno.css">
+</head>
+<body>
+    <!-- Premium Navigation -->
+    <nav class="premium-navbar navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-leaf me-2"></i>Lic. Patricia Fernández
+            </a>
+            
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Acceder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/reservar-turno">Reservar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Premium Main Content -->
+    <main class="premium-container">
+        <div class="premium-main">
+            <div class="premium-content">
+                
+                <!-- Premium Header Compact -->
+                <div class="premium-header-compact">
+                    <h1 class="premium-title-compact">
+                        Reservar Consulta
+                    </h1>
+                    <div class="professional-info-compact">
+                        <div class="professional-avatar-compact">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <div class="professional-details-compact">
+                            <h4 class="professional-name-compact">Lic. Patricia Fernández</h4>
+                            <p class="professional-title-compact">Tu Nutricionista de Confianza</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Premium Form Container -->
+                <div class="premium-form-container">
+                    <div class="premium-form-header">
+                        <h2 class="premium-form-title">
+                            <i class="fas fa-calendar-plus me-2"></i>Formulario de Reserva
+                        </h2>
+                        <p class="premium-form-subtitle">
+                            Completa los datos para agendar tu consulta nutricional
+                        </p>
+                    </div>
+                    
+                    <div class="premium-form-body">
+                        <form id="reservationForm" class="needs-validation" novalidate>
+                            
+                            <!-- Personal Information Section -->
+                            <div class="form-section-premium">
+                                <h4 class="section-title-premium">
+                                    <div class="section-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    Información Personal
+                                </h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="nombre" class="form-label-premium">Nombre *</label>
+                                            <input type="text" class="form-control-premium" id="nombre" name="nombre" 
+                                                   placeholder="Tu nombre" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingresa tu nombre
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="apellido" class="form-label-premium">Apellido *</label>
+                                            <input type="text" class="form-control-premium" id="apellido" name="apellido" 
+                                                   placeholder="Tu apellido" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingresa tu apellido
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="telefono" class="form-label-premium">Teléfono *</label>
+                                            <input type="tel" class="form-control-premium" id="telefono" name="telefono" 
+                                                   placeholder="+54 9 11 1234-5678" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingresa un teléfono válido
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="email" class="form-label-premium">Email *</label>
+                                            <input type="email" class="form-control-premium" id="email" name="email" 
+                                                   placeholder="tu@email.com" required>
+                                            <div class="invalid-feedback">
+                                                Por favor ingresa un email válido
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Appointment Details Section -->
+                            <div class="form-section-premium">
+                                <h4 class="section-title-premium">
+                                    <div class="section-icon">
+                                        <i class="fas fa-calendar-alt"></i>
+                                    </div>
+                                    Detalles de la Consulta
+                                </h4>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="fecha" class="form-label-premium">Fecha Preferida *</label>
+                                            <input type="date" class="form-control-premium" id="fecha" name="fecha" required>
+                                            <div class="invalid-feedback">
+                                                Por favor selecciona una fecha
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label class="form-label-premium">Hora Preferida *</label>
+                                            <div class="hour-selection-container" id="hourSelectionContainer">
+                                                <div class="hour-selection-placeholder">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                    <p>Selecciona primero una fecha para ver los horarios disponibles</p>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" id="hora" name="hora" required>
+                                            <div class="invalid-feedback">
+                                                Por favor selecciona una hora
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="tipo_consulta" class="form-label-premium">Tipo de Consulta *</label>
+                                            <select class="form-select-premium" id="tipo_consulta" name="tipo_consulta" required>
+                                                <option value="">Seleccionar tipo</option>
+                                                <option value="primera_vez">Primera consulta</option>
+                                                <option value="control">Control de seguimiento</option>
+                                                <option value="plan_alimentario">Nuevo plan alimentario</option>
+                                                <option value="consulta_urgente">Consulta de urgencia</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor selecciona el tipo de consulta
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group-premium">
+                                            <label for="motivo_consulta" class="form-label-premium">Motivo de Consulta</label>
+                                            <input type="text" class="form-control-premium" id="motivo_consulta" name="motivo_consulta" 
+                                                   placeholder="Ej: Pérdida de peso, diabetes, etc.">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Additional Information Section -->
+                            <div class="form-section-premium">
+                                <h4 class="section-title-premium">
+                                    <div class="section-icon">
+                                        <i class="fas fa-comment"></i>
+                                    </div>
+                                    Información Adicional
+                                </h4>
+                                
+                                <div class="form-group-premium">
+                                    <label for="observaciones" class="form-label-premium">Observaciones</label>
+                                    <textarea class="form-control-premium" id="observaciones" name="observaciones" 
+                                              rows="3" placeholder="Cuéntanos sobre tus objetivos nutricionales, alergias alimentarias, o cualquier información relevante..."></textarea>
+                                </div>
+                            </div>
+
+
+                            <!-- Alert Container -->
+                            <div id="alertContainer"></div>
+
+                            <!-- Submit Buttons -->
+                            <div class="d-flex gap-3 justify-content-end mt-4">
+                                <button type="button" class="btn-premium btn-secondary-premium" onclick="window.location.href='/'">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancelar
+                                </button>
+                                <button type="submit" class="btn-premium btn-primary-premium" id="submitBtn">
+                                    <i class="fas fa-calendar-check me-2"></i>Reservar Consulta
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="premium-footer">
+        <div class="container">
+            <p>&copy; 2024 Lic. Patricia Fernández - Tu Nutricionista de Confianza. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div class="modal fade modal-premium" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">
+                        <i class="fas fa-check-circle me-2"></i>¡Reserva Confirmada!
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <div class="success-icon-premium">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h4 class="mb-3">Tu consulta ha sido reservada exitosamente</h4>
+                    <p class="text-muted mb-4">Recibirás un email de confirmación con todos los detalles</p>
+                    
+                    <div class="reservation-details-premium" id="reservationDetails">
+                        <!-- Reservation details will be populated here -->
+                    </div>
+                    
+                    <div class="d-flex gap-3 justify-content-center">
+                        <button type="button" class="btn-premium btn-secondary-premium" data-bs-dismiss="modal">
+                            Cerrar
+                        </button>
+                        <button type="button" class="btn-premium btn-primary-premium" onclick="window.location.href='/'">
+                            Volver al Inicio
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="reservar-turno.js"></script>
+</body>
+</html>

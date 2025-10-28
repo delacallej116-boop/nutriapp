@@ -1,0 +1,1712 @@
+/* Patient History Styles - Optimized Layout */
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Global Styles */
+.dashboard-body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f9fafb;
+    padding-top: 48px; /* Match dashboard professional */
+}
+
+/* Navbar Styles - Match Dashboard Professional */
+.navbar {
+    z-index: 1030 !important;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+    min-height: 48px !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.navbar-brand {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 0.25rem 0;
+}
+
+.navbar-brand:hover {
+    color: #e3f2fd !important;
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff !important;
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #e3f2fd !important;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    position: absolute;
+    right: 0;
+    left: auto;
+    min-width: 200px;
+    transform: translateY(-5px);
+    opacity: 0.95;
+}
+
+/* Dropdown positioning for navbar */
+.navbar-nav .dropdown-menu {
+    right: 0;
+    left: auto;
+    top: 100%;
+    margin-top: 5px;
+}
+
+.dropdown-item {
+    color: #495057;
+    font-weight: 500;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+    transform: translateX(5px);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+/* Professional navbar dropdown specific styles */
+.navbar-nav .dropdown-toggle::after {
+    margin-left: 8px;
+    vertical-align: 2px;
+}
+
+.navbar-nav .dropdown-item {
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Main Container */
+.main-container {
+    min-height: calc(100vh - 48px); /* Match navbar height */
+    padding: 0;
+}
+
+/* Patient Sidebar */
+.patient-sidebar {
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-right: 1px solid #e2e8f0;
+    padding: 1rem 0.75rem;
+    min-height: calc(100vh - 48px); /* Match navbar height */
+}
+
+.patient-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.patient-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.patient-card h6 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.patient-info {
+    text-align: left;
+    margin: 0.75rem 0;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.info-row i {
+    width: 16px;
+    color: #3b82f6;
+    margin-right: 0.5rem;
+}
+
+.patient-actions .btn {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+}
+
+/* Main Content */
+.main-content {
+    padding: 1rem;
+    background: #f8fafc;
+}
+
+.content-header {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.content-header h4 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* Tabs Container */
+.tabs-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.tabs-container .nav-tabs {
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 0;
+    padding: 0 1rem;
+}
+
+.tabs-container .nav-link {
+    border: none;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+}
+
+.tabs-container .nav-link:hover {
+    color: #3b82f6;
+    background-color: #f8fafc;
+}
+
+.tabs-container .nav-link.active {
+    color: #3b82f6;
+    background-color: white;
+    border-bottom: 2px solid #3b82f6;
+}
+
+.tabs-container .tab-content {
+    padding: 1rem;
+}
+
+/* Info Cards */
+.info-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.info-card .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 8px 8px 0 0;
+    padding: 0.75rem 1rem;
+}
+
+.info-card .card-header h6 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.info-card .card-body {
+    padding: 1rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item label {
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+}
+
+.info-item span {
+    color: #1e293b;
+    text-align: right;
+    font-size: 0.875rem;
+}
+
+/* Chart Cards */
+.chart-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.chart-card .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    border-radius: 8px 8px 0 0;
+    padding: 0.75rem 1rem;
+}
+
+.chart-card .card-header h6 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.chart-card .card-body {
+    padding: 1rem;
+}
+
+.chart-card canvas {
+    height: 200px !important;
+}
+
+/* Consultation Items */
+.consultations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.consultation-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid #3b82f6;
+}
+
+.consultation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.consultation-date {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+.consultation-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.consultation-content h6 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.consultation-content p {
+    color: #475569;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.consultation-tags {
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Plan Items */
+.nutrition-plans {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.plan-item {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid #10b981;
+}
+
+.plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.plan-title h6 {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+.plan-date {
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.plan-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.plan-content p {
+    color: #475569;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.plan-tags {
+    display: flex;
+    gap: 0.25rem;
+}
+
+/* Document Items */
+
+/* Buttons */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.btn-outline-primary:hover {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.btn-outline-secondary {
+    color: #64748b;
+    border-color: #e2e8f0;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #64748b;
+    border-color: #64748b;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .patient-sidebar {
+        display: none;
+    }
+    
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    .content-header {
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tabs-container .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+    
+    .tabs-container .tab-content {
+        padding: 0.75rem;
+    }
+    
+    .consultation-header,
+    .plan-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .consultation-actions,
+    .plan-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 2rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control,
+.form-select {
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Section headers in modal */
+.modal-body h6 {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Loading state for submit button */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Ensure comparison button is interactive when enabled */
+#compareMeasurementsBtn:not(:disabled) {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+}
+
+#compareMeasurementsBtn:not(:disabled):hover {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* Force button to be interactive */
+#compareMeasurementsBtn {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+#compareMeasurementsBtn:not(:disabled) {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    user-select: none !important;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Consultas Table Styles */
+#consultasTable {
+    margin-bottom: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#consultasTable thead th {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+#consultasTable tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#consultasTable tbody tr:hover {
+    background-color: #f8fafc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#consultasTable tbody td {
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+    border: none;
+}
+
+/* Estado badges */
+.badge-estado {
+    font-size: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge-activo {
+    background-color: #10b981;
+    color: white;
+}
+
+.badge-completado {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.badge-cancelado {
+    background-color: #ef4444;
+    color: white;
+}
+
+.badge-ausente {
+    background-color: #f59e0b;
+    color: white;
+}
+
+/* Objetivo badges */
+.badge-objetivo {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 15px;
+    font-weight: 500;
+}
+
+.badge-perdida-peso {
+    background-color: #ec4899;
+    color: white;
+}
+
+.badge-ganancia-masa {
+    background-color: #8b5cf6;
+    color: white;
+}
+
+.badge-salud {
+    background-color: #06b6d4;
+    color: white;
+}
+
+.badge-rendimiento {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.badge-otro {
+    background-color: #6b7280;
+    color: white;
+}
+
+/* Action buttons */
+.btn-action {
+    padding: 0.375rem 0.75rem;
+    margin: 0 0.125rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Motivo text truncation */
+.motivo-text {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.motivo-text:hover {
+    white-space: normal;
+    overflow: visible;
+    background-color: #f8fafc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Loading state */
+#consultasLoading {
+    background-color: #f8fafc;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* Empty state */
+#noConsultasRow td {
+    background-color: #f8fafc;
+    border-radius: 8px;
+}
+
+/* Modal Editar Consulta */
+#editarConsultaModal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+#editarConsultaModal .modal-header {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+#editarConsultaModal .modal-header .btn-close {
+    filter: invert(1);
+}
+
+#editarConsultaModal .modal-body {
+    padding: 2rem;
+}
+
+#editarConsultaModal .modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 2rem;
+}
+
+/* Modal Detalles de Consulta */
+#detallesConsultaModal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+#detallesConsultaModal .modal-header {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+}
+
+#detallesConsultaModal .modal-header .btn-close {
+    filter: invert(1);
+}
+
+#detallesConsultaModal .modal-body {
+    padding: 2rem;
+}
+
+#detallesConsultaModal .modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 2rem;
+}
+
+/* Consulta details styles */
+.consulta-detail-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.consulta-detail-section h6 {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.consulta-detail-section h6 i {
+    margin-right: 0.5rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #374151;
+    flex: 1;
+}
+
+.detail-value {
+    color: #6b7280;
+    flex: 2;
+    text-align: right;
+}
+
+/* Anthropometry Specific Styles */
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-primary {
+    border-left-color: #3b82f6;
+}
+
+.stat-card-success {
+    border-left-color: #10b981;
+}
+
+.stat-card-info {
+    border-left-color: #06b6d4;
+}
+
+.stat-card-warning {
+    border-left-color: #f59e0b;
+}
+
+.stat-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.stat-card-primary .stat-card-icon {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+.stat-card-success .stat-card-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.stat-card-info .stat-card-icon {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.stat-card-warning .stat-card-icon {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+/* IMC Badge Styles */
+.badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+}
+
+.badge.bg-info {
+    background-color: #06b6d4 !important;
+}
+
+.badge.bg-success {
+    background-color: #10b981 !important;
+}
+
+.badge.bg-warning {
+    background-color: #f59e0b !important;
+}
+
+.badge.bg-danger {
+    background-color: #ef4444 !important;
+}
+
+/* Anthropometry Table Styles */
+#anthropometryTable {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#anthropometryTable thead th {
+    background: #1e293b;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    border: none;
+}
+
+#anthropometryTable tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+#anthropometryTable tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Anthropometry Modal Styles */
+.modal-xl {
+    max-width: 1200px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+.form-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Chart Container Styles */
+.chart-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.chart-card .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 1rem;
+}
+
+.chart-card .card-body {
+    padding: 1rem;
+    height: 300px;
+}
+
+.detail-value.badge {
+    text-align: center;
+    min-width: 100px;
+}
+
+.detail-value.text-muted {
+    font-style: italic;
+}
+
+/* Responsive modal details */
+@media (max-width: 768px) {
+    #detallesConsultaModal .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    #detallesConsultaModal .modal-body {
+        padding: 1rem;
+    }
+    
+    #detallesConsultaModal .modal-footer {
+        padding: 0.75rem 1rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .detail-value {
+        text-align: left;
+        margin-top: 0.25rem;
+    }
+}
+
+/* Comparison Styles */
+.comparison-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.comparison-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.comparison-header {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+.comparison-body {
+    padding: 1rem;
+}
+
+.difference-value {
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.difference-positive {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.difference-negative {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.difference-neutral {
+    background-color: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.measurement-checkbox {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.btn-group .btn {
+    border-radius: 4px;
+    margin: 0 1px;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+}
+
+/* Animation for comparison section */
+#comparisonSection {
+    animation: slideInDown 0.5s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Chart comparison styles */
+#comparisonChart {
+    max-height: 400px;
+}
+
+/* Responsive adjustments for comparison */
+@media (max-width: 768px) {
+    .comparison-body .row > div {
+        margin-bottom: 0.5rem;
+    }
+    
+    .difference-value {
+        font-size: 0.9rem;
+    }
+    
+    .chart-card .card-body {
+        height: 250px;
+    }
+    
+    #comparisonChart {
+        max-height: 300px;
+    }
+}
+
+/* Nutrition Section Styles */
+.nutrition-plan-card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nutrition-plan-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nutrition-plan-header {
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+.nutrition-plan-body {
+    padding: 1rem;
+}
+
+.nutrition-plan-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.nutrition-plan-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.nutrition-plan-icon.active {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.nutrition-plan-icon.inactive {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.nutrition-plan-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+}
+
+.nutrition-plan-subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.nutrition-plan-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.nutrition-stat {
+    text-align: center;
+    padding: 0.75rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 3px solid #3b82f6;
+}
+
+.nutrition-stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.nutrition-stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.nutrition-history-table {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nutrition-history-table thead th {
+    background: #1e293b;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    border: none;
+}
+
+.nutrition-history-table tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.nutrition-history-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.nutrition-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.nutrition-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.nutrition-empty-state h5 {
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+.nutrition-empty-state p {
+    margin-bottom: 1.5rem;
+}
+
+/* Plan Assignment Modal Styles */
+.plan-assignment-modal .modal-dialog {
+    max-width: 800px;
+}
+
+.plan-search-container {
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.plan-search-input {
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.plan-search-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.plan-filter-select {
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.plan-filter-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.available-plans-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.available-plans-table thead th {
+    background: #1e293b;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.available-plans-table tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.available-plans-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.plan-type-badge {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.plan-type-simple {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.plan-type-intermedio {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.assign-plan-btn {
+    border-radius: 6px;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.assign-plan-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Plan Creation Modal Styles */
+.plan-creation-modal .modal-dialog {
+    max-width: 1000px;
+}
+
+.plan-form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.plan-form-section h6 {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.plan-form-section h6 i {
+    margin-right: 0.5rem;
+}
+
+.plan-form-field {
+    margin-bottom: 1rem;
+}
+
+.plan-form-field label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.plan-form-field .form-control,
+.plan-form-field .form-select {
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.plan-form-field .form-control:focus,
+.plan-form-field .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.plan-form-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Plan Details Modal Styles */
+.plan-details-modal .modal-dialog {
+    max-width: 900px;
+}
+
+.plan-details-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #3b82f6;
+}
+
+.plan-details-section h6 {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.plan-details-section h6 i {
+    margin-right: 0.5rem;
+}
+
+.plan-details-field {
+    margin-bottom: 1rem;
+}
+
+.plan-details-field label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.plan-details-field p {
+    color: #6b7280;
+    margin-bottom: 0;
+}
+
+.plan-details-badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* Assignment Confirmation Modal Styles */
+.assignment-confirmation-modal .modal-dialog {
+    max-width: 600px;
+}
+
+.assignment-plan-preview {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.assignment-plan-preview .card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.assignment-plan-preview .card-title {
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.assignment-plan-preview .card-text {
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.assignment-plan-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.assignment-plan-stat {
+    text-align: center;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+}
+
+.assignment-plan-stat small {
+    color: #64748b;
+    font-size: 0.75rem;
+}
+
+.assignment-plan-stat .fw-bold {
+    color: #1e293b;
+    font-size: 0.875rem;
+}
+
+.assignment-form-field {
+    margin-bottom: 1rem;
+}
+
+.assignment-form-field label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.assignment-form-field .form-control {
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.assignment-form-field .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Loading and Error States */
+.nutrition-loading {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #64748b;
+}
+
+.nutrition-loading .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+.nutrition-error {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.nutrition-error .alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments for Nutrition */
+@media (max-width: 768px) {
+    .nutrition-plan-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .nutrition-stat {
+        padding: 0.5rem;
+    }
+    
+    .nutrition-stat-value {
+        font-size: 1rem;
+    }
+    
+    .plan-assignment-modal .modal-dialog,
+    .plan-creation-modal .modal-dialog,
+    .plan-details-modal .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .plan-form-section,
+    .plan-details-section {
+        padding: 1rem;
+    }
+    
+    .assignment-plan-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .available-plans-table {
+        max-height: 300px;
+    }
+}
+
+/* Compact modal styles for assignment confirmation */
+.card-sm {
+    font-size: 0.875rem;
+}
+
+.card-sm .card-body {
+    padding: 0.5rem;
+}
+
+.form-control-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.form-label.small {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Make assignment modal more compact */
+#confirmAssignmentModal .modal-body {
+    padding: 1rem;
+}
+
+#confirmAssignmentModal .alert {
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+#confirmAssignmentModal .row.g-2 {
+    margin-bottom: 0.5rem;
+}
+
+/* Responsive Navbar and Dropdown Styles */
+@media (max-width: 768px) {
+    /* Ensure dropdown stays within viewport on mobile */
+    .navbar-nav .dropdown-menu {
+        right: 0;
+        left: auto;
+        max-width: calc(100vw - 2rem);
+        transform: none;
+        margin-top: 0;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    /* Adjust navbar height on mobile */
+    .navbar {
+        min-height: 56px !important;
+    }
+    
+    .dashboard-body {
+        padding-top: 56px;
+    }
+    
+    .main-container {
+        min-height: calc(100vh - 56px);
+    }
+    
+    .patient-sidebar {
+        min-height: calc(100vh - 56px);
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extra small screens */
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .dropdown-item {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Ensure dropdown doesn't overflow on very small screens */
+    .navbar-nav .dropdown-menu {
+        max-width: calc(100vw - 1rem);
+        right: 0.5rem;
+        left: auto;
+    }
+}

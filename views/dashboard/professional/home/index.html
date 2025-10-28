@@ -1,0 +1,155 @@
+<!-- Sección de Inicio del Dashboard Profesional -->
+<div id="homeSection" class="dashboard-section" style="display: none;">
+    <div class="container-fluid">
+        <!-- Header de bienvenida -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="welcome-card bg-gradient-primary text-white p-4 rounded-3 shadow">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h2 class="mb-2" id="welcomeTitle">
+                                <i class="fas fa-sun me-2"></i>¡Bienvenido de nuevo!
+                            </h2>
+                            <p class="mb-0 opacity-65" id="welcomeSubtitle">
+                                Aquí tienes un resumen de tu jornada de trabajo
+                            </p>
+                            <div class="mt-3">
+                                <span class="badge bg-white bg-opacity-25 text-white fs-6 px-3 py-2">
+                                    <i class="fas fa-clock me-1"></i>
+                                    <span id="currentDateTime">--:--</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="weather-widget">
+                                <i class="fas fa-cloud-sun fa-3x opacity-75"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <!-- Columna izquierda -->
+            <div class="col-lg-8">
+                <!-- Actividad reciente -->
+                <div class="card activity-card mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-clock me-2 text-primary"></i>Actividad Reciente
+                        </h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="refreshRecentActivity()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="activity-container">
+                            <div class="activity-item">
+                                <div class="activity-icon bg-success">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6 class="mb-1">Nuevo paciente registrado</h6>
+                                    <p class="text-muted small mb-0">María González - hace 2 horas</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="badge bg-light text-dark">10:30</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon bg-info">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6 class="mb-1">Consulta completada</h6>
+                                    <p class="text-muted small mb-0">Juan Pérez - Consulta de seguimiento</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="badge bg-light text-dark">09:45</span>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-item">
+                                <div class="activity-icon bg-warning">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <h6 class="mb-1">Plan nutricional creado</h6>
+                                    <p class="text-muted small mb-0">Dieta hipocalórica para Carlos López</p>
+                                </div>
+                                <div class="activity-time">
+                                    <span class="badge bg-light text-dark">Ayer</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-light border-top-0 text-center">
+                            <a href="#" class="text-decoration-none">Ver toda la actividad</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráfico de consultas semanales -->
+                <div class="card chart-card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar me-2 text-success"></i>Consultas esta Semana
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="weeklyConsultationsChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna derecha -->
+            <div class="col-lg-4">
+                <!-- Próximas citas -->
+                <div class="card upcoming-appointments-card mb-4">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2 text-info"></i>Próximas Citas
+                        </h5>
+                        <button class="btn btn-sm btn-outline-success" onclick="showAgenda()">
+                            Ver Agenda
+                        </button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="appointments-container">
+                            <!-- Las citas se cargarán dinámicamente aquí -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones rápidas -->
+                <div class="card quick-actions-card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2 text-warning"></i>Acciones Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" onclick="showNewPatient()">
+                                <i class="fas fa-user-plus me-2"></i>Nuevo Paciente
+                            </button>
+                            <button class="btn btn-success btn-lg" onclick="showNewConsultation()">
+                                <i class="fas fa-calendar-plus me-2"></i>Nueva Consulta
+                            </button>
+                            <button class="btn btn-info btn-lg" onclick="showNewPlan()">
+                                <i class="fas fa-clipboard-list me-2"></i>Crear Plan
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg" onclick="showReports()">
+                                <i class="fas fa-chart-pie me-2"></i>Ver Reportes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

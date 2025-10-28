@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Consultas - Nutricionista App</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="gestion-consultas.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header simplificado -->
+    <div class="gestion-header">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-light me-3" onclick="goBackToDashboard()">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Volver al Dashboard
+                    </button>
+                    <h1 class="mb-0">
+                        <i class="fas fa-calendar-check me-2"></i>
+                        Gestión de Consultas
+                    </h1>
+                </div>
+                <div class="d-flex align-items-center">
+                    <span class="text-light me-3" id="userInfo">Cargando...</span>
+                    <button class="btn btn-outline-light" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-1"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-fluid gestion-main">
+        <main class="px-md-4">
+            <!-- Main Content Area -->
+            <div class="col-12">
+                <!-- Reprogramar Consultas Section -->
+                <div id="reprogramar-section" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="fas fa-calendar-plus me-2"></i>Reprogramar Consultas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Filtros -->
+                            <div class="row mb-4">
+                                <div class="col-md-4">
+                                    <label for="filtro-fecha" class="form-label">Filtrar por fecha:</label>
+                                    <input type="date" class="form-control" id="filtro-fecha">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtro-estado" class="form-label">Filtrar por estado:</label>
+                                    <select class="form-select" id="filtro-estado">
+                                        <option value="">Todos los estados</option>
+                                        <option value="activo">Activas</option>
+                                        <option value="completado">Completadas</option>
+                                        <option value="ausente">Ausentes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="filtro-paciente" class="form-label">Buscar paciente:</label>
+                                    <input type="text" class="form-control" id="filtro-paciente" placeholder="Nombre del paciente">
+                                </div>
+                            </div>
+
+                            <!-- Tabla de consultas -->
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="consultas-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>Paciente</th>
+                                            <th>Fecha Actual</th>
+                                            <th>Hora</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="consultas-tbody">
+                                        <!-- Las consultas se cargarán aquí dinámicamente -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Paginación -->
+                            <nav aria-label="Paginación de consultas">
+                                <ul class="pagination justify-content-center" id="pagination-container">
+                                    <!-- Los botones de paginación se generarán aquí -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Reprogramar Consulta -->
+    <div class="modal fade" id="reprogramarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-calendar-plus me-2"></i>Reprogramar Consulta
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reprogramar-form">
+                        <input type="hidden" id="consulta-id">
+                        
+                        <div class="mb-3">
+                            <label for="paciente-nombre" class="form-label">Paciente:</label>
+                            <input type="text" class="form-control" id="paciente-nombre" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="fecha-actual" class="form-label">Fecha Actual:</label>
+                            <input type="text" class="form-control" id="fecha-actual" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nueva-fecha" class="form-label">Nueva Fecha:</label>
+                            <input type="date" class="form-control" id="nueva-fecha" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nueva-hora" class="form-label">Nueva Hora:</label>
+                            <select class="form-control" id="nueva-hora" required>
+                                <option value="">Seleccione una hora</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motivo-reprogramacion" class="form-label">Motivo de la reprogramación:</label>
+                            <textarea class="form-control" id="motivo-reprogramacion" rows="3" placeholder="Explique el motivo de la reprogramación..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="confirmar-reprogramacion">
+                        <i class="fas fa-save me-2"></i>Reprogramar Consulta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Cancelar Consulta -->
+    <div class="modal fade" id="cancelarModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-times-circle me-2"></i>Cancelar Consulta
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>¡Atención!</strong> Esta acción cancelará la consulta y se enviará una notificación por email al paciente.
+                    </div>
+                    
+                    <form id="cancelar-form">
+                        <input type="hidden" id="cancelar-consulta-id">
+                        
+                        <div class="mb-3">
+                            <label for="cancelar-paciente-nombre" class="form-label">Paciente:</label>
+                            <input type="text" class="form-control" id="cancelar-paciente-nombre" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cancelar-fecha" class="form-label">Fecha de la consulta:</label>
+                            <input type="text" class="form-control" id="cancelar-fecha" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cancelar-hora" class="form-label">Hora de la consulta:</label>
+                            <input type="text" class="form-control" id="cancelar-hora" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="motivo-cancelacion" class="form-label">Motivo de la cancelación:</label>
+                            <textarea class="form-control" id="motivo-cancelacion" rows="3" placeholder="Explique el motivo de la cancelación..." required></textarea>
+                            <div class="form-text">Este motivo se incluirá en el email de notificación al paciente.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>No Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmar-cancelacion">
+                        <i class="fas fa-ban me-2"></i>Confirmar Cancelación
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="d-none">
+        <div class="spinner-overlay">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="gestion-consultas.js"></script>
+</body>
+</html>

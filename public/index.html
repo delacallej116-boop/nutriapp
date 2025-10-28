@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alexis Allendez - Tu Nutricionista de Confianza</title>
+    <meta name="description" content="Nutricionista profesional especializado en nutrición clínica y planes alimentarios personalizados">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fixed Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top" id="mainNavbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white" href="#home">
+                <i class="fas fa-leaf me-2" style="color: var(--accent-color);"></i>Alexis Allendez
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#home">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#about">Sobre Mí</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#services">Servicios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#testimonials">Testimonios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#contact">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <a href="/login" class="btn btn-outline-light me-2 navbar-btn">
+                            Ingresar
+                        </a>
+                        <a href="/reservar-turno" class="btn btn-warning navbar-btn">
+                            Reservar Turno
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="hero-decoration">
+            <img src="https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?w=400&h=400&fit=crop&q=80" 
+                 alt="Decoración" 
+                 class="hero-dec-img hero-dec-1">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=300&h=300&fit=crop&q=80" 
+                 alt="Decoración" 
+                 class="hero-dec-img hero-dec-2">
+        </div>
+        <div class="container hero-container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-12 text-center">
+                    <div class="hero-content">
+                        <h1 class="hero-greeting">Hola, soy</h1>
+                        <h2 class="display-2 fw-bold text-white mb-2 hero-title">
+                            Alexis Allendez
+                        </h2>
+                        <p class="lead text-white mb-4 subtitle">
+                            Tu nutricionista de confianza
+                        </p>
+                        <p class="hero-description text-white mx-auto mb-4">
+                            Cómo te puedo acompañar
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="/reservar-turno" class="btn btn-lg btn-light me-3 btn-cta">
+                                <i class="fas fa-calendar-check me-2"></i>Agendar Consulta
+                            </a>
+                            <a href="https://wa.me/541112345678" target="_blank" class="btn btn-lg btn-outline-light btn-cta">
+                                <i class="fab fa-whatsapp me-2"></i>Consultar por WhatsApp
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction Cards Section -->
+    <section class="introduction-cards py-5">
+        <div class="container">
+            <div class="row g-4 justify-content-center">
+                <!-- Card 1 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="intro-card">
+                        <div class="intro-card-image">
+                            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&h=400&fit=crop&q=80" alt="Ingredientes saludables" class="w-100 h-100 object-fit-cover">
+                        </div>
+                        <div class="intro-card-content">
+                            <h4 class="fw-bold mb-3">Mejora tu relación con la comida</h4>
+                            <p>
+                                A través de apoyo constante, desmentir mitos y educación nutricional.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="intro-card">
+                        <div class="intro-card-image">
+                            <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=400&fit=crop&q=80" alt="Alcanza tus objetivos" class="w-100 h-100 object-fit-cover">
+                        </div>
+                        <div class="intro-card-content">
+                            <h4 class="fw-bold mb-3">Alcanza tus objetivos y consigue mantenerlos a largo plazo</h4>
+                            <p>
+                                Deja tu período de dietas atrás, aquí lo que buscamos es que logres cambiar tu estilo de vida consiguiendo ese objetivo que deseas.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="intro-card">
+                        <div class="intro-card-image">
+                            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&q=80" alt="Disfruta del proceso" class="w-100 h-100 object-fit-cover">
+                        </div>
+                        <div class="intro-card-content">
+                            <h4 class="fw-bold mb-3">Disfruta del proceso</h4>
+                            <p>
+                                Sin alimentos prohibidos, sin sacrificar la vida social y siempre adaptando tu plan a tu situación actual.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-padding">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=800&h=800&fit=crop&q=80" 
+                             alt="Alexis Allendez" 
+                             class="about-professional-img">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-content">
+                        <h2 class="section-title mb-4">Sobre Mí</h2>
+                        <p class="lead mb-4">
+                            Soy Alexis Allendez, tu nutricionista de confianza. Mi enfoque se basa en entender las necesidades 
+                            individuales de cada paciente para lograr transformaciones duraderas a través de la educación 
+                            nutricional y el acompañamiento constante.
+                        </p>
+                        <p class="mb-4">
+                            No busco imponer dietas restrictivas, sino crear un espacio donde puedas mejorar tu relación 
+                            con la comida, alcanzar tus objetivos y disfrutar del proceso. Todo adaptado a tu estilo 
+                            de vida, sin sacrificios innecesarios ni alimentos prohibidos.
+                        </p>
+                        <div class="about-features">
+                            <div class="feature-item mb-3">
+                                <i class="fas fa-graduation-cap me-3"></i>
+                                <span>Licenciado en Nutrición</span>
+                            </div>
+                            <div class="feature-item mb-3">
+                                <i class="fas fa-certificate me-3"></i>
+                                <span>Especialista en Nutrición Clínica</span>
+                            </div>
+                            <div class="feature-item mb-3">
+                                <i class="fas fa-users me-3"></i>
+                                <span>+500 pacientes atendidos</span>
+                            </div>
+                            <div class="feature-item mb-3">
+                                <i class="fas fa-star me-3"></i>
+                                <span>Formación continua y actualizada</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section-padding bg-light services-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Mis Servicios</h2>
+                <p class="section-subtitle">Soluciones nutricionales adaptadas a tus necesidades</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Planes Alimentarios</h4>
+                        <p>
+                            Diseño de planes nutricionales personalizados según tus objetivos, 
+                            preferencias alimentarias y estilo de vida.
+                        </p>
+                        <ul class="service-features">
+                            <li>Análisis nutricional completo</li>
+                            <li>Menús variados y equilibrados</li>
+                            <li>Seguimiento personalizado</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-weight"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Control de Peso</h4>
+                        <p>
+                            Programas especializados para pérdida, mantenimiento o aumento 
+                            de peso de forma saludable y sostenible.
+                        </p>
+                        <ul class="service-features">
+                            <li>Evaluación corporal completa</li>
+                            <li>Metas realistas y alcanzables</li>
+                            <li>Apoyo psicológico nutricional</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-card h-100">
+                        <div class="service-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Nutrición Clínica</h4>
+                        <p>
+                            Tratamiento nutricional para diversas patologías como diabetes, 
+                            hipertensión, problemas digestivos y más.
+                        </p>
+                        <ul class="service-features">
+                            <li>Tratamiento de enfermedades</li>
+                            <li>Educación nutricional</li>
+                            <li>Trabajo multidisciplinario</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section-padding">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">Lo que dicen mis pacientes</h2>
+                <p class="section-subtitle">Testimonios reales de personas que transformaron su vida</p>
+            </div>
+            
+            <!-- Testimonials Carousel -->
+            <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="7000">
+                <div class="carousel-inner">
+                    <!-- Testimonial 1 -->
+                    <div class="carousel-item active">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-content">
+                                        <div class="stars mb-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="mb-4">
+                                            "Alexis me ayudó a perder 15kg de forma saludable. 
+                                            Su enfoque personalizado hizo que el proceso fuera sostenible. 
+                                            Me enseñó a comer de forma inteligente y disfrutar cada comida."
+                                        </p>
+                                        <div class="testimonial-author">
+                                            <strong>María González</strong>
+                                            <small class="text-muted d-block">Paciente desde 2022</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-content">
+                                        <div class="stars mb-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="mb-4">
+                                            "Excelente profesional. Me enseñó a comer mejor y controlar mi diabetes. 
+                                            Muy recomendado para cualquier problema nutricional. 
+                                            Su dedicación y seguimiento son excepcionales."
+                                        </p>
+                                        <div class="testimonial-author">
+                                            <strong>Carlos Rodríguez</strong>
+                                            <small class="text-muted d-block">Paciente desde 2021</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-content">
+                                        <div class="stars mb-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="mb-4">
+                                            "Los planes alimentarios son deliciosos y fáciles de seguir. 
+                                            He mejorado mi energía y mi salud general significativamente. 
+                                            Alexis cambió mi relación con la comida."
+                                        </p>
+                                        <div class="testimonial-author">
+                                            <strong>Ana Martínez</strong>
+                                            <small class="text-muted d-block">Paciente desde 2023</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 4 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-content">
+                                        <div class="stars mb-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="mb-4">
+                                            "Increíble experiencia. Logré bajar de peso sin dejar de disfrutar mis comidas favoritas. 
+                                            El seguimiento constante de Alexis fue clave para mi éxito."
+                                        </p>
+                                        <div class="testimonial-author">
+                                            <strong>Luis Fernández</strong>
+                                            <small class="text-muted d-block">Paciente desde 2022</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 5 -->
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 col-md-10">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-content">
+                                        <div class="stars mb-3">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <p class="mb-4">
+                                            "Después de años intentando controlar mi hipertensión, Alexis me dio 
+                                            las herramientas correctas. Mi presión arterial está bajo control y me siento 
+                                            mucho mejor. Mil gracias."
+                                        </p>
+                                        <div class="testimonial-author">
+                                            <strong>Rosa Ramírez</strong>
+                                            <small class="text-muted d-block">Paciente desde 2021</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                
+                <!-- Carousel Indicators -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-5 bg-primary text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="display-5 fw-bold mb-4">¿Listo para comenzar?</h2>
+                    <p class="lead mb-4">
+                        Toma el primer paso hacia una vida más saludable. 
+                        Agenda tu consulta y descubre cómo la nutrición puede transformar tu bienestar.
+                    </p>
+                    <div class="contact-info">
+                        <div class="contact-item mb-3">
+                            <i class="fas fa-phone me-3"></i>
+                            <span>+54 9 11 1234-5678</span>
+                        </div>
+                        <div class="contact-item mb-3">
+                            <i class="fas fa-envelope me-3"></i>
+                            <span>alexis.allendez@nutricion.com</span>
+                        </div>
+                        <div class="contact-item mb-3">
+                            <i class="fas fa-map-marker-alt me-3"></i>
+                            <span>Av. Corrientes 1234, Buenos Aires</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="contact-actions text-center">
+                        <a href="/reservar-turno" class="btn btn-light btn-lg mb-3 d-block w-100 contact-btn">
+                            <i class="fas fa-calendar-plus me-2"></i>Agendar Consulta
+                        </a>
+                        <a href="https://wa.me/541112345678" target="_blank" class="btn btn-success btn-lg d-block w-100 contact-btn">
+                            <i class="fab fa-whatsapp me-2"></i>Consulta por WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Alexis Allendez - Tu Nutricionista de Confianza</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <!-- Custom JS -->
+    <script src="index.js"></script>
+</body>
+</html>

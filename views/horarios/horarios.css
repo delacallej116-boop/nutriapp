@@ -1,0 +1,954 @@
+/* Estilos para la vista de horarios */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+/* Header */
+.horarios-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.horarios-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none;
+}
+
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    opacity: 0.95;
+    margin: 0;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 1;
+}
+
+/* Header Content */
+.header-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header specific buttons */
+.horarios-header .btn {
+    margin-left: 0.5rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.horarios-header .btn i {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-outline-secondary {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    animation: subtlePulse 2s infinite;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    animation: none;
+}
+
+@keyframes subtlePulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.5);
+    }
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.stat-content h3 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+}
+
+.stat-content p {
+    color: #6c757d;
+    font-weight: 500;
+    margin: 0;
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+    border-bottom: 2px solid #e9ecef;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    border-color: transparent;
+    color: #007bff;
+    background-color: #f8f9fa;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    background-color: white;
+    border-bottom: 3px solid #007bff;
+    font-weight: 600;
+}
+
+/* Tab Content */
+.tab-content {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+/* Turnos */
+.turno-item {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.turno-item:hover {
+    background: #e9ecef;
+    transform: translateX(5px);
+}
+
+.turno-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.turno-hora {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.turno-paciente {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.turno-objetivo {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.turno-contacto {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.turno-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+.status-badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.status-badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.status-badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.status-badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+.turno-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.turno-actions .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* Cards de horarios */
+.horarios-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.dia-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.dia-card-header {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 0.75rem 1rem;
+}
+
+.dia-card-title {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dia-card-title i {
+    font-size: 0.8rem;
+}
+
+.horarios-list {
+    padding: 0.5rem;
+}
+
+.horario-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.horario-card:hover {
+    background: #e9ecef;
+    transform: translateX(2px);
+}
+
+.horario-card:last-child {
+    margin-bottom: 0;
+}
+
+.horario-info {
+    flex-grow: 1;
+}
+
+.horario-time {
+    font-weight: 600;
+    color: #007bff;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.horario-details {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.duracion {
+    background: #e9ecef;
+    color: #495057;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.horario-actions {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.horario-actions .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* Horarios */
+.horario-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.horario-item:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.horario-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.horario-horas {
+    font-size: 1.1rem;
+    color: #007bff;
+    font-weight: 600;
+    text-align: center;
+}
+
+.horario-duracion {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.horario-estado {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.horario-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+/* Horarios compactos */
+.horario-item-compact {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+}
+
+.horario-item-compact:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.horario-horas-compact {
+    font-size: 0.9rem;
+    color: #007bff;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.horario-info-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-grow: 1;
+}
+
+.horario-actions-compact {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: center;
+}
+
+.badge-sm {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+}
+
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+/* Días No Laborales */
+.dia-no-laboral-item {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 10px;
+    padding: 1.5rem;
+    height: 100%;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.dia-no-laboral-item:hover {
+    background: #ffeaa7;
+    transform: translateY(-2px);
+}
+
+.dia-fecha {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #856404;
+}
+
+.dia-motivo {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.dia-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 1rem;
+}
+
+/* Empty States */
+.text-center.py-5 {
+    padding: 3rem 0 !important;
+}
+
+.text-center.py-5 i {
+    opacity: 0.5;
+}
+
+.text-center.py-5 h5 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.text-center.py-5 p {
+    margin-bottom: 0;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .horarios-header {
+        padding: 1.5rem 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+    }
+    
+    .turno-item {
+        padding: 1rem;
+    }
+    
+    .turno-info {
+        gap: 0.25rem;
+    }
+    
+    .turno-actions {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .horario-item {
+        padding: 1rem;
+    }
+    
+    .dia-no-laboral-item {
+        padding: 1rem;
+    }
+    
+}
+
+@media (max-width: 576px) {
+    .horarios-header .btn span {
+        display: none;
+    }
+    
+    .horarios-header .btn {
+        padding: 0.75rem;
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .horarios-header .btn i {
+        margin-right: 0;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Modal Styles Mejorados */
+.modal-content {
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: none;
+    overflow: hidden;
+}
+
+.modal-header {
+    border-radius: 20px 20px 0 0;
+    border: none;
+    padding: 1.5rem 2rem;
+}
+
+.modal-header.bg-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.modal-header.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+}
+
+.modal-header.bg-warning .btn-close {
+    filter: none;
+    opacity: 0.8;
+}
+
+.modal-header.bg-warning .btn-close:hover {
+    opacity: 1;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    border: none;
+    color: #212529;
+}
+
+.modal-header.bg-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+.modal-body .row.g-0 > div {
+    min-height: 500px;
+}
+
+/* Form Controls Mejorados */
+.form-control-lg, .form-select-lg {
+    border-radius: 12px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-control-lg:focus, .form-select-lg:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.form-label.fw-bold {
+    color: #495057;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.form-label i {
+    width: 20px;
+    text-align: center;
+}
+
+/* Switch Mejorado */
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+/* Botones Mejorados */
+.btn-lg {
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-lg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border: none;
+}
+
+/* Vista Previa Mejorada */
+#vistaPreviaSlots, #editarVistaPreviaSlots {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px dashed #dee2e6;
+    transition: all 0.3s ease;
+}
+
+#vistaPreviaSlots:hover, #editarVistaPreviaSlots:hover {
+    border-color: #007bff;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+}
+
+.slot-item {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.slot-item:hover {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #007bff;
+}
+
+.slot-item strong {
+    color: #007bff;
+    font-size: 0.9rem;
+}
+
+/* Alertas Mejoradas */
+.alert {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    color: #0c5460;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+}
+
+/* Radio Buttons Compactos para Días No Laborales */
+.form-check.border {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.form-check.border:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-check.border:has(input:checked) {
+    background-color: #e3f2fd;
+    border-color: #007bff !important;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2);
+}
+
+.form-check.border input[type="radio"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.form-check.border label {
+    cursor: pointer;
+    margin-bottom: 0;
+}
+
+.form-check.border label.small {
+    font-size: 0.875rem;
+}
+
+/* Mejoras en el espaciado de modales medianos */
+.modal-body.p-4 {
+    padding: 2rem !important;
+}
+
+.modal-body .mb-3 {
+    margin-bottom: 1rem !important;
+}
+
+.modal-body .mt-3 {
+    margin-top: 1.5rem !important;
+}
+
+.modal-body .mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+/* Mejoras en textarea mediano */
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Mejoras en el switch mediano */
+.form-check.form-switch.bg-light {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e9ecef;
+}
+
+.form-check.form-switch.bg-light:hover {
+    background-color: #e9ecef !important;
+}
+
+/* Mejoras en botones medianos */
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+}
+
+.d-grid.gap-2 {
+    gap: 0.5rem !important;
+}
+
+/* Ajustes para radio buttons en col-4 con modal-md */
+.col-4 .form-check.border {
+    padding: 1rem !important;
+}
+
+.col-4 .form-check.border label {
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-dialog.modal-xl {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+    
+    .modal-body .row.g-0 > div {
+        min-height: auto;
+    }
+    
+    .col-md-6 {
+        padding: 1rem !important;
+    }
+    
+    .btn-lg {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Vista Previa de Slots */
+#vistaPreviaSlots {
+    min-height: 120px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.slot-item {
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef !important;
+}
+
+.slot-item:hover {
+    background-color: #f8f9fa !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.slot-item strong {
+    color: #007bff;
+    font-size: 0.9rem;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 1rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem;
+    }
+    
+    .slot-item {
+        margin-bottom: 0.5rem;
+    }
+}

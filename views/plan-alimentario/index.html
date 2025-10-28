@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Planes Alimentarios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="plan-alimentario.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Header -->
+        <header class="plan-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <div class="d-flex align-items-center">
+                            <a href="/dashboard/professional/?tab=planes" class="btn btn-outline-secondary me-4" title="Volver al Dashboard">
+                                <i class="fas fa-arrow-left"></i>
+                                <span class="d-none d-sm-inline ms-2">Volver</span>
+                            </a>
+                            <div class="header-content">
+                                <h1 class="page-title">Gestión de Planes Alimentarios</h1>
+                                <p class="page-subtitle">Crea y gestiona planes nutricionales personalizados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="row">
+            <div class="col-12">
+                <div class="content-wrapper">
+                    <!-- Plan Options -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <h2 class="section-title">
+                                <i class="fas fa-utensils me-2"></i>Selecciona el Tipo de Plan
+                            </h2>
+                            <p class="section-subtitle">Selecciona el tipo de plan que mejor se adapte a tus necesidades</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Plan Simple -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="plan-option-card compact" data-plan-type="simple">
+                                <div class="plan-option-content">
+                                    <div class="plan-option-icon">
+                                        <i class="fas fa-file-text"></i>
+                                    </div>
+                                    <div class="plan-option-info">
+                                        <h4 class="plan-option-title">Plan Simple</h4>
+                                        <p class="plan-option-desc">Configuración básica con texto libre y horarios</p>
+                                    </div>
+                                    <div class="plan-option-action">
+                                        <button class="btn btn-outline-primary" data-plan-type="simple" id="crearPlanSimpleBtn">
+                                            Crear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Plan Intermedio -->
+                        <div class="col-lg-6 col-md-6">
+                            <div class="plan-option-card compact" data-plan-type="intermedio">
+                                <div class="plan-option-content">
+                                    <div class="plan-option-icon">
+                                        <i class="fas fa-calculator"></i>
+                                    </div>
+                                    <div class="plan-option-info">
+                                        <h4 class="plan-option-title">Plan Intermedio</h4>
+                                        <p class="plan-option-desc">Incluye información nutricional detallada</p>
+                                    </div>
+                                    <div class="plan-option-action">
+                                        <button class="btn btn-outline-warning" data-plan-type="intermedio" id="crearPlanIntermedioBtn">
+                                            Crear
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Plans Section -->
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h2 class="section-title">
+                                    <i class="fas fa-list me-2"></i>Planes Existentes
+                                </h2>
+                                <div class="plan-controls d-flex gap-3">
+                                    <div class="search-box">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="searchPlans" placeholder="Buscar por nombre...">
+                                            <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                            <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn" title="Limpiar búsqueda">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <select class="form-select" id="filterTipo" style="width: auto;">
+                                        <option value="">Todos los tipos</option>
+                                        <option value="simple">Plan Simple</option>
+                                        <option value="intermedio">Plan Intermedio</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Plans Table -->
+                            <div class="table-responsive">
+                                <table class="table table-hover plans-table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Tipo</th>
+                                            <th>Paciente</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="plansTableBody">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Cargando planes...</span>
+                                                </div>
+                                                <p class="mt-3 mb-0">Cargando planes alimentarios...</p>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- No results message -->
+                            <div id="noResultsMessage" class="text-center py-5" style="display: none;">
+                                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No se encontraron planes</h5>
+                                <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="plan-alimentario.js"></script>
+</body>
+</html>
