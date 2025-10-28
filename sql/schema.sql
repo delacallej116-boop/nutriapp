@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     tipo_documento VARCHAR(50),
     numero_historia_clinica VARCHAR(50) UNIQUE,
     apellido_nombre VARCHAR(150) NOT NULL,
-    usuario VARCHAR(50) NOT NULL UNIQUE, -- usuario único para login
+    usuario VARCHAR(50) NULL UNIQUE, -- usuario único para login (opcional para pacientes sin cuenta)
     email VARCHAR(150),
     telefono VARCHAR(30),
     fecha_ingreso DATE,
