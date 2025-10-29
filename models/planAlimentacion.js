@@ -179,7 +179,7 @@ class PlanAlimentacion {
     // Obtener estadísticas de planes
     async getPlanStats(profesionalId) {
         try {
-            // Detectar si las columnas 'activo' y 'tipo' existen en la BD actual (evita errores en entornos donde faltan)
+             // Detectar si las columnas 'activo' y 'tipo' existen en la BD actual (evita errores en entornos donde faltan)
             const checkColumn = async (columnName) => {
                 const checkQuery = `
                     SELECT COUNT(*) AS existe

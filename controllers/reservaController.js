@@ -122,6 +122,7 @@ class ReservaController {
             // Crear la reserva en la base de datos
             const query = `
                 INSERT INTO consultas (
+                    usuario_id,
                     profesional_id,
                     fecha,
                     hora,
@@ -135,7 +136,7 @@ class ReservaController {
                     paciente_externo_email,
                     observaciones,
                     creado_en
-                ) VALUES (?, ?, ?, ?, 'activo', ?, ?, ?, ?, ?, ?, ?, NOW())
+                ) VALUES (NULL, ?, ?, ?, ?, 'activo', ?, ?, ?, ?, ?, ?, ?, NOW())
             `;
 
             const params = [
