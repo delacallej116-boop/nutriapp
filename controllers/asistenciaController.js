@@ -33,12 +33,25 @@ class AsistenciaController {
                     c.notas_profesional,
                     c.creado_en,
                     c.actualizado_en,
-                    COALESCE(c.paciente_externo_nombre, 'Paciente') as paciente_nombre,
-                    COALESCE(c.paciente_externo_email, '') as paciente_email,
-                    COALESCE(c.paciente_externo_telefono, '') as paciente_telefono,
-                    'externo' as tipo_paciente,
+                    CASE 
+                        WHEN c.usuario_id IS NOT NULL THEN u.apellido_nombre
+                        ELSE COALESCE(c.paciente_externo_nombre, 'Paciente Externo')
+                    END as paciente_nombre,
+                    CASE 
+                        WHEN c.usuario_id IS NOT NULL THEN u.email
+                        ELSE COALESCE(c.paciente_externo_email, '')
+                    END as paciente_email,
+                    CASE 
+                        WHEN c.usuario_id IS NOT NULL THEN u.telefono
+                        ELSE COALESCE(c.paciente_externo_telefono, '')
+                    END as paciente_telefono,
+                    CASE 
+                        WHEN c.usuario_id IS NOT NULL THEN 'registrado'
+                        ELSE 'externo'
+                    END as tipo_paciente,
                     'Dr. Alexis Allendez' as profesional_nombre
                 FROM consultas c
+                LEFT JOIN usuarios u ON c.usuario_id = u.id
                 WHERE c.profesional_id = ?
                 AND c.fecha <= CURDATE()
                 AND c.estado IN ('activo', 'ausente', 'completado')
@@ -107,6 +120,12 @@ class AsistenciaController {
         } catch (error) {
             console.error('❌ Error obteniendo consultas pendientes:', error);
             console.error('❌ Stack trace:', error.stack);
+            console.error('❌ Error details:', {
+                message: error.message,
+                sqlState: error.sqlState,
+                sqlMessage: error.sqlMessage,
+                errno: error.errno
+            });
             res.status(500).json({
                 success: false,
                 message: 'Error interno del servidor',
