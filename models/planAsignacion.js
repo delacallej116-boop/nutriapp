@@ -42,23 +42,33 @@ class PlanAsignacion {
     // Obtener asignaciones por usuario (solo activas)
     async getAsignacionesByUsuario(usuarioId) {
         try {
-            const query = `
+            console.log(`📊 Query: buscando asignaciones activas para usuario ${usuarioId}`);
+            
+            // Primero intentar con la estructura completa
+            let query = `
                 SELECT pa.*, 
-                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
-                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    pa.plan_id, 
+                    p.tipo, 
                     p.objetivo, 
                     p.calorias_diarias, 
-                    p.descripcion
+                    p.descripcion,
+                    CONCAT('Plan #', pa.plan_id) as plan_nombre
                 FROM ${this.tableName} pa
                 LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
                 ORDER BY pa.fecha_asignacion DESC
             `;
 
-            const result = await executeQuery(query, [usuarioId]);
+            let result = await executeQuery(query, [usuarioId]);
+            console.log(`✅ Resultado de asignaciones: ${result?.length || 0} registros`);
             return result || [];
         } catch (error) {
-            console.error('Error al obtener asignaciones por usuario:', error);
+            console.error('❌ Error al obtener asignaciones por usuario:', error);
+            console.error('Error details:', {
+                message: error.message,
+                sqlState: error.sqlState,
+                sqlMessage: error.sqlMessage
+            });
             throw error;
         }
     }
@@ -68,11 +78,12 @@ class PlanAsignacion {
         try {
             const query = `
                 SELECT pa.*, 
-                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
-                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    pa.plan_id, 
+                    p.tipo, 
                     p.objetivo, 
                     p.calorias_diarias, 
-                    p.descripcion
+                    p.descripcion,
+                    CONCAT('Plan #', pa.plan_id) as plan_nombre
                 FROM ${this.tableName} pa
                 LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ?
@@ -90,13 +101,15 @@ class PlanAsignacion {
     // Obtener asignación activa por usuario
     async getAsignacionActivaByUsuario(usuarioId) {
         try {
+            console.log(`📊 Query: buscando asignación activa para usuario ${usuarioId}`);
             const query = `
                 SELECT pa.*, 
-                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
-                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    pa.plan_id, 
+                    p.tipo, 
                     p.objetivo, 
                     p.calorias_diarias, 
-                    p.descripcion
+                    p.descripcion,
+                    CONCAT('Plan #', pa.plan_id) as plan_nombre
                 FROM ${this.tableName} pa
                 LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
@@ -105,9 +118,15 @@ class PlanAsignacion {
             `;
 
             const result = await executeQuery(query, [usuarioId]);
+            console.log(`✅ Resultado de asignación activa: ${result ? 'encontrada' : 'no encontrada'}`);
             return result && result.length > 0 ? result[0] : null;
         } catch (error) {
-            console.error('Error al obtener asignación activa por usuario:', error);
+            console.error('❌ Error al obtener asignación activa por usuario:', error);
+            console.error('Error details:', {
+                message: error.message,
+                sqlState: error.sqlState,
+                sqlMessage: error.sqlMessage
+            });
             throw error;
         }
     }

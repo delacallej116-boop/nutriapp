@@ -65,18 +65,21 @@ class PlanAsignacionController {
                 });
             }
 
+            console.log(`🔍 Obteniendo asignaciones para usuario: ${usuarioId}`);
             const asignaciones = await this.planAsignacion.getAsignacionesByUsuario(usuarioId);
+            console.log(`✅ Asignaciones encontradas: ${asignaciones?.length || 0}`);
 
             res.json({
                 success: true,
-                data: asignaciones
+                data: asignaciones || []
             });
 
         } catch (error) {
-            console.error('Error en getAsignacionesByUsuario:', error);
+            console.error('❌ Error en getAsignacionesByUsuario:', error);
             res.status(500).json({
                 success: false,
-                message: 'Error interno del servidor'
+                message: 'Error interno del servidor',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         }
     }
@@ -93,18 +96,21 @@ class PlanAsignacionController {
                 });
             }
 
+            console.log(`🔍 Obteniendo asignación activa para usuario: ${usuarioId}`);
             const asignacion = await this.planAsignacion.getAsignacionActivaByUsuario(usuarioId);
+            console.log(`✅ Asignación activa encontrada: ${asignacion ? 'Sí' : 'No'}`);
 
             res.json({
                 success: true,
-                data: asignacion
+                data: asignacion || null
             });
 
         } catch (error) {
-            console.error('Error en getAsignacionActivaByUsuario:', error);
+            console.error('❌ Error en getAsignacionActivaByUsuario:', error);
             res.status(500).json({
                 success: false,
-                message: 'Error interno del servidor'
+                message: 'Error interno del servidor',
+                error: process.env.NODE_ENV === 'development' ? error.message : undefined
             });
         }
     }
