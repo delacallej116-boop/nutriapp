@@ -169,11 +169,11 @@ function showFieldError(field, message) {
 
 // Limpiar error de campo
 function clearFieldError(field) {
-    if (!field) return;
+    if (!field || !field.classList) return;
     
     field.classList.remove('is-invalid');
     const feedback = field.parentNode?.querySelector('.invalid-feedback');
-    if (feedback) {
+    if (feedback && feedback.remove) {
         feedback.remove();
     }
 }
