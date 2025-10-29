@@ -28,7 +28,6 @@ class AsistenciaController {
                     c.hora,
                     c.estado,
                     c.codigo_cancelacion,
-                    c.observaciones,
                     c.notas_profesional,
                     c.creado_en,
                     c.actualizado_en,
