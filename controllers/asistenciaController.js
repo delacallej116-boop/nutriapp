@@ -28,7 +28,6 @@ class AsistenciaController {
                     c.hora,
                     c.estado,
                     c.codigo_cancelacion,
-                    c.motivo_consulta,
                     c.observaciones,
                     c.notas_profesional,
                     c.creado_en,
@@ -70,9 +69,11 @@ class AsistenciaController {
             console.log('🔍 Ejecutando consulta SQL...');
             console.log('📅 Fecha actual (CURDATE):', new Date().toISOString().split('T')[0]);
             console.log('👤 Profesional ID:', profesionalId);
+            console.log('📊 Parámetros de consulta:', [profesionalId, parseInt(limit), parseInt(offset)]);
             
+            console.log('🔍 Query SQL completa:', query);
             const consultas = await executeQuery(query, [profesionalId, parseInt(limit), parseInt(offset)]);
-            console.log('✅ Consulta ejecutada exitosamente, resultados:', consultas.length);
+            console.log('✅ Consulta ejecutada exitosamente, resultados:', consultas?.length || 0);
             
             // Obtener total de consultas para paginación
             const countQuery = `
