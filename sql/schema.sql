@@ -347,6 +347,6 @@ CREATE TABLE IF NOT EXISTS plan_asignaciones (
     INDEX idx_usuario_id (usuario_id),
     INDEX idx_fecha_asignacion (fecha_asignacion),
     INDEX idx_activo (activo),
-    UNIQUE KEY unique_usuario_activo (usuario_id, activo)
+    INDEX idx_usuario_activo (usuario_id, activo)
 );
 

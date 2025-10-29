@@ -50,13 +50,13 @@ class PlanAsignacion {
                     p.calorias_diarias, 
                     p.descripcion
                 FROM ${this.tableName} pa
-                JOIN planes_alimentacion p ON pa.plan_id = p.id
+                LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
                 ORDER BY pa.fecha_asignacion DESC
             `;
 
             const result = await executeQuery(query, [usuarioId]);
-            return result;
+            return result || [];
         } catch (error) {
             console.error('Error al obtener asignaciones por usuario:', error);
             throw error;
@@ -74,13 +74,13 @@ class PlanAsignacion {
                     p.calorias_diarias, 
                     p.descripcion
                 FROM ${this.tableName} pa
-                JOIN planes_alimentacion p ON pa.plan_id = p.id
+                LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ?
                 ORDER BY pa.fecha_asignacion DESC
             `;
 
             const result = await executeQuery(query, [usuarioId]);
-            return result;
+            return result || [];
         } catch (error) {
             console.error('Error al obtener todas las asignaciones por usuario:', error);
             throw error;
@@ -98,14 +98,14 @@ class PlanAsignacion {
                     p.calorias_diarias, 
                     p.descripcion
                 FROM ${this.tableName} pa
-                JOIN planes_alimentacion p ON pa.plan_id = p.id
+                LEFT JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
                 ORDER BY pa.fecha_asignacion DESC
                 LIMIT 1
             `;
 
             const result = await executeQuery(query, [usuarioId]);
-            return result.length > 0 ? result[0] : null;
+            return result && result.length > 0 ? result[0] : null;
         } catch (error) {
             console.error('Error al obtener asignación activa por usuario:', error);
             throw error;

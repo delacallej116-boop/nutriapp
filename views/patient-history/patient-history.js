@@ -14,7 +14,7 @@ let laboratoriosData = []; // Store laboratories data
 let currentEditingLaboratory = null; // Store laboratory being edited
 let currentNutritionData = {
     activePlan: null,
-    history: []
+    planHistory: []
 };
 let currentEvolutionData = {
     evolutions: [],
@@ -6234,6 +6234,10 @@ async function loadNutritionData() {
         if (historyResponse.ok) {
             const historyData = await historyResponse.json();
             currentNutritionData.planHistory = historyData.success ? historyData.data : [];
+        } else {
+            // Initialize empty array if API call fails
+            console.error('Error loading plan history:', historyResponse.status, historyResponse.statusText);
+            currentNutritionData.planHistory = [];
         }
 
         updateNutritionUI();
@@ -6306,6 +6310,11 @@ function updateNutritionHistoryTable() {
     if (!tbody) return;
     
     tbody.innerHTML = '';
+    
+    // Safety check: ensure planHistory is defined and is an array
+    if (!currentNutritionData.planHistory || !Array.isArray(currentNutritionData.planHistory)) {
+        currentNutritionData.planHistory = [];
+    }
     
     if (currentNutritionData.planHistory.length === 0) {
         if (noHistoryRow) {
