@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     grupo_sanguineo VARCHAR(5),
     estado_civil VARCHAR(50),
     ocupacion VARCHAR(100),
-    contrasena VARCHAR(255) NOT NULL, -- contraseña para login
+    contrasena VARCHAR(255) NULL, -- contraseña para login (opcional para pacientes sin cuenta)
     rol ENUM('paciente') DEFAULT 'paciente', -- rol del usuario (2 = paciente)
     activo BOOLEAN DEFAULT TRUE,
     observaciones TEXT,
