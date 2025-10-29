@@ -179,16 +179,42 @@ class PlanAlimentacion {
     // Obtener estadísticas de planes
     async getPlanStats(profesionalId) {
         try {
-            const query = `
-                SELECT 
-                    COUNT(*) as total_planes,
-                    SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) as planes_activos,
-                    SUM(CASE WHEN tipo = 'simple' THEN 1 ELSE 0 END) as planes_simples,
-                    SUM(CASE WHEN tipo = 'intermedio' THEN 1 ELSE 0 END) as planes_intermedios,
-                    SUM(CASE WHEN tipo = 'avanzado' THEN 1 ELSE 0 END) as planes_avanzados
-                FROM ${this.tableName} 
-                WHERE profesional_id = ?
+            // Detectar si la columna 'activo' existe en la BD actual (evita errores en entornos donde falta)
+            const columnCheckQuery = `
+                SELECT COUNT(*) AS existe
+                FROM information_schema.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                  AND TABLE_NAME = ? 
+                  AND COLUMN_NAME = 'activo'
             `;
+            const columnCheckResult = await executeQuery(columnCheckQuery, [this.tableName]);
+            const hasActivoColumn = Array.isArray(columnCheckResult)
+                ? (columnCheckResult[0]?.existe > 0)
+                : Boolean(columnCheckResult?.existe);
+
+            // Construir consulta según disponibilidad de 'activo'
+            const query = hasActivoColumn
+                ? `
+                    SELECT 
+                        COUNT(*) as total_planes,
+                        SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) as planes_activos,
+                        SUM(CASE WHEN tipo = 'simple' THEN 1 ELSE 0 END) as planes_simples,
+                        SUM(CASE WHEN tipo = 'intermedio' THEN 1 ELSE 0 END) as planes_intermedios,
+                        SUM(CASE WHEN tipo = 'avanzado' THEN 1 ELSE 0 END) as planes_avanzados
+                    FROM ${this.tableName}
+                    WHERE profesional_id = ?
+                `
+                : `
+                    SELECT 
+                        COUNT(*) as total_planes,
+                        NULL as planes_activos,
+                        SUM(CASE WHEN tipo = 'simple' THEN 1 ELSE 0 END) as planes_simples,
+                        SUM(CASE WHEN tipo = 'intermedio' THEN 1 ELSE 0 END) as planes_intermedios,
+                        SUM(CASE WHEN tipo = 'avanzado' THEN 1 ELSE 0 END) as planes_avanzados
+                    FROM ${this.tableName}
+                    WHERE profesional_id = ?
+                `;
+
             const result = await executeQuery(query, [profesionalId]);
             return result[0] || {};
         } catch (error) {

@@ -188,7 +188,7 @@ CREATE TABLE IF NOT EXISTS evoluciones (
 CREATE TABLE IF NOT EXISTS planes_alimentacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(255) NOT NULL,
-    tipo ENUM('simple', 'intermedio') NOT NULL DEFAULT 'simple',
+    tipo ENUM('simple', 'intermedio', 'avanzado') NOT NULL DEFAULT 'simple',
     usuario_id INT NULL,
     profesional_id INT NOT NULL,
     fecha_inicio DATE NOT NULL,

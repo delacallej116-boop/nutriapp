@@ -258,7 +258,7 @@ const createAllTables = async (connection) => {
                 CREATE TABLE planes_alimentacion (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nombre VARCHAR(255) NOT NULL,
-                    tipo ENUM('simple', 'intermedio') NOT NULL DEFAULT 'simple',
+                    tipo ENUM('simple', 'intermedio', 'avanzado') NOT NULL DEFAULT 'simple',
                     usuario_id INT NULL,
                     profesional_id INT NOT NULL,
                     fecha_inicio DATE NOT NULL,
@@ -608,7 +608,7 @@ const createMissingTables = async (connection, missingTables) => {
             // Si falla el batch, intentar una por una para identificar cuál falla
             console.log('🔄 Intentando crear tablas una por una...');
             for (const table of tablesToCreate) {
-                try {
+                 try {
                     await connection.query(table.sql);
                     console.log(`✅ Tabla ${table.name} creada`);
                 } catch (individualError) {
