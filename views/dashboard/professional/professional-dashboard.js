@@ -251,6 +251,12 @@ function initSidebar() {
 function showSection(sectionName) {
     console.log('showSection called with:', sectionName);
     
+    // Special case: asistencia should redirect to dedicated page without showing inline section
+    if (sectionName === 'asistencia') {
+        loadSectionContent('asistencia');
+        return;
+    }
+    
     // Remove active class from all nav links
     const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
     navLinks.forEach(link => {
