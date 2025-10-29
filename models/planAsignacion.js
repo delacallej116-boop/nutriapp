@@ -43,7 +43,12 @@ class PlanAsignacion {
     async getAsignacionesByUsuario(usuarioId) {
         try {
             const query = `
-                SELECT pa.*, p.nombre as plan_nombre, p.tipo as plan_tipo, p.objetivo, p.calorias_diarias, p.descripcion
+                SELECT pa.*, 
+                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
+                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    p.objetivo, 
+                    p.calorias_diarias, 
+                    p.descripcion
                 FROM ${this.tableName} pa
                 JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
@@ -62,7 +67,12 @@ class PlanAsignacion {
     async getAllAsignacionesByUsuario(usuarioId) {
         try {
             const query = `
-                SELECT pa.*, p.nombre as plan_nombre, p.tipo as plan_tipo, p.objetivo, p.calorias_diarias, p.descripcion
+                SELECT pa.*, 
+                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
+                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    p.objetivo, 
+                    p.calorias_diarias, 
+                    p.descripcion
                 FROM ${this.tableName} pa
                 JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ?
@@ -81,7 +91,12 @@ class PlanAsignacion {
     async getAsignacionActivaByUsuario(usuarioId) {
         try {
             const query = `
-                SELECT pa.*, p.nombre as plan_nombre, p.tipo as plan_tipo, p.objetivo, p.calorias_diarias, p.descripcion
+                SELECT pa.*, 
+                    COALESCE(p.nombre, 'Plan Alimentario') as plan_nombre, 
+                    COALESCE(p.tipo, 'simple') as plan_tipo, 
+                    p.objetivo, 
+                    p.calorias_diarias, 
+                    p.descripcion
                 FROM ${this.tableName} pa
                 JOIN planes_alimentacion p ON pa.plan_id = p.id
                 WHERE pa.usuario_id = ? AND pa.activo = true
