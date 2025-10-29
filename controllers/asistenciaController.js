@@ -20,7 +20,7 @@ class AsistenciaController {
                 });
             }
 
-            // Obtener consultas que necesitan confirmación de asistencia (versión corregida)
+            // Obtener consultas que necesitan confirmación de asistencia (versión simplificada)
             const query = `
                 SELECT 
                     c.id,
@@ -31,18 +31,9 @@ class AsistenciaController {
                     c.notas_profesional,
                     c.creado_en,
                     c.actualizado_en,
-                    CASE 
-                        WHEN c.usuario_id IS NOT NULL THEN u.apellido_nombre
-                        ELSE COALESCE(c.paciente_externo_nombre, 'Paciente Externo')
-                    END as paciente_nombre,
-                    CASE 
-                        WHEN c.usuario_id IS NOT NULL THEN u.email
-                        ELSE COALESCE(c.paciente_externo_email, '')
-                    END as paciente_email,
-                    CASE 
-                        WHEN c.usuario_id IS NOT NULL THEN u.telefono
-                        ELSE COALESCE(c.paciente_externo_telefono, '')
-                    END as paciente_telefono,
+                    COALESCE(u.apellido_nombre, 'Paciente') as paciente_nombre,
+                    COALESCE(u.email, '') as paciente_email,
+                    COALESCE(u.telefono, '') as paciente_telefono,
                     CASE 
                         WHEN c.usuario_id IS NOT NULL THEN 'registrado'
                         ELSE 'externo'
