@@ -341,13 +341,12 @@ CREATE TABLE IF NOT EXISTS plan_asignaciones (
     observaciones TEXT NULL,
     creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
     actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    activo_unique INT GENERATED ALWAYS AS (CASE WHEN activo = true THEN usuario_id ELSE NULL END) STORED,
     FOREIGN KEY (plan_id) REFERENCES planes_alimentacion(id) ON DELETE CASCADE,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_usuario_activo_true (activo_unique),
     INDEX idx_plan_id (plan_id),
     INDEX idx_usuario_id (usuario_id),
     INDEX idx_fecha_asignacion (fecha_asignacion),
-    INDEX idx_activo (activo)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    INDEX idx_activo (activo),
+    UNIQUE KEY unique_usuario_activo (usuario_id, activo)
+);
 
