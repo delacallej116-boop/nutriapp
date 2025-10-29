@@ -89,7 +89,7 @@ const createAllTables = async (connection) => {
                 CREATE TABLE profesionales (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nombre VARCHAR(100) NOT NULL,
-                    usuario VARCHAR(50) NOT NULL UNIQUE,
+                    usuario VARCHAR(50) NULL UNIQUE,
                     email VARCHAR(150),
                     telefono VARCHAR(30),
                     contrasena VARCHAR(255) NOT NULL,
@@ -114,7 +114,7 @@ const createAllTables = async (connection) => {
                     tipo_documento VARCHAR(50),
                     numero_historia_clinica VARCHAR(50) UNIQUE,
                     apellido_nombre VARCHAR(150) NOT NULL,
-                    usuario VARCHAR(50) NOT NULL UNIQUE,
+                    usuario VARCHAR(50) NULL UNIQUE,
                     email VARCHAR(150),
                     telefono VARCHAR(30),
                     fecha_ingreso DATE,
@@ -128,7 +128,7 @@ const createAllTables = async (connection) => {
                     grupo_sanguineo VARCHAR(5),
                     estado_civil VARCHAR(50),
                     ocupacion VARCHAR(100),
-                    contrasena VARCHAR(255) NOT NULL,
+                    contrasena VARCHAR(255) NULL,
                     rol ENUM('paciente') DEFAULT 'paciente',
                     activo BOOLEAN DEFAULT TRUE,
                     observaciones TEXT,
@@ -311,7 +311,7 @@ const createMissingTables = async (connection, missingTables) => {
                 CREATE TABLE profesionales (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     nombre VARCHAR(100) NOT NULL,
-                    usuario VARCHAR(50) NOT NULL UNIQUE,
+                    usuario VARCHAR(50) NULL UNIQUE,
                     email VARCHAR(150),
                     telefono VARCHAR(30),
                     contrasena VARCHAR(255) NOT NULL,
@@ -336,7 +336,7 @@ const createMissingTables = async (connection, missingTables) => {
                     tipo_documento VARCHAR(50),
                     numero_historia_clinica VARCHAR(50) UNIQUE,
                     apellido_nombre VARCHAR(150) NOT NULL,
-                    usuario VARCHAR(50) NOT NULL UNIQUE,
+                    usuario VARCHAR(50) NULL UNIQUE,
                     email VARCHAR(150),
                     telefono VARCHAR(30),
                     fecha_ingreso DATE,
@@ -350,7 +350,7 @@ const createMissingTables = async (connection, missingTables) => {
                     grupo_sanguineo VARCHAR(5),
                     estado_civil VARCHAR(50),
                     ocupacion VARCHAR(100),
-                    contrasena VARCHAR(255) NOT NULL,
+                    contrasena VARCHAR(255) NULL,
                     rol ENUM('paciente') DEFAULT 'paciente',
                     activo BOOLEAN DEFAULT TRUE,
                     observaciones TEXT,
@@ -508,6 +508,106 @@ const createMissingTables = async (connection, missingTables) => {
                     INDEX idx_ultima_consulta (ultima_consulta),
                     INDEX idx_proxima_consulta (proxima_consulta)
                 )
+            `
+        },
+        {
+            name: 'plan_comidas',
+            sql: `
+                CREATE TABLE plan_comidas (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    plan_id INT NOT NULL,
+                    dia_semana ENUM('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo') NOT NULL,
+                    tipo_comida ENUM('desayuno','media_manana','almuerzo','media_tarde','cena','colacion') NOT NULL,
+                    nombre_comida VARCHAR(255) NOT NULL,
+                    descripcion TEXT,
+                    hora TIME COMMENT 'Hora de la comida',
+                    calorias DECIMAL(8,2),
+                    proteinas DECIMAL(8,2),
+                    carbohidratos DECIMAL(8,2),
+                    grasas DECIMAL(8,2),
+                    fibra DECIMAL(8,2),
+                    azucares DECIMAL(8,2),
+                    sodio DECIMAL(8,2),
+                    ingredientes TEXT,
+                    preparacion TEXT,
+                    tiempo_preparacion INT COMMENT 'Minutos de preparación',
+                    dificultad ENUM('facil','medio','dificil') DEFAULT 'facil',
+                    porciones INT DEFAULT 1,
+                    notas TEXT,
+                    activo BOOLEAN DEFAULT TRUE,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (plan_id) REFERENCES planes_alimentacion(id) ON DELETE CASCADE,
+                    INDEX idx_plan_dia_tipo (plan_id, dia_semana, tipo_comida),
+                    INDEX idx_plan_activo (plan_id, activo)
+                )
+            `
+        },
+        {
+            name: 'laboratorios',
+            sql: `
+                CREATE TABLE laboratorios (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    usuario_id INT NOT NULL,
+                    profesional_id INT NOT NULL,
+                    fecha_estudio DATE NOT NULL,
+                    laboratorio VARCHAR(255),
+                    medico_solicitante VARCHAR(255),
+                    notas TEXT,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                    FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE,
+                    INDEX idx_fecha_estudio (fecha_estudio),
+                    INDEX idx_usuario_fecha (usuario_id, fecha_estudio),
+                    INDEX idx_profesional_fecha (profesional_id, fecha_estudio)
+                )
+            `
+        },
+        {
+            name: 'resultados_laboratorio',
+            sql: `
+                CREATE TABLE resultados_laboratorio (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    laboratorio_id INT NOT NULL,
+                    parametro VARCHAR(100) NOT NULL,
+                    valor DECIMAL(10,3),
+                    unidad VARCHAR(50),
+                    valor_referencia_min DECIMAL(10,3),
+                    valor_referencia_max DECIMAL(10,3),
+                    estado ENUM('normal', 'alto', 'bajo', 'critico') DEFAULT 'normal',
+                    observaciones TEXT,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (laboratorio_id) REFERENCES laboratorios(id) ON DELETE CASCADE,
+                    INDEX idx_parametro (parametro),
+                    INDEX idx_estado (estado),
+                    INDEX idx_laboratorio_parametro (laboratorio_id, parametro(50))
+                )
+            `
+        },
+        {
+            name: 'plan_asignaciones',
+            sql: `
+                CREATE TABLE plan_asignaciones (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    plan_id INT NOT NULL,
+                    usuario_id INT NOT NULL,
+                    fecha_asignacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    fecha_inicio DATE NOT NULL,
+                    fecha_fin DATE NULL,
+                    activo BOOLEAN DEFAULT TRUE,
+                    observaciones TEXT NULL,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                    activo_unique INT GENERATED ALWAYS AS (CASE WHEN activo = true THEN usuario_id ELSE NULL END) STORED,
+                    FOREIGN KEY (plan_id) REFERENCES planes_alimentacion(id) ON DELETE CASCADE,
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                    UNIQUE KEY unique_usuario_activo_true (activo_unique),
+                    INDEX idx_plan_id (plan_id),
+                    INDEX idx_usuario_id (usuario_id),
+                    INDEX idx_fecha_asignacion (fecha_asignacion),
+                    INDEX idx_activo (activo)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             `
         }
     ];
