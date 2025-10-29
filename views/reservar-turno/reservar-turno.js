@@ -261,19 +261,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(formData)
             });
             
-            const result = await response.json();
+            // Parse response
+            let result;
+            try {
+                result = await response.json();
+            } catch (parseError) {
+                console.error('Error parsing response:', parseError);
+                throw new Error('Error al procesar la respuesta del servidor');
+            }
+            
             console.log('📥 Respuesta del servidor:', result);
             console.log('📊 result.data:', result.data);
-            console.log('📊 result.data.nombre:', result.data?.nombre);
-            console.log('📊 result.data.apellido:', result.data?.apellido);
-            console.log('📊 result.data.tipo_consulta:', result.data?.tipo_consulta);
+            
+            if (!response.ok) {
+                // Server returned an error status
+                const errorMessage = result.message || `Error del servidor: ${response.status}`;
+                showPremiumAlert('danger', errorMessage);
+                return;
+            }
             
             if (result.success) {
-                // Show success modal
+                // Show success modal BEFORE resetting anything
                 console.log('🎯 Llamando showSuccessModal con:', result.data);
                 showSuccessModal(result.data);
                 
-                // Reset form
+                // Reset form AFTER showing modal
                 reservationForm.reset();
                 resetHourSelection();
                 
@@ -281,16 +293,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 alertContainer.innerHTML = '';
                 
             } else {
-                showPremiumAlert('danger', result.message);
+                showPremiumAlert('danger', result.message || 'Error al crear la reserva');
             }
             
         } catch (error) {
             console.error('Error al enviar la reserva:', error);
-            showPremiumAlert('danger', 'Error de conexión con el servidor. Inténtalo de nuevo más tarde.');
+            showPremiumAlert('danger', error.message || 'Error de conexión con el servidor. Inténtalo de nuevo más tarde.');
         } finally {
-            // Remove loading state
+            // Remove loading state and restore button text
             submitBtn.classList.remove('btn-loading-premium');
             submitBtn.disabled = false;
+            // Asegurarse de que el texto del botón esté presente
+            if (!submitBtn.innerHTML.includes('Reservar Consulta')) {
+                submitBtn.innerHTML = '<i class="fas fa-calendar-check me-2"></i>Reservar Consulta';
+            }
         }
     }
     
@@ -329,25 +345,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show success modal
     function showSuccessModal(reservationData) {
-        console.log('📊 Datos recibidos para el modal:', reservationData);
-        console.log('📊 reservationData.nombre:', reservationData.nombre);
-        console.log('📊 reservationData.apellido:', reservationData.apellido);
-        console.log('📊 reservationData.tipo_consulta:', reservationData.tipo_consulta);
-        console.log('📊 reservationData.fecha:', reservationData.fecha);
-        console.log('📊 reservationData.pacienteRecurrente:', reservationData.pacienteRecurrente);
-        
-        const modal = new bootstrap.Modal(document.getElementById('successModal'));
-        
-        // Populate reservation details
-        const detailsContainer = document.getElementById('reservationDetails');
-        let contenidoHTML = `
-            <p><strong>Nombre:</strong> ${reservationData.nombre || 'N/A'} ${reservationData.apellido || 'N/A'}</p>
-            <p><strong>Fecha:</strong> ${formatDate(reservationData.fecha)}</p>
-            <p><strong>Hora:</strong> ${reservationData.hora}</p>
-            <p><strong>Tipo:</strong> ${getTipoConsultaText(reservationData.tipo_consulta)}</p>
-            <p><strong>Código de Cancelación:</strong> <code>${reservationData.codigo_cancelacion}</code></p>
-        `;
-        
+        try {
+            console.log('📊 Datos recibidos para el modal:', reservationData);
+            console.log('📊 reservationData.nombre:', reservationData.nombre);
+            console.log('📊 reservationData.apellido:', reservationData.apellido);
+            console.log('📊 reservationData.tipo_consulta:', reservationData.tipo_consulta);
+            console.log('📊 reservationData.fecha:', reservationData.fecha);
+            console.log('📊 reservationData.pacienteRecurrente:', reservationData.pacienteRecurrente);
+            
+            // Verificar que el modal existe
+            const modalElement = document.getElementById('successModal');
+            if (!modalElement) {
+                console.error('❌ Modal successModal no encontrado en el DOM');
+                showPremiumAlert('success', '¡Reserva creada exitosamente!');
+                return;
+            }
+            
+            // Verificar que el contenedor de detalles existe
+            const detailsContainer = document.getElementById('reservationDetails');
+            if (!detailsContainer) {
+                console.error('❌ Contenedor reservationDetails no encontrado');
+                showPremiumAlert('success', '¡Reserva creada exitosamente!');
+                return;
+            }
+            
+            // Crear instancia del modal
+            const modal = new bootstrap.Modal(modalElement);
+            
+            // Populate reservation details
+            let contenidoHTML = `
+                <p><strong>Nombre:</strong> ${reservationData.nombre || 'N/A'} ${reservationData.apellido || 'N/A'}</p>
+                <p><strong>Fecha:</strong> ${formatDate(reservationData.fecha)}</p>
+                <p><strong>Hora:</strong> ${reservationData.hora}</p>
+                <p><strong>Tipo:</strong> ${getTipoConsultaText(reservationData.tipo_consulta)}</p>
+                <p><strong>Código de Cancelación:</strong> <code>${reservationData.codigo_cancelacion}</code></p>
+            `;
+            
             // 🆕 MOSTRAR INFORMACIÓN DE PACIENTE RECURRENTE (solo si es recurrente)
             if (reservationData.pacienteRecurrente && reservationData.pacienteRecurrente.esRecurrente) {
                 const ultimaConsulta = reservationData.pacienteRecurrente.ultimaConsulta;
@@ -363,11 +396,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             }
-        
-        console.log('📋 Contenido HTML del modal:', contenidoHTML);
-        detailsContainer.innerHTML = contenidoHTML;
-        
-        modal.show();
+            
+            console.log('📋 Contenido HTML del modal:', contenidoHTML);
+            detailsContainer.innerHTML = contenidoHTML;
+            
+            // Mostrar el modal
+            console.log('🎯 Mostrando modal...');
+            modal.show();
+            console.log('✅ Modal mostrado');
+            
+        } catch (error) {
+            console.error('❌ Error al mostrar modal:', error);
+            // Fallback: mostrar alerta si el modal falla
+            showPremiumAlert('success', '¡Reserva creada exitosamente! Código: ' + (reservationData.codigo_cancelacion || 'N/A'));
+        }
     }
     
     // Format date for display

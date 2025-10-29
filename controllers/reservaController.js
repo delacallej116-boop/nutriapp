@@ -161,36 +161,7 @@ class ReservaController {
             // Detectar paciente recurrente
             const deteccionPaciente = await ReservaController.detectarPacienteRecurrente(telefono);
 
-            // Enviar confirmación por email
-            try {
-                const emailService = new EmailService();
-                
-                const reservaData = {
-                    nombre,
-                    apellido,
-                    paciente: `${nombre} ${apellido}`,
-                    email,
-                    telefono,
-                    fecha,
-                    hora,
-                    tipo_consulta,
-                    motivo_consulta,
-                    observaciones,
-                    codigo_cancelacion
-                };
-
-                const emailResult = await emailService.sendReservaConfirmacion(reservaData, 'Dr. Alexis Allendez');
-                
-                if (emailResult.success) {
-                    console.log('✅ Email de confirmación enviado');
-                } else {
-                    console.log('⚠️ Error enviando email:', emailResult.message);
-                }
-            } catch (emailError) {
-                console.error('❌ Error enviando email:', emailError.message);
-            }
-
-            // Respuesta exitosa
+            // Respuesta exitosa - enviar INMEDIATAMENTE (antes del email para que no bloquee)
             res.status(201).json({
                 success: true,
                 message: 'Reserva creada exitosamente',
@@ -211,6 +182,38 @@ class ReservaController {
                     email,
                     // 🆕 INFORMACIÓN DE DETECCIÓN DE PACIENTE RECURRENTE
                     pacienteRecurrente: deteccionPaciente
+                }
+            });
+
+            // Enviar confirmación por email EN SEGUNDO PLANO (no bloquea la respuesta)
+            // Usar setImmediate para ejecutar después de enviar la respuesta HTTP
+            setImmediate(async () => {
+                try {
+                    const emailService = new EmailService();
+                    
+                    const reservaData = {
+                        nombre,
+                        apellido,
+                        paciente: `${nombre} ${apellido}`,
+                        email,
+                        telefono,
+                        fecha,
+                        hora,
+                        tipo_consulta,
+                        motivo_consulta,
+                        observaciones,
+                        codigo_cancelacion
+                    };
+
+                    const emailResult = await emailService.sendReservaConfirmacion(reservaData, 'Dr. Alexis Allendez');
+                    
+                    if (emailResult.success) {
+                        console.log('✅ Email de confirmación enviado');
+                    } else {
+                        console.log('⚠️ Error enviando email:', emailResult.message);
+                    }
+                } catch (emailError) {
+                    console.error('❌ Error enviando confirmación:', emailError.message);
                 }
             });
 
