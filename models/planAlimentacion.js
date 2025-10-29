@@ -179,22 +179,26 @@ class PlanAlimentacion {
     // Obtener estadísticas de planes
     async getPlanStats(profesionalId) {
         try {
-            // Detectar si la columna 'activo' existe en la BD actual (evita errores en entornos donde falta)
-            const columnCheckQuery = `
-                SELECT COUNT(*) AS existe
-                FROM information_schema.COLUMNS 
-                WHERE TABLE_SCHEMA = DATABASE() 
-                  AND TABLE_NAME = ? 
-                  AND COLUMN_NAME = 'activo'
-            `;
-            const columnCheckResult = await executeQuery(columnCheckQuery, [this.tableName]);
-            const hasActivoColumn = Array.isArray(columnCheckResult)
-                ? (columnCheckResult[0]?.existe > 0)
-                : Boolean(columnCheckResult?.existe);
+            // Detectar si las columnas 'activo' y 'tipo' existen en la BD actual (evita errores en entornos donde faltan)
+            const checkColumn = async (columnName) => {
+                const checkQuery = `
+                    SELECT COUNT(*) AS existe
+                    FROM information_schema.COLUMNS 
+                    WHERE TABLE_SCHEMA = DATABASE() 
+                      AND TABLE_NAME = ? 
+                      AND COLUMN_NAME = ?
+                `;
+                const result = await executeQuery(checkQuery, [this.tableName, columnName]);
+                return Array.isArray(result) ? (result[0]?.existe > 0) : Boolean(result?.existe);
+            };
 
-            // Construir consulta según disponibilidad de 'activo'
-            const query = hasActivoColumn
-                ? `
+            const hasActivoColumn = await checkColumn('activo');
+            const hasTipoColumn = await checkColumn('tipo');
+
+            // Construir consulta según disponibilidad de columnas
+            let query;
+            if (hasActivoColumn && hasTipoColumn) {
+                query = `
                     SELECT 
                         COUNT(*) as total_planes,
                         SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) as planes_activos,
@@ -203,8 +207,20 @@ class PlanAlimentacion {
                         SUM(CASE WHEN tipo = 'avanzado' THEN 1 ELSE 0 END) as planes_avanzados
                     FROM ${this.tableName}
                     WHERE profesional_id = ?
-                `
-                : `
+                `;
+            } else if (hasActivoColumn && !hasTipoColumn) {
+                query = `
+                    SELECT 
+                        COUNT(*) as total_planes,
+                        SUM(CASE WHEN activo = 1 THEN 1 ELSE 0 END) as planes_activos,
+                        NULL as planes_simples,
+                        NULL as planes_intermedios,
+                        NULL as planes_avanzados
+                    FROM ${this.tableName}
+                    WHERE profesional_id = ?
+                `;
+            } else if (!hasActivoColumn && hasTipoColumn) {
+                query = `
                     SELECT 
                         COUNT(*) as total_planes,
                         NULL as planes_activos,
@@ -214,6 +230,19 @@ class PlanAlimentacion {
                     FROM ${this.tableName}
                     WHERE profesional_id = ?
                 `;
+            } else {
+                // No existen ni 'activo' ni 'tipo'
+                query = `
+                    SELECT 
+                        COUNT(*) as total_planes,
+                        NULL as planes_activos,
+                        NULL as planes_simples,
+                        NULL as planes_intermedios,
+                        NULL as planes_avanzados
+                    FROM ${this.tableName}
+                    WHERE profesional_id = ?
+                `;
+            }
 
             const result = await executeQuery(query, [profesionalId]);
             return result[0] || {};
