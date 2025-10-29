@@ -157,31 +157,58 @@ class HorarioDisponible {
     static async getStats(profesionalId) {
         try {
             const stats = {};
-            
-            // Contar total de horarios
-            const totalQuery = 'SELECT COUNT(*) as total FROM horarios_disponibles WHERE profesional_id = ?';
-            const [totalResult] = await executeQuery(totalQuery, [profesionalId]);
-            stats.total_horarios = totalResult.total;
-            
-            // Contar horarios activos
-            const activosQuery = 'SELECT COUNT(*) as activos FROM horarios_disponibles WHERE profesional_id = ? AND activo = true';
-            const [activosResult] = await executeQuery(activosQuery, [profesionalId]);
-            stats.horarios_activos = activosResult.activos;
-            
-            // Contar días con horarios
-            const diasQuery = `
-                SELECT COUNT(DISTINCT dia_semana) as dias 
-                FROM horarios_disponibles 
-                WHERE profesional_id = ? AND activo = true
+
+            // Total de horarios y activos
+            const totalQuery = `
+                SELECT 
+                    COUNT(*) AS total,
+                    SUM(CASE WHEN activo = TRUE THEN 1 ELSE 0 END) AS activos
+                FROM horarios_disponibles
+                WHERE profesional_id = ?
             `;
-            const [diasResult] = await executeQuery(diasQuery, [profesionalId]);
-            stats.dias_trabajo = diasResult.dias;
-            
-            // Horarios por día
+            const [totalRow] = await executeQuery(totalQuery, [profesionalId]);
+            stats.total_horarios = totalRow.total || 0;
+            stats.horarios_activos = totalRow.activos || 0;
+
+            // Días cubiertos (distintos con al menos un horario activo)
+            const diasCubiertosQuery = `
+                SELECT COUNT(DISTINCT dia_semana) AS dias
+                FROM horarios_disponibles
+                WHERE profesional_id = ? AND activo = TRUE
+            `;
+            const [diasCubiertosRow] = await executeQuery(diasCubiertosQuery, [profesionalId]);
+            stats.dias_cubiertos = diasCubiertosRow.dias || 0;
+
+            // Próximos días no laborales futuros activos
+            const proxNoLaboralesQuery = `
+                SELECT COUNT(*) AS futuros
+                FROM excepciones_horarios
+                WHERE profesional_id = ? AND activo = TRUE AND fecha >= CURDATE()
+            `;
+            const [proxNoLabRow] = await executeQuery(proxNoLaboralesQuery, [profesionalId]);
+            stats.proximos_dias_no_laborales = proxNoLabRow.futuros || 0;
+
+            // Horas semanales: suma de diferencias hora_fin - hora_inicio para horarios activos
+            const horasSemanalesQuery = `
+                SELECT 
+                    COALESCE(
+                        SUM(TIMESTAMPDIFF(MINUTE, 
+                            STR_TO_DATE(hora_inicio, '%H:%i:%s'), 
+                            STR_TO_DATE(hora_fin, '%H:%i:%s')
+                        )), 0
+                    ) AS minutos
+                FROM horarios_disponibles
+                WHERE profesional_id = ? AND activo = TRUE
+            `;
+            const [horasRow] = await executeQuery(horasSemanalesQuery, [profesionalId]);
+            const minutos = horasRow.minutos || 0;
+            stats.horas_semanales = Math.round(minutos / 60);
+
+            // Horarios por día (para posibles gráficos futuros)
             const porDiaQuery = `
-                SELECT dia_semana, COUNT(*) as cantidad
-                FROM horarios_disponibles 
-                WHERE profesional_id = ? AND activo = true
+                SELECT dia_semana, COUNT(*) AS cantidad
+                FROM horarios_disponibles
+                WHERE profesional_id = ? AND activo = TRUE
                 GROUP BY dia_semana
                 ORDER BY 
                     CASE dia_semana 
@@ -194,9 +221,8 @@ class HorarioDisponible {
                         WHEN 'Domingo' THEN 7
                     END
             `;
-            const porDiaResults = await executeQuery(porDiaQuery, [profesionalId]);
-            stats.horarios_por_dia = porDiaResults;
-            
+            stats.horarios_por_dia = await executeQuery(porDiaQuery, [profesionalId]);
+
             return stats;
         } catch (error) {
             throw error;

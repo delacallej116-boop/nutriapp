@@ -22,19 +22,55 @@ class Antropometria {
                 observaciones
             } = antropometriaData;
 
+            // Verificar qué columnas existen en la tabla
+            const columnasQuery = `
+                SELECT COLUMN_NAME 
+                FROM information_schema.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() 
+                  AND TABLE_NAME = ?
+            `;
+            const columnasExistentes = await executeQuery(columnasQuery, [this.table]);
+            const nombresColumnas = columnasExistentes.map(row => row.COLUMN_NAME);
+
+            // Campos base siempre presentes
+            const camposBase = ['usuario_id', 'fecha'];
+            const valoresBase = [usuario_id, fecha];
+            
+            // Campos opcionales con sus valores
+            const camposOpcionales = {
+                'peso': peso,
+                'altura': altura,
+                'imc': imc,
+                'pliegue_tricipital': pliegue_tricipital,
+                'pliegue_subescapular': pliegue_subescapular,
+                'circunferencia_cintura': circunferencia_cintura,
+                'circunferencia_cadera': circunferencia_cadera,
+                'porcentaje_grasa': porcentaje_grasa,
+                'masa_muscular': masa_muscular,
+                'observaciones': observaciones
+            };
+
+            // Construir query dinámicamente solo con columnas que existen
+            const camposParaInsertar = [...camposBase];
+            const valoresParaInsertar = [...valoresBase];
+
+            Object.keys(camposOpcionales).forEach(campo => {
+                if (nombresColumnas.includes(campo)) {
+                    camposParaInsertar.push(campo);
+                    // Permitir valores null/undefined para campos opcionales
+                    const valor = camposOpcionales[campo];
+                    valoresParaInsertar.push(valor !== undefined && valor !== null && valor !== '' ? valor : null);
+                }
+            });
+
+            const placeholders = camposParaInsertar.map(() => '?').join(', ');
             const query = `
                 INSERT INTO ${this.table} (
-                    usuario_id, fecha, peso, altura, imc,
-                    pliegue_tricipital, pliegue_subescapular, circunferencia_cintura,
-                    circunferencia_cadera, porcentaje_grasa, masa_muscular, observaciones
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ${camposParaInsertar.join(', ')}
+                ) VALUES (${placeholders})
             `;
 
-            const result = await executeQuery(query, [
-                usuario_id, fecha, peso, altura, imc,
-                pliegue_tricipital, pliegue_subescapular, circunferencia_cintura,
-                circunferencia_cadera, porcentaje_grasa, masa_muscular, observaciones
-            ]);
+            const result = await executeQuery(query, valoresParaInsertar);
 
             return result.insertId;
         } catch (error) {

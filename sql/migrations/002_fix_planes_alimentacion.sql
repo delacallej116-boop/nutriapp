@@ -181,7 +181,25 @@ PREPARE stmt FROM @sql_fecha_creacion;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
--- Step 11: Verify table structure
+-- Step 11: Ensure usuario_id can be NULL (for generic plans)
+SET @col_exists = (
+    SELECT COUNT(*) 
+    FROM information_schema.COLUMNS 
+    WHERE TABLE_SCHEMA = DATABASE() 
+      AND TABLE_NAME = 'planes_alimentacion' 
+      AND COLUMN_NAME = 'usuario_id'
+);
+
+SET @sql_fix_usuario = IF(@col_exists > 0,
+    'ALTER TABLE planes_alimentacion MODIFY COLUMN usuario_id INT NULL DEFAULT NULL',
+    'SELECT "usuario_id column does not exist" AS message'
+);
+
+PREPARE stmt FROM @sql_fix_usuario;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- Step 12: Verify table structure
 SELECT 
     COLUMN_NAME, 
     DATA_TYPE, 
@@ -191,5 +209,16 @@ SELECT
 FROM information_schema.COLUMNS 
 WHERE TABLE_SCHEMA = DATABASE() 
   AND TABLE_NAME = 'planes_alimentacion'
+  AND COLUMN_NAME IN (
+    'id',
+    'nombre',
+    'tipo',
+    'usuario_id',
+    'profesional_id',
+    'activo',
+    'objetivo',
+    'calorias_diarias',
+    'creado_en'
+  )
 ORDER BY ORDINAL_POSITION;
 
