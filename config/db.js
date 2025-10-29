@@ -225,7 +225,16 @@ const createAllTables = async (connection) => {
                     cadera DECIMAL(5,2),
                     pliegue_tricipital DECIMAL(5,2),
                     pliegue_subescapular DECIMAL(5,2),
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+                    fecha_medicion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    circunferencia_cintura DECIMAL(5,2),
+                    circunferencia_cadera DECIMAL(5,2),
+                    porcentaje_grasa DECIMAL(5,2),
+                    masa_muscular DECIMAL(5,2),
+                    observaciones TEXT,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                    INDEX idx_fecha_medicion (fecha_medicion),
+                    INDEX idx_usuario_fecha (usuario_id, fecha)
                 )
             `
         },
@@ -248,13 +257,26 @@ const createAllTables = async (connection) => {
             sql: `
                 CREATE TABLE planes_alimentacion (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    usuario_id INT NOT NULL,
+                    nombre VARCHAR(255) NOT NULL,
+                    tipo ENUM('simple', 'intermedio') NOT NULL DEFAULT 'simple',
+                    usuario_id INT NULL,
                     profesional_id INT NOT NULL,
                     fecha_inicio DATE NOT NULL,
                     fecha_fin DATE,
                     descripcion TEXT,
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    objetivo VARCHAR(255),
+                    calorias_diarias INT,
+                    caracteristicas TEXT,
+                    observaciones TEXT,
+                    activo BOOLEAN DEFAULT TRUE,
+                    creado_en DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    actualizado_en DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-                    FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE
+                    FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE,
+                    INDEX idx_fecha_creacion (fecha_creacion),
+                    INDEX idx_activo (activo),
+                    INDEX idx_tipo (tipo)
                 )
             `
         },
@@ -419,26 +441,6 @@ const createMissingTables = async (connection, missingTables) => {
             `
         },
         {
-            name: 'antropometria',
-            sql: `
-                CREATE TABLE antropometria (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    usuario_id INT NOT NULL,
-                    consulta_id INT,
-                    peso DECIMAL(5,2),
-                    talla DECIMAL(5,2),
-                    imc DECIMAL(4,2),
-                    circunferencia_cintura DECIMAL(5,2),
-                    circunferencia_cadera DECIMAL(5,2),
-                    porcentaje_grasa DECIMAL(4,2),
-                    masa_muscular DECIMAL(5,2),
-                    fecha_medicion DATE NOT NULL,
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-                    FOREIGN KEY (consulta_id) REFERENCES consultas(id) ON DELETE SET NULL
-                )
-            `
-        },
-        {
             name: 'evoluciones',
             sql: `
                 CREATE TABLE evoluciones (
@@ -454,28 +456,6 @@ const createMissingTables = async (connection, missingTables) => {
                     fecha_evolucion DATE NOT NULL,
                     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
                     FOREIGN KEY (consulta_id) REFERENCES consultas(id) ON DELETE SET NULL
-                )
-            `
-        },
-        {
-            name: 'planes_alimentacion',
-            sql: `
-                CREATE TABLE planes_alimentacion (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    usuario_id INT NOT NULL,
-                    profesional_id INT NOT NULL,
-                    nombre_plan VARCHAR(100) NOT NULL,
-                    descripcion TEXT,
-                    calorias_diarias INT,
-                    macronutrientes JSON,
-                    alimentos_permitidos TEXT,
-                    alimentos_restringidos TEXT,
-                    observaciones TEXT,
-                    fecha_inicio DATE NOT NULL,
-                    fecha_fin DATE,
-                    activo BOOLEAN DEFAULT TRUE,
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
-                    FOREIGN KEY (profesional_id) REFERENCES profesionales(id) ON DELETE CASCADE
                 )
             `
         },
@@ -614,13 +594,28 @@ const createMissingTables = async (connection, missingTables) => {
     // Filtrar solo las tablas que faltan
     const tablesToCreate = allTables.filter(table => missingTables.includes(table.name));
     
-    for (const table of tablesToCreate) {
+    // Crear todas las tablas en un solo batch
+    if (tablesToCreate.length > 0) {
         try {
-            await connection.query(table.sql);
-            console.log(`✅ Tabla ${table.name} creada`);
+            // Ejecutar todas las queries en una sola transacción
+            const queries = tablesToCreate.map(table => table.sql).join(';\n');
+            await connection.query(queries);
+            
+            const createdNames = tablesToCreate.map(t => t.name).join(', ');
+            console.log(`✅ ${tablesToCreate.length} tablas creadas: ${createdNames}`);
         } catch (error) {
-            console.error(`❌ Error creando tabla ${table.name}:`, error.message);
-            throw error;
+            console.error(`❌ Error creando tablas:`, error.message);
+            // Si falla el batch, intentar una por una para identificar cuál falla
+            console.log('🔄 Intentando crear tablas una por una...');
+            for (const table of tablesToCreate) {
+                try {
+                    await connection.query(table.sql);
+                    console.log(`✅ Tabla ${table.name} creada`);
+                } catch (individualError) {
+                    console.error(`❌ Error creando tabla ${table.name}:`, individualError.message);
+                    throw individualError;
+                }
+            }
         }
     }
 };
@@ -640,8 +635,8 @@ const verifyTablesStructure = async (connection) => {
     const missingTables = requiredTables.filter(table => !existingTables.includes(table));
     
     if (missingTables.length > 0) {
-        console.log(`⚠️ Faltan tablas: ${missingTables.join(', ')}`);
-        console.log('🔄 Creando tablas faltantes...');
+        console.log(`⚠️ Faltan ${missingTables.length} tablas: ${missingTables.join(', ')}`);
+        console.log('🔄 Creando todas las tablas faltantes juntas...');
         await createMissingTables(connection, missingTables);
     } else {
         console.log('✅ Todas las tablas requeridas existen');
