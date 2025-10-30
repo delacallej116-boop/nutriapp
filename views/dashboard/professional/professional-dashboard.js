@@ -2860,9 +2860,6 @@ async function loadSystemSettings() {
         // Load timezone settings
         await loadTimezoneSettings();
         
-        // Load additional settings
-        loadAdditionalSettings();
-        
         // Start time preview updates
         startTimePreview();
         
@@ -2906,24 +2903,6 @@ async function loadTimezoneSettings() {
         
     } catch (error) {
         console.error('❌ Error cargando zona horaria:', error);
-    }
-}
-
-// Load additional settings
-function loadAdditionalSettings() {
-    try {
-        // Load auto-save setting
-        const autoSave = localStorage.getItem('autoSave') === 'true';
-        document.getElementById('autoSaveSwitch').checked = autoSave;
-        
-        // Load notifications setting
-        const notifications = localStorage.getItem('notifications') === 'true';
-        document.getElementById('notificationsSwitch').checked = notifications;
-        
-        console.log('⚙️ Configuraciones adicionales cargadas');
-        
-    } catch (error) {
-        console.error('❌ Error cargando configuraciones adicionales:', error);
     }
 }
 
@@ -2994,8 +2973,6 @@ async function saveSystemSettings() {
         console.log('💾 Guardando configuraciones del sistema...');
         
         const selectedTimezone = document.getElementById('timezoneSelect').value;
-        const autoSave = document.getElementById('autoSaveSwitch').checked;
-        const notifications = document.getElementById('notificationsSwitch').checked;
         
         if (!selectedTimezone) {
             showAlert('Por favor selecciona una zona horaria', 'warning');
@@ -3004,8 +2981,6 @@ async function saveSystemSettings() {
         
         // Save to localStorage
         localStorage.setItem('systemTimezone', selectedTimezone);
-        localStorage.setItem('autoSave', autoSave.toString());
-        localStorage.setItem('notifications', notifications.toString());
         
         // Update professional timezone in database
         await updateProfessionalTimezone(selectedTimezone);

@@ -201,37 +201,37 @@ function loadPlanSimpleContent() {
                 
                 <!-- Meal Types -->
                 <div class="meal-types">
-                    <div class="meal-type-card" data-meal="desayuno">
+                    <div class="meal-type-card" data-meal-type="desayuno">
                         <div class="meal-type-icon">
                             <i class="fas fa-sun"></i>
                         </div>
                         <h6 class="meal-type-title">Desayuno</h6>
                     </div>
-                    <div class="meal-type-card" data-meal="media_manana">
+                    <div class="meal-type-card" data-meal-type="media_manana">
                         <div class="meal-type-icon">
                             <i class="fas fa-apple-alt"></i>
                         </div>
                         <h6 class="meal-type-title">Media Mañana</h6>
                     </div>
-                    <div class="meal-type-card" data-meal="almuerzo">
+                    <div class="meal-type-card" data-meal-type="almuerzo">
                         <div class="meal-type-icon">
                             <i class="fas fa-utensils"></i>
                         </div>
                         <h6 class="meal-type-title">Almuerzo</h6>
                     </div>
-                    <div class="meal-type-card" data-meal="media_tarde">
+                    <div class="meal-type-card" data-meal-type="media_tarde">
                         <div class="meal-type-icon">
                             <i class="fas fa-coffee"></i>
                         </div>
                         <h6 class="meal-type-title">Media Tarde</h6>
                     </div>
-                    <div class="meal-type-card" data-meal="cena">
+                    <div class="meal-type-card" data-meal-type="cena">
                         <div class="meal-type-icon">
                             <i class="fas fa-moon"></i>
                         </div>
                         <h6 class="meal-type-title">Cena</h6>
                     </div>
-                    <div class="meal-type-card" data-meal="colacion">
+                    <div class="meal-type-card" data-meal-type="colacion">
                         <div class="meal-type-icon">
                             <i class="fas fa-cookie-bite"></i>
                         </div>
@@ -337,10 +337,7 @@ function loadPlanIntermedioContent() {
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="d-flex justify-content-between mt-4">
-                    <button type="button" class="btn btn-secondary" id="previewPlanBtn">
-                        <i class="fas fa-eye me-2"></i>Vista Previa
-                    </button>
+                <div class="d-flex justify-content-end mt-4">
                     <button type="button" class="btn btn-success" id="savePlanBtn">
                         <i class="fas fa-save me-2"></i>Guardar Plan
                     </button>
@@ -520,7 +517,9 @@ function setupEventListeners() {
     // Meal type selector
     document.addEventListener('click', (e) => {
         if (e.target.closest('.meal-type-card')) {
-            const mealType = e.target.closest('.meal-type-card').getAttribute('data-meal-type');
+            const card = e.target.closest('.meal-type-card');
+            // Try both data-meal-type and data-meal attributes
+            const mealType = card.getAttribute('data-meal-type') || card.getAttribute('data-meal');
             if (mealType) {
                 selectMealType(mealType);
             }
@@ -545,11 +544,6 @@ function setupEventListeners() {
         saveBtn.addEventListener('click', savePlan);
     }
     
-    // Preview button
-    const previewBtn = document.getElementById('previewPlanBtn');
-    if (previewBtn) {
-        previewBtn.addEventListener('click', previewPlan);
-    }
 }
 
 // Select day
@@ -577,12 +571,26 @@ function selectDay(day) {
 function selectMealType(mealType) {
     currentMealType = mealType;
     
+    // Ensure a day is selected, default to first day if none selected
+    if (!currentDay) {
+        currentDay = 'Lunes';
+        // Update active day button
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        const firstDayBtn = document.querySelector('[data-day="Lunes"]');
+        if (firstDayBtn) {
+            firstDayBtn.classList.add('active');
+        }
+    }
+    
     // Update active meal type card
     document.querySelectorAll('.meal-type-card').forEach(card => {
         card.classList.remove('active');
     });
     
-    const selectedCard = document.querySelector(`[data-meal-type="${mealType}"]`);
+    // Try both data-meal-type and data-meal attributes
+    const selectedCard = document.querySelector(`[data-meal-type="${mealType}"], [data-meal="${mealType}"]`);
     if (selectedCard) {
         selectedCard.classList.add('active');
     }
@@ -590,7 +598,7 @@ function selectMealType(mealType) {
     // Show meal form
     showMealForm(currentDay, mealType);
     
-    console.log('🍽️ Tipo de comida seleccionado:', mealType);
+    console.log('🍽️ Tipo de comida seleccionado:', mealType, 'Día:', currentDay);
 }
 
 // Show meal form
@@ -1131,12 +1139,6 @@ function collectPlanData() {
         activo: true,
         comidas: savedMeals // Incluir comidas guardadas
     };
-}
-
-// Preview plan
-function previewPlan() {
-    console.log('👁️ Vista previa del plan');
-    showAlert('Función de vista previa en desarrollo', 'info');
 }
 
 // Show alert function
