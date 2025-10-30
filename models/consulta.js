@@ -99,10 +99,14 @@ class Consulta {
     static async findById(id) {
         try {
             const query = `
-                SELECT c.*, u.apellido_nombre as paciente_nombre, p.nombre as profesional_nombre
+                SELECT c.*, 
+                       COALESCE(u.apellido_nombre, c.paciente_externo_nombre) as paciente_nombre,
+                       COALESCE(u.email, c.paciente_externo_email) as paciente_email,
+                       COALESCE(u.telefono, c.paciente_externo_telefono) as paciente_telefono,
+                       p.nombre as profesional_nombre
                 FROM consultas c
-                JOIN usuarios u ON c.usuario_id = u.id
-                JOIN profesionales p ON c.profesional_id = p.id
+                LEFT JOIN usuarios u ON c.usuario_id = u.id
+                INNER JOIN profesionales p ON c.profesional_id = p.id
                 WHERE c.id = ?
             `;
             const results = await executeQuery(query, [id]);
