@@ -43,7 +43,7 @@ class AsistenciaController {
                 FROM consultas c
                 LEFT JOIN usuarios u ON c.usuario_id = u.id
                 WHERE c.profesional_id = ?
-                AND c.fecha <= CURDATE()
+                AND c.fecha < CURDATE()
                 AND c.estado IN ('activo', 'ausente', 'completado')
                 ORDER BY 
                     CASE c.estado 
@@ -71,7 +71,7 @@ class AsistenciaController {
                 SELECT COUNT(*) as total
                 FROM consultas c
                 WHERE c.profesional_id = ?
-                AND c.fecha <= CURDATE()
+                AND c.fecha < CURDATE()
                 AND c.estado IN ('activo', 'ausente', 'completado')
             `;
             const countResult = await executeQuery(countQuery, [profesionalId]);

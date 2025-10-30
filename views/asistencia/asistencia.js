@@ -609,13 +609,35 @@ class AsistenciaManager {
     }
 
     formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('es-ES', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
+        try {
+            // Parsear fecha correctamente evitando problemas de timezone
+            if (dateString && typeof dateString === 'string') {
+                const parts = dateString.split('T')[0].split('-');
+                if (parts.length === 3) {
+                    // Crear fecha en timezone local para evitar desfase
+                    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                    const options = {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    };
+                    return date.toLocaleDateString('es-ES', options);
+                }
+            }
+            // Fallback: usar Date si es necesario
+            const date = new Date(dateString + 'T00:00:00');
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            return date.toLocaleDateString('es-ES', options);
+        } catch (error) {
+            console.warn('⚠️ Error formateando fecha:', error);
+            return dateString;
+        }
     }
 
     updateFilteredCount() {

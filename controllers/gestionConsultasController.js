@@ -33,12 +33,12 @@ class GestionConsultasController {
                     c.estado,
                     c.notas_profesional,
                     c.creado_en,
-                    u.apellido_nombre as paciente_nombre,
-                    u.numero_documento as paciente_documento,
-                    u.email as paciente_email,
-                    u.telefono as paciente_telefono
+                    COALESCE(u.apellido_nombre, c.paciente_externo_nombre, 'Paciente') as paciente_nombre,
+                    COALESCE(u.numero_documento, '') as paciente_documento,
+                    COALESCE(u.email, c.paciente_externo_email, '') as paciente_email,
+                    COALESCE(u.telefono, c.paciente_externo_telefono, '') as paciente_telefono
                 FROM consultas c
-                INNER JOIN usuarios u ON c.usuario_id = u.id
+                LEFT JOIN usuarios u ON c.usuario_id = u.id
                 WHERE c.profesional_id = ?
                 AND c.fecha >= DATE(NOW())
                 AND c.estado IN ('activo', 'completado')
@@ -59,12 +59,13 @@ class GestionConsultasController {
 
             if (paciente) {
                 query += ` AND (
-                    u.apellido_nombre LIKE ? OR 
-                    u.numero_documento LIKE ? OR 
-                    u.email LIKE ?
+                    COALESCE(u.apellido_nombre, c.paciente_externo_nombre) LIKE ? OR 
+                    COALESCE(u.numero_documento, '') LIKE ? OR 
+                    COALESCE(u.email, c.paciente_externo_email) LIKE ? OR
+                    COALESCE(c.paciente_externo_nombre, '') LIKE ?
                 )`;
                 const searchPattern = `%${paciente}%`;
-                params.push(searchPattern, searchPattern, searchPattern);
+                params.push(searchPattern, searchPattern, searchPattern, searchPattern);
             }
 
             // Ordenar por fecha y hora - Próximas primero
@@ -74,13 +75,13 @@ class GestionConsultasController {
             const countQuery = `
                 SELECT COUNT(*) as total
                 FROM consultas c
-                INNER JOIN usuarios u ON c.usuario_id = u.id
+                LEFT JOIN usuarios u ON c.usuario_id = u.id
                 WHERE c.profesional_id = ?
                 AND c.fecha >= DATE(NOW())
                 AND c.estado IN ('activo', 'completado')
                 ${fecha ? 'AND DATE(c.fecha) = ?' : ''}
                 ${estado ? 'AND c.estado = ?' : ''}
-                ${paciente ? 'AND (u.apellido_nombre LIKE ? OR u.numero_documento LIKE ? OR u.email LIKE ?)' : ''}
+                ${paciente ? 'AND (COALESCE(u.apellido_nombre, c.paciente_externo_nombre) LIKE ? OR COALESCE(u.numero_documento, \'\') LIKE ? OR COALESCE(u.email, c.paciente_externo_email) LIKE ? OR COALESCE(c.paciente_externo_nombre, \'\') LIKE ?)' : ''}
             `;
 
             const countParams = [profesionalId];
@@ -88,7 +89,7 @@ class GestionConsultasController {
             if (estado) countParams.push(estado);
             if (paciente) {
                 const searchPattern = `%${paciente}%`;
-                countParams.push(searchPattern, searchPattern, searchPattern);
+                countParams.push(searchPattern, searchPattern, searchPattern, searchPattern);
             }
 
             const [countResult] = await executeQuery(countQuery, countParams);
