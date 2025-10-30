@@ -175,15 +175,30 @@ class GestionConsultasController {
                 });
             }
 
-            // Obtener datos del paciente y profesional para el email
-            const paciente = await Usuario.findById(consulta.usuario_id);
+            // Obtener datos del profesional
             const profesional = await Usuario.findById(profesionalId);
-
-            if (!paciente || !profesional) {
+            if (!profesional) {
                 return res.status(404).json({
                     success: false,
-                    message: 'No se pudieron obtener los datos del paciente o profesional'
+                    message: 'No se pudieron obtener los datos del profesional'
                 });
+            }
+
+            // Obtener datos del paciente (puede ser registrado o externo)
+            let pacienteNombre = '';
+            let pacienteEmail = '';
+            
+            if (consulta.usuario_id) {
+                // Paciente registrado
+                const paciente = await Usuario.findById(consulta.usuario_id);
+                if (paciente) {
+                    pacienteNombre = paciente.apellido_nombre || '';
+                    pacienteEmail = paciente.email || '';
+                }
+            } else {
+                // Paciente externo
+                pacienteNombre = consulta.paciente_externo_nombre || '';
+                pacienteEmail = consulta.paciente_externo_email || '';
             }
 
             // Guardar datos originales para el email
@@ -199,22 +214,24 @@ class GestionConsultasController {
 
             await Consulta.update(consultaId, datosActualizacion);
 
-            // Enviar email de notificación al paciente
-            try {
-                const emailService = new EmailService();
-                await emailService.sendReprogramacionNotificacion({
-                    pacienteNombre: paciente.apellido_nombre,
-                    pacienteEmail: paciente.email,
-                    profesionalNombre: profesional.nombre,
-                    fechaOriginal: fechaOriginal,
-                    horaOriginal: horaOriginal,
-                    nuevaFecha: nueva_fecha,
-                    nuevaHora: nueva_hora,
-                    motivo: motivo || 'Sin motivo especificado'
-                });
-            } catch (emailError) {
-                console.warn('Error enviando email de reprogramación:', emailError);
-                // No fallar la operación si el email falla
+            // Enviar email de notificación al paciente (solo si tiene email)
+            if (pacienteEmail) {
+                try {
+                    const emailService = new EmailService();
+                    await emailService.sendReprogramacionNotificacion({
+                        pacienteNombre: pacienteNombre,
+                        pacienteEmail: pacienteEmail,
+                        profesionalNombre: profesional.nombre || 'Dr. Alexis Allendez',
+                        fechaOriginal: fechaOriginal,
+                        horaOriginal: horaOriginal,
+                        nuevaFecha: nueva_fecha,
+                        nuevaHora: nueva_hora,
+                        motivo: motivo || 'Sin motivo especificado'
+                    });
+                } catch (emailError) {
+                    console.warn('Error enviando email de reprogramación:', emailError);
+                    // No fallar la operación si el email falla
+                }
             }
 
             res.json({
@@ -268,15 +285,30 @@ class GestionConsultasController {
                 });
             }
 
-            // Obtener datos del paciente y profesional para el email
-            const paciente = await Usuario.findById(consulta.usuario_id);
+            // Obtener datos del profesional
             const profesional = await Usuario.findById(consulta.profesional_id);
-
-            if (!paciente || !profesional) {
+            if (!profesional) {
                 return res.status(404).json({
                     success: false,
-                    message: 'No se pudieron obtener los datos del paciente o profesional'
+                    message: 'No se pudieron obtener los datos del profesional'
                 });
+            }
+
+            // Obtener datos del paciente (puede ser registrado o externo)
+            let pacienteNombre = '';
+            let pacienteEmail = '';
+            
+            if (consulta.usuario_id) {
+                // Paciente registrado
+                const paciente = await Usuario.findById(consulta.usuario_id);
+                if (paciente) {
+                    pacienteNombre = paciente.apellido_nombre || '';
+                    pacienteEmail = paciente.email || '';
+                }
+            } else {
+                // Paciente externo
+                pacienteNombre = consulta.paciente_externo_nombre || '';
+                pacienteEmail = consulta.paciente_externo_email || '';
             }
 
             // Cancelar la consulta
@@ -285,20 +317,22 @@ class GestionConsultasController {
                 notas_profesional: motivo || 'Consulta cancelada'
             });
 
-            // Enviar email de notificación al paciente
-            try {
-                const emailService = new EmailService();
-                await emailService.sendCancelacionNotificacion({
-                    pacienteNombre: paciente.apellido_nombre,
-                    pacienteEmail: paciente.email,
-                    profesionalNombre: profesional.nombre,
-                    fecha: consulta.fecha,
-                    hora: consulta.hora,
-                    motivo: motivo || 'Sin motivo especificado'
-                });
-            } catch (emailError) {
-                console.warn('Error enviando email de cancelación:', emailError);
-                // No fallar la operación si el email falla
+            // Enviar email de notificación al paciente (solo si tiene email)
+            if (pacienteEmail) {
+                try {
+                    const emailService = new EmailService();
+                    await emailService.sendCancelacionNotificacion({
+                        pacienteNombre: pacienteNombre,
+                        pacienteEmail: pacienteEmail,
+                        profesionalNombre: profesional.nombre || 'Dr. Alexis Allendez',
+                        fecha: consulta.fecha,
+                        hora: consulta.hora,
+                        motivo: motivo || 'Sin motivo especificado'
+                    });
+                } catch (emailError) {
+                    console.warn('Error enviando email de cancelación:', emailError);
+                    // No fallar la operación si el email falla
+                }
             }
 
             res.json({
