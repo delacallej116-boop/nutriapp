@@ -369,15 +369,9 @@ async function fetchRealActivities(professionalId, token) {
                 
                 // Solo mostrar consultas de los últimos 3 días
                 if (timeDiff <= 3) {
-                    // Determinar el nombre del paciente correctamente
-                    let pacienteNombre = 'Paciente externo';
-                    if (consulta.paciente_nombre) {
-                        pacienteNombre = consulta.paciente_nombre;
-                    } else if (consulta.paciente_externo_nombre) {
-                        pacienteNombre = consulta.paciente_externo_nombre;
-                    } else if (consulta.usuario_id) {
-                        pacienteNombre = 'Paciente registrado'; // Fallback si no tiene nombre claro
-                    }
+                    // El backend ya devuelve "Paciente externo - [nombre]" cuando es paciente externo con nombre
+                    // Si paciente_nombre ya viene formateado, lo usamos directamente
+                    let pacienteNombre = consulta.paciente_nombre || 'Paciente externo';
                     
                     console.log('🔍 Consulta procesada:', { 
                         paciente_nombre: consulta.paciente_nombre, 
@@ -691,7 +685,7 @@ async function loadUpcomingAppointments() {
         if (activeAppointments.length > 0) {
             console.log('📅 Citas encontradas:');
             activeAppointments.forEach((apt, index) => {
-                console.log(`  ${index + 1}. ${apt.fecha} ${apt.hora} - ${apt.paciente_nombre || apt.paciente_exterior_nombre || 'Paciente externo'} (${apt.estado})`);
+                console.log(`  ${index + 1}. ${apt.fecha} ${apt.hora} - ${apt.paciente_nombre || 'Paciente externo'} (${apt.estado})`);
             });
         }
         
@@ -731,7 +725,8 @@ function updateUpcomingAppointments(appointments) {
     container.innerHTML = appointments.map(appointment => {
         const timeFormatted = formatTime(appointment.hora);
         const periodFormatted = getTimePeriod(appointment.hora);
-        const pacienteName = appointment.paciente_nombre || appointment.paciente_exterior_nombre || 'Paciente externo';
+        // El backend ya devuelve "Paciente externo - [nombre]" cuando es paciente externo con nombre
+        const pacienteName = appointment.paciente_nombre || 'Paciente externo';
         const tipoConsulta = appointment.tipo_consulta || 'Consulta general';
         const estado = getStatusText(appointment.estado);
         const statusColor = getStatusColor(appointment.estado);

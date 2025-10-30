@@ -11,10 +11,16 @@ class Agenda {
             const query = `
                 SELECT 
                     c.*,
-                    COALESCE(u.apellido_nombre, 'Paciente externo') as paciente_nombre,
+                    COALESCE(u.apellido_nombre, 
+                        CASE WHEN c.paciente_externo_nombre IS NOT NULL AND c.paciente_externo_nombre != '' 
+                            THEN CONCAT('Paciente externo - ', c.paciente_externo_nombre)
+                            ELSE 'Paciente externo' 
+                        END
+                    ) as paciente_nombre,
+                    c.paciente_externo_nombre,
                     COALESCE(u.numero_documento, 'Externo') as numero_documento,
-                    COALESCE(u.telefono, 'N/A') as telefono,
-                    COALESCE(u.email, 'N/A') as email,
+                    COALESCE(u.telefono, c.paciente_externo_telefono, 'N/A') as telefono,
+                    COALESCE(u.email, c.paciente_externo_email, 'N/A') as email,
                     CASE WHEN c.usuario_id IS NOT NULL THEN 'registrado' ELSE 'externo' END as tipo_paciente
                 FROM ${this.tableName} c
                 LEFT JOIN usuarios u ON c.usuario_id = u.id
@@ -37,10 +43,16 @@ class Agenda {
             const query = `
                 SELECT 
                     c.*,
-                    COALESCE(u.apellido_nombre, 'Paciente externo') as paciente_nombre,
+                    COALESCE(u.apellido_nombre, 
+                        CASE WHEN c.paciente_externo_nombre IS NOT NULL AND c.paciente_externo_nombre != '' 
+                            THEN CONCAT('Paciente externo - ', c.paciente_externo_nombre)
+                            ELSE 'Paciente externo' 
+                        END
+                    ) as paciente_nombre,
+                    c.paciente_externo_nombre,
                     COALESCE(u.numero_documento, 'Externo') as numero_documento,
-                    COALESCE(u.telefono, 'N/A') as telefono,
-                    COALESCE(u.email, 'N/A') as email,
+                    COALESCE(u.telefono, c.paciente_externo_telefono, 'N/A') as telefono,
+                    COALESCE(u.email, c.paciente_externo_email, 'N/A') as email,
                     CASE WHEN c.usuario_id IS NOT NULL THEN 'registrado' ELSE 'externo' END as tipo_paciente
                 FROM ${this.tableName} c
                 LEFT JOIN usuarios u ON c.usuario_id = u.id
@@ -63,10 +75,16 @@ class Agenda {
             const query = `
                 SELECT 
                     c.*,
-                    COALESCE(u.apellido_nombre, 'Paciente externo') as paciente_nombre,
+                    COALESCE(u.apellido_nombre, 
+                        CASE WHEN c.paciente_externo_nombre IS NOT NULL AND c.paciente_externo_nombre != '' 
+                            THEN CONCAT('Paciente externo - ', c.paciente_externo_nombre)
+                            ELSE 'Paciente externo' 
+                        END
+                    ) as paciente_nombre,
+                    c.paciente_externo_nombre,
                     COALESCE(u.numero_documento, 'Externo') as numero_documento,
-                    COALESCE(u.telefono, 'N/A') as telefono,
-                    COALESCE(u.email, 'N/A') as email,
+                    COALESCE(u.telefono, c.paciente_externo_telefono, 'N/A') as telefono,
+                    COALESCE(u.email, c.paciente_externo_email, 'N/A') as email,
                     CASE WHEN c.usuario_id IS NOT NULL THEN 'registrado' ELSE 'externo' END as tipo_paciente
                 FROM ${this.tableName} c
                 LEFT JOIN usuarios u ON c.usuario_id = u.id
