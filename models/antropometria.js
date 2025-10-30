@@ -70,6 +70,10 @@ class Antropometria {
                 ) VALUES (${placeholders})
             `;
 
+            console.log('📊 Antropometria - Columnas detectadas:', nombresColumnas);
+            console.log('📊 Antropometria - Campos a insertar:', camposParaInsertar);
+            console.log('📊 Antropometria - Query generado:', query);
+
             const result = await executeQuery(query, valoresParaInsertar);
 
             return result.insertId;

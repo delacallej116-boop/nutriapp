@@ -477,10 +477,11 @@ class AsistenciaManager {
         // Formatear fecha para mostrar solo día/mes
         const fechaFormateada = this.formatDateShort(consulta.fecha);
         
-        // Truncar texto largo
-        const motivoTruncado = this.truncateText(consulta.motivo_consulta || 'Sin motivo', 30);
-        const emailTruncado = this.truncateText(consulta.paciente_email || 'Sin email', 25);
-        const telefonoTruncado = consulta.paciente_telefono || 'Sin teléfono';
+        // Truncar texto largo (manejar cadenas vacías y null)
+        const motivoTruncado = this.truncateText((consulta.motivo_consulta && consulta.motivo_consulta.trim()) || 'Sin motivo', 30);
+        const emailTruncado = this.truncateText((consulta.paciente_email && consulta.paciente_email.trim()) || 'Sin email', 25);
+        const telefonoTruncado = (consulta.paciente_telefono && consulta.paciente_telefono.trim()) || 'Sin teléfono';
+        const pacienteNombre = (consulta.paciente_nombre && consulta.paciente_nombre.trim()) || 'Paciente';
 
         // Determinar clase de fila según estado
         let rowClass = '';
@@ -504,7 +505,7 @@ class AsistenciaManager {
                     <span class="text-muted">${consulta.hora}</span>
                 </td>
                 <td>
-                    <span class="fw-semibold">${consulta.paciente_nombre}</span>
+                    <span class="fw-semibold">${pacienteNombre}</span>
                 </td>
                 <td>
                     <span class="text-muted small" title="${consulta.paciente_email || 'Sin email'}">
@@ -585,7 +586,17 @@ class AsistenciaManager {
     }
 
     formatDateShort(dateString) {
-        const date = new Date(dateString);
+        // Parsear fecha correctamente evitando problemas de timezone
+        // Preferir usar directamente la fecha que viene del servidor (YYYY-MM-DD)
+        if (dateString && typeof dateString === 'string') {
+            const parts = dateString.split('T')[0].split('-'); // Extraer solo la parte de fecha
+            if (parts.length === 3) {
+                // Formato: YYYY-MM-DD -> DD/MM
+                return `${parts[2]}/${parts[1]}`;
+            }
+        }
+        // Fallback: usar Date si es necesario
+        const date = new Date(dateString + 'T00:00:00'); // Agregar hora para evitar timezone issues
         return date.toLocaleDateString('es-ES', {
             day: '2-digit',
             month: '2-digit'
@@ -830,14 +841,14 @@ class AsistenciaManager {
 
     populateDetallesModal(consulta) {
         // Información del paciente
-        document.getElementById('detallesPacienteNombre').textContent = consulta.paciente_nombre || 'No disponible';
-        document.getElementById('detallesPacienteEmail').textContent = consulta.paciente_email || 'No disponible';
-        document.getElementById('detallesPacienteTelefono').textContent = consulta.paciente_telefono || 'No disponible';
+        document.getElementById('detallesPacienteNombre').textContent = consulta.paciente_nombre || (consulta.paciente_externo_nombre || 'No disponible');
+        document.getElementById('detallesPacienteEmail').textContent = consulta.paciente_email || (consulta.paciente_externo_email || 'No disponible');
+        document.getElementById('detallesPacienteTelefono').textContent = consulta.paciente_telefono || (consulta.paciente_externo_telefono || 'No disponible');
         document.getElementById('detallesPacienteDocumento').textContent = consulta.paciente_documento || 'No disponible';
         
         // Detalles de la consulta
         document.getElementById('detallesFecha').textContent = this.formatDateLong(consulta.fecha);
-        document.getElementById('detallesHora').textContent = consulta.hora;
+        document.getElementById('detallesHora').textContent = consulta.hora || 'No especificada';
         document.getElementById('detallesMotivo').textContent = consulta.motivo_consulta || 'Sin motivo especificado';
         
         // Estado actual
@@ -944,7 +955,23 @@ class AsistenciaManager {
     // Formatear fecha larga para mostrar en detalles
     formatDateLong(dateString) {
         try {
-            const date = new Date(dateString);
+            // Parsear fecha correctamente evitando problemas de timezone
+            if (dateString && typeof dateString === 'string') {
+                const parts = dateString.split('T')[0].split('-');
+                if (parts.length === 3) {
+                    // Crear fecha en timezone local para evitar desfase
+                    const date = new Date(parts[0], parts[1] - 1, parts[2]);
+                    const options = { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    };
+                    return date.toLocaleDateString('es-ES', options);
+                }
+            }
+            // Fallback: usar Date si es necesario
+            const date = new Date(dateString + 'T00:00:00');
             const options = { 
                 weekday: 'long', 
                 year: 'numeric', 
