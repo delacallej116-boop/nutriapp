@@ -22,6 +22,16 @@ let currentEvolutionData = {
     stats: {}
 };
 
+// Flags para controlar si los datos ya se cargaron (evita recargas innecesarias)
+let dataLoadedFlags = {
+    consultas: false,
+    antecedentes: false,
+    laboratorios: false,
+    antropometria: false,
+    nutricion: false,
+    evolucion: false
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     initPatientHistory();
 });
@@ -53,7 +63,7 @@ function initPatientHistory() {
     initCharts();
     setupAnthropometryEventListeners(); // Only setup event listeners, don't load data yet
     setupEvolutionEventListeners(); // Setup evolution event listeners
-    loadConsultas(); // Cargar consultas al inicializar
+    loadConsultas(false); // Cargar consultas al inicializar
 }
 
 // Check if we should redirect to nutrition tab
@@ -623,11 +633,15 @@ function initTabs() {
 function initAntecedentsTab() {
     console.log('🚀 Initializing antecedents tab...');
     
-    // Setup event listeners
+    // Setup event listeners (solo una vez)
     setupAntecedentsEventListeners();
     
-    // Load antecedents data
-    loadAntecedentsData();
+    // Load antecedents data solo si no se ha cargado antes
+    if (!dataLoadedFlags.antecedentes) {
+        loadAntecedentsData(false);
+    } else {
+        console.log('📋 Antecedentes ya cargados, usando datos en memoria');
+    }
 }
 
 // Setup event listeners for antecedents
@@ -646,7 +660,14 @@ function setupAntecedentsEventListeners() {
 }
 
 // Load antecedents data
-async function loadAntecedentsData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadAntecedentsData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.antecedentes) {
+        console.log('📋 Antecedentes ya cargados, omitiendo recarga');
+        return;
+    }
+    
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('patientId');
@@ -675,6 +696,7 @@ async function loadAntecedentsData() {
             if (response.status === 404) {
                 console.log('📝 No antecedents found for patient');
                 antecedentesData = null;
+                dataLoadedFlags.antecedentes = true; // Marcar como cargado (aunque no haya datos)
                 showAntecedentsEmptyState();
                 hideAntecedentsLoading();
                 return;
@@ -686,6 +708,7 @@ async function loadAntecedentsData() {
         
         if (result.success && result.data) {
             antecedentesData = result.data;
+            dataLoadedFlags.antecedentes = true; // Marcar como cargado
             console.log('✅ Antecedents loaded:', antecedentesData);
             displayAntecedentsData(antecedentesData);
         } else {
@@ -834,8 +857,8 @@ async function saveAntecedents() {
             const modal = bootstrap.Modal.getInstance(document.getElementById('editAntecedentsModal'));
             if (modal) modal.hide();
             
-            // Reload data
-            await loadAntecedentsData();
+            // Reload data (forzar recarga después de guardar)
+            await loadAntecedentsData(true);
             
             // Update summary if on overview tab
             if (currentPatient) {
@@ -860,11 +883,15 @@ async function saveAntecedents() {
 function initLaboratoriesTab() {
     console.log('🚀 Initializing laboratories tab...');
     
-    // Setup event listeners
+    // Setup event listeners (solo una vez)
     setupLaboratoriesEventListeners();
     
-    // Load laboratories data
-    loadLaboratoriesData();
+    // Load laboratories data solo si no se ha cargado antes
+    if (!dataLoadedFlags.laboratorios) {
+        loadLaboratoriesData(false);
+    } else {
+        console.log('🧪 Laboratorios ya cargados, usando datos en memoria');
+    }
 }
 
 // Setup event listeners for laboratories
@@ -908,7 +935,14 @@ function setupLaboratoriesEventListeners() {
 }
 
 // Load laboratories data
-async function loadLaboratoriesData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadLaboratoriesData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.laboratorios) {
+        console.log('🧪 Laboratorios ya cargados, omitiendo recarga');
+        return;
+    }
+    
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('patientId');
@@ -936,6 +970,7 @@ async function loadLaboratoriesData() {
             if (response.status === 404) {
                 console.log('📝 No laboratories found for patient');
                 laboratoriosData = [];
+                dataLoadedFlags.laboratorios = true; // Marcar como cargado (aunque no haya datos)
                 showLaboratoriesEmptyState();
                 return;
             }
@@ -946,6 +981,7 @@ async function loadLaboratoriesData() {
         
         if (result.success && result.data) {
             laboratoriosData = result.data;
+            dataLoadedFlags.laboratorios = true; // Marcar como cargado
             console.log('✅ Laboratories loaded:', laboratoriosData);
             
             // Load analysis data directly
@@ -1352,8 +1388,8 @@ async function saveLaboratory() {
             const modal = bootstrap.Modal.getInstance(document.getElementById('laboratoryModal'));
             if (modal) modal.hide();
             
-            // Reload data
-            await loadLaboratoriesData();
+            // Reload data (forzar recarga después de guardar)
+            await loadLaboratoriesData(true);
             
         } else {
             throw new Error(result.message || 'Error al guardar estudio');
@@ -1837,8 +1873,8 @@ async function deleteLaboratory(laboratoryId) {
             console.log('✅ Laboratory deleted successfully');
             showAlert('Estudio de laboratorio eliminado exitosamente', 'success');
             
-            // Reload data
-            await loadLaboratoriesData();
+            // Reload data (forzar recarga después de guardar)
+            await loadLaboratoriesData(true);
             
         } else {
             throw new Error(result.message || 'Error al eliminar estudio');
@@ -3456,6 +3492,16 @@ function setupEventListeners() {
                     if (targetTab === '#nutrition') {
                         initNutrition();
                     }
+                    
+                    // Load evolution data when evolution tab is clicked
+                    if (targetTab === '#evolution') {
+                        initEvolution();
+                    }
+                    
+                    // Load consultations data when consultations tab is clicked (si no se ha cargado)
+                    if (targetTab === '#consultations' && !dataLoadedFlags.consultas) {
+                        loadConsultas(false);
+                    }
                 }
             }
         });
@@ -4298,7 +4344,14 @@ function generateCancellationCode() {
 }
 
 // Load consultations for the patient
-async function loadConsultas() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadConsultas(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.consultas) {
+        console.log('📋 Consultas ya cargadas, omitiendo recarga');
+        return;
+    }
+    
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('patientId');
@@ -4324,6 +4377,7 @@ async function loadConsultas() {
         const result = await response.json();
         const consultas = result.data || [];
         consultasData = consultas; // Store globally for export
+        dataLoadedFlags.consultas = true; // Marcar como cargado
 
         console.log('Consultas cargadas:', consultas);
         renderConsultasTable(consultas);
@@ -4910,8 +4964,8 @@ async function guardarEdicionConsulta() {
         const modal = bootstrap.Modal.getInstance(modalElement);
         if (modal) modal.hide();
         
-        // Reload consultations table
-        loadConsultas();
+        // Reload consultations table (forzar recarga después de guardar)
+        loadConsultas(true);
 
     } catch (error) {
         console.error('Error guardando edición de consulta:', error);
@@ -4990,8 +5044,8 @@ async function confirmarCancelacionConsulta() {
         
         showAlert('Consulta cancelada exitosamente. Se ha enviado una notificación por email al paciente.', 'success');
         
-        // Recargar las consultas
-        await loadConsultas();
+        // Recargar las consultas (forzar recarga después de cancelar)
+        await loadConsultas(true);
         
     } catch (error) {
         console.error('Error cancelando consulta:', error);
@@ -5030,9 +5084,13 @@ function initAnthropometry() {
     console.log('🚀 Initializing anthropometry section...');
     setupAnthropometryEventListeners();
     console.log('✅ Event listeners set up');
-    // Only load data when anthropometry tab is accessed
-    console.log('📡 Loading anthropometry data...');
-    loadAnthropometryData();
+    // Only load data when anthropometry tab is accessed, y solo si no se ha cargado antes
+    if (!dataLoadedFlags.antropometria) {
+        console.log('📡 Loading anthropometry data...');
+        loadAnthropometryData(false);
+    } else {
+        console.log('⚖️ Antropometría ya cargada, usando datos en memoria');
+    }
 }
 
 // Setup event listeners for anthropometry
@@ -5172,7 +5230,14 @@ function calculateEditIMC() {
 }
 
 // Load anthropometry data
-async function loadAnthropometryData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadAnthropometryData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.antropometria) {
+        console.log('⚖️ Antropometría ya cargada, omitiendo recarga');
+        return;
+    }
+    
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const patientId = urlParams.get('patientId');
@@ -5206,6 +5271,7 @@ async function loadAnthropometryData() {
         
         antropometriaData = result.data || [];
         currentAnthropometryData = result.data || []; // Update current data for comparison
+        dataLoadedFlags.antropometria = true; // Marcar como cargado
 
         console.log('✅ Mediciones antropométricas cargadas:', antropometriaData);
         console.log('📈 Total measurements:', antropometriaData.length);
@@ -5767,8 +5833,8 @@ async function guardarNuevaAntropometria() {
         // Show success message
         showAlert('Medición antropométrica guardada exitosamente', 'success');
         
-        // Reload data
-        loadAnthropometryData();
+        // Reload data (forzar recarga después de guardar/editar/eliminar)
+        loadAnthropometryData(true);
         
         // Update patient summary with latest data
         await updatePatientSummary();
@@ -5914,8 +5980,8 @@ async function guardarEdicionAntropometria() {
         const modal = bootstrap.Modal.getInstance(modalElement);
         if (modal) modal.hide();
         
-        // Reload data
-        loadAnthropometryData();
+        // Reload data (forzar recarga después de guardar/editar/eliminar)
+        loadAnthropometryData(true);
         
         // Update patient summary with latest data
         await updatePatientSummary();
@@ -6137,7 +6203,12 @@ function updateEmptyCharts() {
 // Initialize nutrition functionality
 function initNutrition() {
     setupNutritionEventListeners();
-    loadNutritionData();
+    // Load nutrition data solo si no se ha cargado antes
+    if (!dataLoadedFlags.nutricion) {
+        loadNutritionData(false);
+    } else {
+        console.log('🍎 Nutrición ya cargada, usando datos en memoria');
+    }
 }
 
 // Setup nutrition event listeners
@@ -6199,7 +6270,14 @@ function setupNutritionEventListeners() {
 }
 
 // Load nutrition data
-async function loadNutritionData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadNutritionData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.nutricion) {
+        console.log('🍎 Nutrición ya cargada, omitiendo recarga');
+        return;
+    }
+    
     try {
         showNutritionLoading(true);
         
@@ -6240,6 +6318,7 @@ async function loadNutritionData() {
             currentNutritionData.planHistory = [];
         }
 
+        dataLoadedFlags.nutricion = true; // Marcar como cargado
         updateNutritionUI();
         
     } catch (error) {
@@ -6640,8 +6719,8 @@ async function confirmPlanAssignment() {
             bootstrap.Modal.getInstance(document.getElementById('confirmAssignmentModal')).hide();
             bootstrap.Modal.getInstance(document.getElementById('assignExistingPlanModal')).hide();
             
-            // Reload nutrition data
-            await loadNutritionData();
+            // Reload nutrition data (forzar recarga después de guardar)
+            await loadNutritionData(true);
             
             // Show success message
             showAlert('Plan asignado exitosamente', 'success');
@@ -6839,8 +6918,8 @@ async function deactivatePlan(asignacionId) {
         const result = await response.json();
         
         if (result.success) {
-            // Reload nutrition data
-            await loadNutritionData();
+            // Reload nutrition data (forzar recarga después de guardar)
+            await loadNutritionData(true);
             
             // Show success message
             showAlert('Plan desactivado exitosamente', 'success');
@@ -6914,7 +6993,12 @@ let currentEditingEvolution = null; // Store the evolution being edited
 function initEvolution() {
     console.log('🔄 Initializing evolution section...');
     setupEvolutionEventListeners();
-    loadEvolutionData();
+    // Load evolution data solo si no se ha cargado antes
+    if (!dataLoadedFlags.evolucion) {
+        loadEvolutionData(false);
+    } else {
+        console.log('📊 Evolución ya cargada, usando datos en memoria');
+    }
 }
 
 // Setup evolution event listeners
@@ -6949,7 +7033,14 @@ function setupEvolutionEventListeners() {
 }
 
 // Load evolution data
-async function loadEvolutionData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadEvolutionData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dataLoadedFlags.evolucion) {
+        console.log('📊 Evolución ya cargada, omitiendo recarga');
+        return;
+    }
+    
     try {
         console.log('📊 Loading evolution data...');
         showEvolutionLoading(true);
@@ -6994,6 +7085,7 @@ async function loadEvolutionData() {
         calculateEvolutionStats();
         
         // Update UI
+        dataLoadedFlags.evolucion = true; // Marcar como cargado
         updateEvolutionUI();
         
         showEvolutionLoading(false);
@@ -7351,8 +7443,8 @@ async function saveEvolution() {
                 modal.hide();
             }
 
-            // Reload evolution data
-            loadEvolutionData();
+            // Reload evolution data (forzar recarga después de guardar/editar)
+            loadEvolutionData(true);
         } else {
             throw new Error(result.message || 'Error al guardar la evolución');
         }
@@ -7554,8 +7646,8 @@ async function updateEvolution() {
             resetEvolutionForm();
             currentEditingEvolution = null;
             
-            // Reload evolution data
-            loadEvolutionData();
+            // Reload evolution data (forzar recarga después de guardar/editar)
+            loadEvolutionData(true);
         } else {
             showAlert(result.message || 'Error al actualizar evolución', 'error');
         }
