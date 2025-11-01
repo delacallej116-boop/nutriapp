@@ -197,23 +197,24 @@ async function loadProfessionalData() {
 }
 
 // Update professional statistics
+// Note: This function is a fallback for dashboard elements that are not updated by real API calls
+// totalPatientsCount is updated by renderSearchResults() with real API data, so it's not updated here
 function updateProfessionalStats() {
     // Simulate API call to get professional data
     // In a real application, this would be an actual API call
     const professionalData = {
-        totalPatients: 0,
         appointmentsToday: 0,
         nextAppointment: 'No hay turnos',
         alerts: 0
     };
     
-    // Update UI elements with loading state first
-    const totalPatientsElement = document.getElementById('totalPatientsCount');
+    // Update UI elements - only elements that exist in the main dashboard
+    // Note: totalPatientsCount is managed by renderSearchResults() in the pacientes section
+    // and should NOT be updated here to avoid overwriting real data
     const appointmentsElement = document.getElementById('appointmentsToday');
     const nextAppointmentElement = document.getElementById('nextAppointmentTime');
     const alertsElement = document.getElementById('alertsCount');
     
-    if (totalPatientsElement) totalPatientsElement.textContent = 'Cargando...';
     if (appointmentsElement) appointmentsElement.textContent = 'Cargando...';
     if (nextAppointmentElement) nextAppointmentElement.textContent = 'Cargando...';
     if (alertsElement) alertsElement.textContent = 'Cargando...';
@@ -221,8 +222,7 @@ function updateProfessionalStats() {
     // Simulate API delay
     setTimeout(() => {
         // Update with actual data (or placeholder if no data)
-        // Note: Sidebar stats are now updated by loadProfessionalStats() with real API data
-        if (totalPatientsElement) totalPatientsElement.textContent = professionalData.totalPatients;
+        // Note: totalPatientsCount and sidebar stats are updated by loadProfessionalStats() and renderSearchResults() with real API data
         if (appointmentsElement) appointmentsElement.textContent = professionalData.appointmentsToday;
         if (nextAppointmentElement) nextAppointmentElement.textContent = professionalData.nextAppointment;
         if (alertsElement) alertsElement.textContent = professionalData.alerts;
