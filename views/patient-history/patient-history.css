@@ -106,8 +106,24 @@
 .patient-sidebar {
     background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
     border-right: 1px solid #e2e8f0;
-    padding: 1rem 0.75rem;
+    padding: 1rem;
     min-height: calc(100vh - 48px); /* Match navbar height */
+    min-width: 240px; /* Ancho mínimo más amplio para mostrar correos completos */
+}
+
+/* Asegurar que el sidebar tenga suficiente ancho en diferentes breakpoints */
+@media (min-width: 768px) {
+    .patient-sidebar {
+        min-width: 240px;
+        max-width: 280px; /* Ancho máximo para mantener proporción */
+    }
+}
+
+@media (min-width: 992px) {
+    .patient-sidebar {
+        min-width: 260px;
+        max-width: 300px;
+    }
 }
 
 .patient-card {
@@ -116,7 +132,7 @@
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
-    overflow: hidden; /* Evita desbordes del contenedor */
+    word-wrap: break-word; /* Permite que el contenido largo se ajuste */
 }
 
 .patient-avatar {
@@ -142,14 +158,14 @@
     text-align: left;
     margin: 0.75rem 0;
     width: 100%; /* Asegura que use todo el ancho disponible */
-    overflow: hidden; /* Evita desbordes */
+    word-wrap: break-word; /* Permite que el contenido largo se ajuste */
 }
 
 .info-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Cambiar a flex-start para permitir múltiples líneas */
     margin-bottom: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.8rem; /* Reducir ligeramente el tamaño de fuente */
     color: #64748b;
 }
 
@@ -158,14 +174,24 @@
     color: #3b82f6;
     margin-right: 0.5rem;
     flex-shrink: 0; /* Evita que el ícono se comprima */
+    margin-top: 0.15rem; /* Alinear con la primera línea del texto */
 }
 
 .info-row span {
+    flex: 1; /* Permite que el span ocupe el espacio disponible */
     min-width: 0; /* Permite que el span se contraiga en flexbox */
     overflow-wrap: break-word; /* Permite romper palabras largas */
     word-wrap: break-word; /* Compatibilidad con navegadores antiguos */
     word-break: break-word; /* Rompe palabras muy largas (como correos) en lugar de desbordarse */
-    max-width: 100%; /* Asegura que no exceda el ancho del contenedor */
+    line-height: 1.4; /* Mejor espaciado entre líneas */
+    white-space: normal; /* Permitir múltiples líneas */
+}
+
+/* Estilo específico para el correo electrónico */
+#patientEmail {
+    font-size: 0.75rem; /* Tamaño de fuente ligeramente más pequeño para correos largos */
+    line-height: 1.5; /* Mejor espaciado para múltiples líneas */
+    word-break: break-all; /* Permite romper en cualquier parte si es necesario */
 }
 
 .patient-actions .btn {
