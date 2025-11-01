@@ -116,6 +116,7 @@
     padding: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     text-align: center;
+    overflow: hidden; /* Evita desbordes del contenedor */
 }
 
 .patient-avatar {
@@ -140,6 +141,8 @@
 .patient-info {
     text-align: left;
     margin: 0.75rem 0;
+    width: 100%; /* Asegura que use todo el ancho disponible */
+    overflow: hidden; /* Evita desbordes */
 }
 
 .info-row {
@@ -154,6 +157,15 @@
     width: 16px;
     color: #3b82f6;
     margin-right: 0.5rem;
+    flex-shrink: 0; /* Evita que el ícono se comprima */
+}
+
+.info-row span {
+    min-width: 0; /* Permite que el span se contraiga en flexbox */
+    overflow-wrap: break-word; /* Permite romper palabras largas */
+    word-wrap: break-word; /* Compatibilidad con navegadores antiguos */
+    word-break: break-word; /* Rompe palabras muy largas (como correos) en lugar de desbordarse */
+    max-width: 100%; /* Asegura que no exceda el ancho del contenedor */
 }
 
 .patient-actions .btn {

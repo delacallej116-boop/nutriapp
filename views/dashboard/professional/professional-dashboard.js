@@ -175,7 +175,7 @@ function checkUrlParameters() {
 }
 
 // Load professional data
-function loadProfessionalData() {
+async function loadProfessionalData() {
     // Get user data from localStorage (from login)
     const userData = localStorage.getItem('user');
     
@@ -183,9 +183,14 @@ function loadProfessionalData() {
         const user = JSON.parse(userData);
         document.getElementById('professionalName').textContent = user.nombre || user.usuario;
         document.getElementById('professionalNameSidebar').textContent = user.nombre || user.usuario;
+        
+        // Load real statistics from API
+        if (user.id) {
+            await loadProfessionalStats(user.id);
+        }
     }
     
-    // Simulate loading professional data
+    // Simulate loading professional data (fallback)
     setTimeout(() => {
         updateProfessionalStats();
     }, 1000);
@@ -216,17 +221,11 @@ function updateProfessionalStats() {
     // Simulate API delay
     setTimeout(() => {
         // Update with actual data (or placeholder if no data)
+        // Note: Sidebar stats are now updated by loadProfessionalStats() with real API data
         if (totalPatientsElement) totalPatientsElement.textContent = professionalData.totalPatients;
         if (appointmentsElement) appointmentsElement.textContent = professionalData.appointmentsToday;
         if (nextAppointmentElement) nextAppointmentElement.textContent = professionalData.nextAppointment;
         if (alertsElement) alertsElement.textContent = professionalData.alerts;
-        
-        // Update sidebar stats
-        const sidebarPatientElement = document.getElementById('sidebarPatientCount');
-        const sidebarAppointmentsElement = document.getElementById('sidebarAppointmentsToday');
-        
-        if (sidebarPatientElement) sidebarPatientElement.textContent = professionalData.totalPatients;
-        if (sidebarAppointmentsElement) sidebarAppointmentsElement.textContent = professionalData.appointmentsToday;
     }, 1500);
 }
 
@@ -2608,36 +2607,69 @@ async function loadProfessionalProfile() {
 // Load professional statistics
 async function loadProfessionalStats(professionalId) {
     try {
+        // Get today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Get token from localStorage for authenticated requests
+        const token = localStorage.getItem('token');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+        
         // Fetch statistics from API
         const [patientsResponse, consultationsResponse] = await Promise.all([
-            fetch(`/api/usuarios?profesional_id=${professionalId}`),
-            fetch(`/api/consultas?profesional_id=${professionalId}&fecha=${new Date().toISOString().split('T')[0]}`)
+            fetch(`/api/usuarios/profesional/${professionalId}/pacientes?limit=1`, { headers }),
+            fetch(`/api/consultas/profesional/${professionalId}?fecha=${today}`, { headers })
         ]);
         
         let patientsCount = 0;
         let consultationsCount = 0;
         
         if (patientsResponse.ok) {
-            const patientsData = await patientsResponse.json();
-            patientsCount = Array.isArray(patientsData) ? patientsData.length : 0;
+            const patientsResult = await patientsResponse.json();
+            // La respuesta tiene estructura { success, data, pagination, stats }
+            if (patientsResult.success && patientsResult.pagination) {
+                patientsCount = patientsResult.pagination.totalItems || 0;
+            } else if (Array.isArray(patientsResult.data)) {
+                patientsCount = patientsResult.data.length;
+            } else if (Array.isArray(patientsResult)) {
+                patientsCount = patientsResult.length;
+            }
         }
         
         if (consultationsResponse.ok) {
-            const consultationsData = await consultationsResponse.json();
-            consultationsCount = Array.isArray(consultationsData) ? consultationsData.length : 0;
+            const consultationsResult = await consultationsResponse.json();
+            // La respuesta tiene estructura { success, data, total }
+            if (consultationsResult.success && Array.isArray(consultationsResult.data)) {
+                consultationsCount = consultationsResult.data.length;
+            } else if (consultationsResult.total !== undefined) {
+                consultationsCount = consultationsResult.total;
+            } else if (Array.isArray(consultationsResult)) {
+                consultationsCount = consultationsResult.length;
+            }
         }
         
         // Update statistics in modal
-        document.getElementById('statPatients').textContent = patientsCount;
-        document.getElementById('statConsultations').textContent = consultationsCount;
+        const statPatientsElement = document.getElementById('statPatients');
+        const statConsultationsElement = document.getElementById('statConsultations');
+        if (statPatientsElement) statPatientsElement.textContent = patientsCount;
+        if (statConsultationsElement) statConsultationsElement.textContent = consultationsCount;
         
         // Update sidebar statistics
-        document.getElementById('sidebarPatientCount').textContent = patientsCount;
+        const sidebarPatientElement = document.getElementById('sidebarPatientCount');
+        const sidebarAppointmentsElement = document.getElementById('sidebarAppointmentsToday');
+        if (sidebarPatientElement) sidebarPatientElement.textContent = patientsCount;
+        if (sidebarAppointmentsElement) sidebarAppointmentsElement.textContent = consultationsCount;
         
     } catch (error) {
         console.error('Error cargando estadísticas:', error);
-        document.getElementById('statPatients').textContent = '0';
-        document.getElementById('statConsultations').textContent = '0';
+        const statPatientsElement = document.getElementById('statPatients');
+        const statConsultationsElement = document.getElementById('statConsultations');
+        const sidebarPatientElement = document.getElementById('sidebarPatientCount');
+        const sidebarAppointmentsElement = document.getElementById('sidebarAppointmentsToday');
+        
+        if (statPatientsElement) statPatientsElement.textContent = '0';
+        if (statConsultationsElement) statConsultationsElement.textContent = '0';
+        if (sidebarPatientElement) sidebarPatientElement.textContent = '0';
+        if (sidebarAppointmentsElement) sidebarAppointmentsElement.textContent = '0';
     }
 }
 
