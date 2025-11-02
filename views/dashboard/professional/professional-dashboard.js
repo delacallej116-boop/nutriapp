@@ -14,6 +14,15 @@ let itemsPerPage = 10;
 let totalPages = 1;
 let totalItems = 0;
 
+// Flags para controlar si los datos ya se cargaron (evita recargas innecesarias)
+let dashboardDataLoadedFlags = {
+    pacientes: false,
+    agenda: false,
+    planes: false,
+    horarios: false,
+    dashboard: false // El dashboard principal ya está en HTML, siempre marcado como cargado
+};
+
 // Función para verificar si el caché local es válido
 function isLocalCacheValid() {
     return pacientesCache && lastCacheUpdate && (Date.now() - lastCacheUpdate) < CACHE_DURATION;
@@ -298,16 +307,16 @@ function loadSectionContent(sectionName) {
             break;
         case 'pacientes':
             console.log('Loading pacientes content');
-            loadPacientesContent();
+            loadPacientesContent(false); // Cargar solo si no se ha cargado antes
             break;
         case 'agenda':
-            loadAgendaContent();
+            loadAgendaContent(false); // Cargar solo si no se ha cargado antes
             break;
         case 'horarios':
-            loadHorariosContent();
+            loadHorariosContent(false); // Cargar solo si no se ha cargado antes
             break;
         case 'planes':
-            loadPlanesContent();
+            loadPlanesContent(false); // Cargar solo si no se ha cargado antes
             break;
         case 'asistencia':
             loadAsistenciaContent();
@@ -322,7 +331,14 @@ function loadDashboardContent() {
 }
 
 // Load pacientes content (OPTIMIZADO CON CACHÉ LOCAL)
-async function loadPacientesContent() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadPacientesContent(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.pacientes) {
+        console.log('👥 Pacientes ya cargados, omitiendo recarga');
+        return;
+    }
+    
     console.log('Loading pacientes content...');
     const section = document.getElementById('pacientes-section');
     
@@ -333,15 +349,17 @@ async function loadPacientesContent() {
     
     console.log('Section found, loading content...');
     
-    // Mostrar loading
-    section.innerHTML = `
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
+    // Mostrar loading solo si no hay contenido previo
+    if (!section.querySelector('.section-header')) {
+        section.innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-3">Cargando pacientes...</p>
             </div>
-            <p class="mt-3">Cargando pacientes...</p>
-        </div>
-    `;
+        `;
+    }
     
     try {
         // Obtener datos del usuario logueado
@@ -415,6 +433,7 @@ async function loadPacientesContent() {
             timestamp: Date.now()
         };
         lastCacheUpdate = Date.now();
+        dashboardDataLoadedFlags.pacientes = true; // Marcar como cargado
         console.log('💾 Local cache updated');
         
         // Renderizar contenido usando la función unificada
@@ -538,7 +557,7 @@ async function searchPatients() {
                 <h4 class="alert-heading">Error en la búsqueda</h4>
                 <p>${error.message}</p>
                 <hr>
-                <button class="btn btn-outline-danger" onclick="loadPacientesContent()">
+                <button class="btn btn-outline-danger" onclick="loadPacientesContent(true)">
                     <i class="fas fa-redo me-2"></i>Volver a la lista completa
                 </button>
             </div>
@@ -1005,7 +1024,7 @@ async function filterPatients() {
                 <h4 class="alert-heading">Error al aplicar filtros</h4>
                 <p>${error.message}</p>
                 <hr>
-                <button class="btn btn-outline-danger" onclick="loadPacientesContent()">
+                <button class="btn btn-outline-danger" onclick="loadPacientesContent(true)">
                     <i class="fas fa-redo me-2"></i>Volver a la lista completa
                 </button>
             </div>
@@ -1155,7 +1174,14 @@ function newConsultation(patientId) {
 
 
 // Load agenda content
-function loadAgendaContent() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+function loadAgendaContent(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.agenda) {
+        console.log('📅 Agenda ya cargada, omitiendo recarga');
+        return;
+    }
+    
     console.log('loadAgendaContent called');
     const section = document.getElementById('agenda-section');
     if (!section) {
@@ -1314,8 +1340,8 @@ function loadAgendaContent() {
     actualizarFechaActual();
     renderizarCalendario();
     
-    // Cargar datos de agenda
-    loadAgendaData();
+    // Cargar datos de agenda (primera vez, no forzar)
+    loadAgendaData(false);
 }
 
 // Setup agenda event listeners
@@ -1642,7 +1668,14 @@ function mostrarEventosCalendario(eventos) {
 }
 
 // Load agenda data from API
-async function loadAgendaData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadAgendaData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.agenda) {
+        console.log('📅 Datos de agenda ya cargados, omitiendo recarga');
+        return;
+    }
+    
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -1732,6 +1765,9 @@ async function loadAgendaData() {
         
         // Actualizar selector de pacientes
         updatePacienteSelector(pacientes.data || []);
+        
+        // Marcar como cargado
+        dashboardDataLoadedFlags.agenda = true;
 
     } catch (error) {
         console.error('Error loading agenda data:', error);
@@ -2026,7 +2062,13 @@ function saveScheduleData(button) {
 
 
 // Load planes content
-async function loadPlanesContent() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadPlanesContent(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.planes) {
+        console.log('🍎 Planes ya cargados, omitiendo recarga');
+        return;
+    }
     
     try {
         await loadPlanesStatistics();
@@ -2077,6 +2119,7 @@ async function loadPlanesStatistics() {
         if (result.success) {
             await displayPlanesStats(result.data);
             await loadPlanesSummary(profesionalId, token);
+            dashboardDataLoadedFlags.planes = true; // Marcar como cargado
         } else {
             throw new Error(result.message || 'Error fetching plans statistics');
         }
@@ -2133,7 +2176,7 @@ async function loadPlanesSummary(profesionalId, token) {
             const reloadBtn = document.getElementById('reloadPlanesBtn');
             if (reloadBtn) {
                 reloadBtn.addEventListener('click', function() {
-                    loadPlanesContent();
+                    loadPlanesContent(true); // Forzar recarga después de operación
                 });
             }
         }
@@ -3333,16 +3376,30 @@ function goToNewPatient() {
 
 
 // Load horarios content
-function loadHorariosContent() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+function loadHorariosContent(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.horarios) {
+        console.log('⏰ Horarios ya cargados, omitiendo recarga');
+        return;
+    }
+    
     const section = document.getElementById('horarios-section');
     if (!section) return;
     
     // Load horarios data and display
-    loadHorariosData();
+    loadHorariosData(forceReload);
 }
 
 // Load horarios data from API
-async function loadHorariosData() {
+// forceReload: si es true, fuerza la recarga incluso si ya se cargó antes
+async function loadHorariosData(forceReload = false) {
+    // Si no se fuerza recarga y ya se cargó antes, no hacer nada
+    if (!forceReload && dashboardDataLoadedFlags.horarios) {
+        console.log('⏰ Datos de horarios ya cargados, omitiendo recarga');
+        return;
+    }
+    
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -3372,6 +3429,9 @@ async function loadHorariosData() {
 
         // Display the data
         displayHorariosData(horarios.data || [], diasNoLaborales.data || [], stats.data || {});
+        
+        // Marcar como cargado
+        dashboardDataLoadedFlags.horarios = true;
         
         // Add event listener for config button
         setTimeout(() => {
@@ -3553,7 +3613,7 @@ function displayHorariosError(message) {
             <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
             <h5>Error al Cargar Horarios</h5>
             <p>${message}</p>
-            <button class="btn btn-danger" onclick="loadHorariosData()">
+            <button class="btn btn-danger" onclick="loadHorariosData(true)">
                 <i class="fas fa-refresh me-2"></i>Reintentar
             </button>
         </div>
@@ -4215,7 +4275,7 @@ async function guardarNuevaConsulta() {
             
             // Recargar calendario
             renderizarCalendario();
-            loadAgendaData();
+            loadAgendaData(true); // Forzar recarga después de crear consulta
         } else {
             const error = await response.json();
             showAlert(`Error al crear consulta: ${error.message}`, 'danger');
@@ -4640,7 +4700,7 @@ async function limpiarUsuarioTemporal(patientId) {
         if (result.success) {
             showAlert('Usuario temporal limpiado exitosamente', 'success');
             // Recargar lista de pacientes
-            loadPacientesContent();
+            loadPacientesContent(true); // Forzar recarga después de crear/editar paciente
         } else {
             showAlert(result.message || 'Error limpiando usuario temporal', 'error');
         }
@@ -4698,7 +4758,7 @@ async function submitCreateAccount(patientId) {
                 bsModal.hide();
             }
             // Recargar lista de pacientes
-            loadPacientesContent();
+            loadPacientesContent(true); // Forzar recarga después de crear/editar paciente
         } else {
             showAlert(result.message || 'Error creando cuenta', 'error');
         }
@@ -5307,7 +5367,7 @@ async function changePage(newPage) {
     }
     
     currentPage = newPage;
-    await loadPacientesContent();
+    await loadPacientesContent(false); // Cambio de página, usar caché si está disponible
 }
 
 // Exportar funciones de paginación
