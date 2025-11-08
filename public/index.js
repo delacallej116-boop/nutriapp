@@ -145,7 +145,7 @@ function animateOnScroll() {
     
     // Observar todas las cards y secciones
     const elementsToAnimate = document.querySelectorAll(
-        '.demo-card, .step-card, .tool-feature-card, .include-card, .faq-item, .contact-card, .screen-item, .section-title, .section-subtitle'
+        '.demo-card, .step-card, .tool-feature-card, .include-card, .faq-item, .contact-card, .screen-item, .section-title, .section-subtitle, .try-feature-item, .try-card-preview'
     );
     
     elementsToAnimate.forEach((el, index) => {
