@@ -1,0 +1,262 @@
+
+body{
+    background-color: #e0f7fa;
+}
+.hero {
+  background-image: url('fondo.jpg'); /* Imagen de fondo */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.bg-overlay {
+  background-color: rgba(0, 0, 0, 0.6); /* navbar con fondo oscuro semitransparente */
+}
+
+.banner {
+  min-height: 80vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Capa oscura sobre la imagen */
+  backdrop-filter: brightness(0.7);
+}
+
+.banner .container {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+@media (min-width: 768px) {
+  .banner .container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.navbar-nav .nav-link {
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #004d50; 
+  transition: width 0.3s ease-in-out;
+}
+
+.navbar-nav .nav-link:hover::after,
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+  
+}
+
+.subtitulo-oscuro {
+  color: rgba(255, 255, 255, 0.85); /* blanco más tenue */
+}
+
+
+h1, h2 {
+  color: white;
+}
+
+.btn-instagram-link {
+  background-color: #006064;      
+  color: #ffffff;                
+  font-weight: 500;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 0;               
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-instagram-link:hover {
+  background-color: #004d50;      
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.descanso-section {
+  background-color: #e0f7fa; 
+  color: #006064; 
+  padding: 4rem 1rem;
+}
+
+.descanso-section blockquote {
+  font-family: 'Poppins', sans-serif; 
+  font-size: 1.75rem;
+  font-style: italic;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  border-left: 5px solid #006064; 
+  padding-left: 1rem;
+}
+
+@media (max-width: 576px) {
+  .descanso-section blockquote {
+    font-size: 1.3rem;
+    padding-left: 0.75rem;
+  }
+}
+
+
+.sobre-mi-bg {
+  background-color: #e0f7fa;
+}
+
+h2{
+     font-weight: 600;
+  color: #006064;
+}
+
+.sobre-mi h2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #006064;
+}
+
+
+.sobre-mi p {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+
+.img-sabrina {
+  width: 100%;
+  max-width: 500px; 
+  height: auto;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+  float: right;
+}
+
+.card-img-top {
+  height: 250px;             
+  object-fit: cover;          
+  width: 100%;               
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+
+#consultas{
+   
+     background-color: #e0f7fa
+}
+
+.testimonios-section {
+  background: #e0f7fa;
+}
+
+.testimonio-card {
+  max-width: 700px;
+  min-height: 240px;
+  padding: 2rem;
+  border: none;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.testimonio-card p {
+  color: #333;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.testimonio-card .autor {
+  color: #555;
+}
+
+.custom-arrow {
+  font-size: 2rem;
+  color: #333;
+  background-color: #ffffffcc;
+  border-radius: 50%;
+  padding: 0.3rem 0.75rem;
+  transition: background 0.3s ease;
+}
+
+.custom-arrow:hover {
+  background-color: #ddd;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: auto;
+  padding: 0 1rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .testimonio-card {
+    padding: 1.5rem;
+    min-height: 280px;
+  }
+
+  .custom-arrow {
+    font-size: 1.5rem;
+    padding: 0.25rem 0.6rem;
+  }
+}
+
+.carousel-caption.custom-caption {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 1rem;
+  border-radius: 10px;
+  max-width: 90%;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .carousel-caption.custom-caption {
+    font-size: 1.1rem;
+    max-width: 600px;
+    padding: 1.5rem;
+  }
+}
+
+.accion-section {
+  background-image: url('final.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Efecto parallax */
+  position: relative;
+  min-height: 70vh;
+}
+
+.accion-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5); /* Oscurece para mayor contraste */
+  z-index: 1;
+}
+
+.accion-section .container {
+  position: relative;
+  z-index: 2;
+}
+
+footer{
+    padding-top: 50px;
+    background-color: #004d50;
+    color: white;
+}

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ale Rosas - Nutrióloga & Coach. Entrena, come y vive sin extremos. Especialista en Deporte de Alto Rendimiento.">
+    <title>Ale Rosas - Nutrióloga & Coach</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="apple-touch-icon" href="favicon.svg">
+    <meta name="theme-color" content="#E67E22">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">Ale Rosas</div>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#sobre-mi">Sobre Mí</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <!-- 
+    INSTRUCCIONES PARA AGREGAR IMÁGENES DE FONDO:
+    
+    1. HERO (Sección principal):
+       - Nombre del archivo: 'hero-background.jpg'
+       - Ubicación: Misma carpeta que index.html
+       - Recomendación: Imagen de alguien haciendo ejercicios (gimnasio, entrenamiento, deporte)
+       - Tamaño recomendado: 1920x1080px o mayor
+       - Formato: JPG, PNG o WebP
+       
+    2. METODOLOGÍA:
+       - Nombre del archivo: 'methodology-background.jpg'
+       - Ubicación: Misma carpeta que index.html
+       - Recomendación: Imagen de entrenamiento/deporte/coaching
+       - Tamaño recomendado: 1920x1080px o mayor
+       - Formato: JPG, PNG o WebP
+       
+    Las imágenes se ajustarán automáticamente y tendrán overlays para mantener la legibilidad del texto.
+    Si no agregas las imágenes, se mostrará un gradiente de color como respaldo.
+    -->
+    <section id="inicio" class="hero">
+        <div class="hero-background"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span>Nutrióloga & Coach</span>
+                </div>
+                <h1 class="hero-title">Ale Rosas</h1>
+                <p class="hero-subtitle" id="typewriter"></p>
+                <p class="hero-credentials">MSc activo en Deporte de Alto Rendimiento</p>
+                <div class="hero-buttons d-flex flex-wrap gap-3 justify-content-center">
+                    <a href="#contacto" class="btn btn-primary">Comenzar Ahora</a>
+                    <a href="#servicios" class="btn btn-secondary">Ver Servicios</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="sobre-mi" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Sobre Mí</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-wrapper row g-5 align-items-center">
+                    <div class="about-image col-lg-4 col-md-6">
+                        <div class="image-placeholder">
+                            <!-- Reemplazar con: <img src="ruta/a/foto-ale.jpg" alt="Ale Rosas - Nutrióloga & Coach"> -->
+                            <span class="image-icon">AR</span>
+                            <p class="image-text">Foto de Ale</p>
+                        </div>
+                    </div>
+                    <div class="about-text col-lg-8 col-md-6">
+                        <p class="lead">Soy Ale Rosas, nutrióloga y coach especializada en deporte de alto rendimiento. Mi enfoque combina nutrición científica con coaching personalizado para ayudarte a alcanzar tus objetivos sin extremos.</p>
+                        <p>Con una Maestría activa en Deporte de Alto Rendimiento, trabajo con atletas y personas activas que buscan optimizar su rendimiento, mejorar su composición corporal y desarrollar una relación saludable con la comida y el entrenamiento.</p>
+                        <p>Mi filosofía se basa en el equilibrio: puedes entrenar fuerte, comer bien y disfrutar de la vida sin restricciones extremas ni dietas imposibles. Te ayudo a encontrar tu balance único entre rendimiento, salud y bienestar.</p>
+                        <div class="credentials row g-4">
+                            <div class="credential-item col-md-4">
+                                <h4>MSc en Deporte de Alto Rendimiento</h4>
+                                <p>Especialización activa</p>
+                            </div>
+                            <div class="credential-item col-md-4">
+                                <h4>Nutrióloga Certificada</h4>
+                                <p>Licenciatura en Nutriología</p>
+                            </div>
+                            <div class="credential-item col-md-4">
+                                <h4>Coach Personal</h4>
+                                <p>Entrenamiento y nutrición integrados</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="servicios" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Servicios</h2>
+                <div class="title-underline"></div>
+                <p class="section-subtitle">Programas integrales de nutrición y coaching para alcanzar tus objetivos</p>
+            </div>
+            <div class="services-grid row g-4">
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Coaching Nutricional</h3>
+                    <p>Plan nutricional personalizado adaptado a tus objetivos deportivos, estilo de vida y preferencias alimentarias.</p>
+                </div>
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Nutrición Deportiva</h3>
+                    <p>Optimización nutricional para mejorar rendimiento, recuperación y composición corporal en deportistas.</p>
+                </div>
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Coaching Personal</h3>
+                    <p>Acompañamiento integral para desarrollar hábitos sostenibles que combinen entrenamiento, nutrición y bienestar mental.</p>
+                </div>
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Programas Personalizados</h3>
+                    <p>Planes completos que integran nutrición, entrenamiento y coaching adaptados a tu nivel y objetivos específicos.</p>
+                </div>
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Seguimiento Continuo</h3>
+                    <p>Acompañamiento constante con ajustes periódicos para mantenerte en el camino hacia tus objetivos.</p>
+                </div>
+                <div class="service-card col-lg-4 col-md-6">
+                    <div class="service-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Consultas Online</h3>
+                    <p>Sesiones virtuales desde cualquier lugar, adaptadas a tu zona horaria y disponibilidad.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Methodology Section -->
+    <!-- Esta sección usa 'methodology-background.jpg' como imagen de fondo -->
+    <!-- Ver instrucciones en la sección Hero para más detalles -->
+    <section id="metodologia" class="methodology">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Mi Metodología</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="methodology-content">
+                <div class="methodology-text">
+                    <h3>Entrena, come y vive sin extremos</h3>
+                    <p>Mi enfoque se basa en la ciencia aplicada al mundo real. No creo en las dietas extremas, los entrenamientos agotadores ni los enfoques que no puedes sostener a largo plazo.</p>
+                    <p>Como nutrióloga y coach, trabajo contigo para crear un plan que se adapte a tu vida real: tus horarios, tus gustos, tus objetivos y tu nivel de actividad. La clave está en encontrar el equilibrio perfecto entre rendimiento y sostenibilidad.</p>
+                    <p>Con mi formación en Deporte de Alto Rendimiento, aplico los mismos principios científicos que uso con atletas de élite, pero adaptados a tu realidad. Porque todos merecemos un enfoque profesional, sin importar tu nivel de experiencia.</p>
+                    <div class="methodology-principles row g-4">
+                        <div class="principle col-lg-3 col-md-6">
+                            <h4>Ciencia Aplicada</h4>
+                            <p>Evidencia científica adaptada a tu realidad</p>
+                        </div>
+                        <div class="principle col-lg-3 col-md-6">
+                            <h4>Equilibrio Real</h4>
+                            <p>Sin extremos, sin restricciones imposibles</p>
+                        </div>
+                        <div class="principle col-lg-3 col-md-6">
+                            <h4>Coaching Integral</h4>
+                            <p>Nutrición, entrenamiento y mentalidad</p>
+                        </div>
+                        <div class="principle col-lg-3 col-md-6">
+                            <h4>Sostenibilidad</h4>
+                            <p>Hábitos que puedes mantener de por vida</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contacto" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contacto</h2>
+                <div class="title-underline"></div>
+                <p class="section-subtitle">¿Listo para transformar tu relación con la nutrición y el entrenamiento?</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-cards row g-4 mb-5">
+                    <div class="contact-card col-lg-4 col-md-6">
+                        <div class="contact-card-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3>Ubicación</h3>
+                        <p>Consultas online disponibles</p>
+                        <span class="contact-card-subtitle">Desde cualquier lugar del mundo</span>
+                    </div>
+                    <div class="contact-card col-lg-4 col-md-6">
+                        <div class="contact-card-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3>Disponibilidad</h3>
+                        <p>Horarios flexibles</p>
+                        <span class="contact-card-subtitle">Adaptado a tu zona horaria</span>
+                    </div>
+                    <div class="contact-card featured col-lg-4 col-md-6">
+                        <div class="contact-card-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3>Instagram</h3>
+                        <p>@alerosascota</p>
+                        <a href="https://instagram.com/alerosascota" target="_blank" class="contact-card-link">
+                            Enviar mensaje directo
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-cta-wrapper">
+                    <div class="contact-cta">
+                        <div class="cta-content">
+                            <h3>Comienza tu transformación</h3>
+                            <p>Únete a cientos de personas que han transformado su relación con la nutrición y el entrenamiento. Envíame un mensaje directo en Instagram y coordinamos tu primera sesión.</p>
+                        </div>
+                        <a href="https://instagram.com/alerosascota" target="_blank" class="btn btn-primary btn-large btn-cta">
+                            <span>Contactar ahora</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content row g-4">
+                <div class="footer-brand col-lg-4 col-md-6">
+                    <h3>Ale Rosas</h3>
+                    <p>Nutrióloga & Coach</p>
+                    <p class="footer-tagline">Entrena, come y vive sin extremos</p>
+                </div>
+                <div class="footer-links col-lg-4 col-md-6">
+                    <h4>Navegación</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#sobre-mi">Sobre Mí</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#metodologia">Metodología</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social col-lg-4 col-md-12">
+                    <h4>Sígueme</h4>
+                    <a href="https://instagram.com/alerosascota" target="_blank" class="social-link">
+                        Instagram
+                    </a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ale Rosas. Todos los derechos reservados.</p>
+                <p class="footer-location">Consultas online disponibles</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
+</body>
+</html>

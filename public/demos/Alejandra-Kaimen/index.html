@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saber Nutrición - Alejandra Kaimen | Nutrición Clínica y Deportiva</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Hero Background Wrapper (Navbar + Hero) -->
+    <div class="hero-wrapper">
+        <!-- Navbar Bootstrap -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="#home">
+                    <span class="logo-icon">🍊</span>
+                    <span class="logo-text ms-2">Saber <span class="logo-accent">Nutrición</span></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#home">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">Sobre mí</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#services">Servicios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#testimonials">Testimonios</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contacto</a>
+                        </li>
+                        <li class="nav-item ms-3">
+                            <button class="btn btn-primary btn-sm" onclick="scrollToContact()">Contactar</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-overlay"></div>
+            <div class="container position-relative">
+                <div class="row align-items-center min-vh-100">
+                    <div class="col-lg-8">
+                        <h1 class="hero-title mb-4">
+                            <span class="gradient-text">Transforma tu relación</span><br>
+                            con la alimentación
+                        </h1>
+                        <p class="hero-subtitle mb-4">
+                            <span id="typewriter-text"></span>
+                        </p>
+                        <div class="hero-cta d-flex flex-wrap gap-3">
+                            <button class="btn btn-primary btn-lg" onclick="scrollToContact()">Agendar consulta</button>
+                            <button class="btn btn-outline-light btn-lg" onclick="scrollToServices()">Conocer más</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Motivational Quote 1 -->
+    <section class="quote-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <p class="quote-text text-center">"La salud no es solo la ausencia de enfermedad, es un estado de bienestar completo que comienza con la alimentación."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about position-relative" id="about">
+        <!-- Imagen del profesional como fondo - Se puede cambiar en CSS .about-background -->
+        <div class="about-background"></div>
+        <div class="about-overlay"></div>
+        <div class="container position-relative">
+            <div class="row min-vh-75 align-items-center py-5">
+                <div class="col-lg-6">
+                    <div class="about-text">
+                        <div class="about-header mb-4">
+                            <span class="section-label">Sobre mí</span>
+                            <h2 class="section-title mb-3">Alejandra Kaimen</h2>
+                            <div class="about-divider"></div>
+                        </div>
+                        <p class="about-description">
+                            Especialista en nutrición clínica y deportiva con enfoque integral. 
+                            Combinando ciencia y experiencia para ayudarte a alcanzar tus objetivos 
+                            de salud de manera sostenible y personalizada.
+                        </p>
+                        <div class="about-features mb-4">
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Nutrición Clínica</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Nutrición Deportiva</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <span>Antropometría ISAK II</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Matrícula como clip en esquina -->
+        <div class="matricula-clip">
+            <div class="matricula-content">
+                <span class="matricula-label">MP</span>
+                <span class="matricula-number">6063</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="services py-5" id="services">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <span class="section-label">Servicios</span>
+                <h2 class="section-title">Atención integral</h2>
+                <p class="section-subtitle">Servicios personalizados para tu bienestar nutricional</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-clipboard-data service-icon"></i>
+                        </div>
+                        <h3>Antropometría ISAK II</h3>
+                        <p>Evaluación precisa de tu composición corporal con metodología internacional</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-file-earmark-text service-icon"></i>
+                        </div>
+                        <h3>Planes nutricionales</h3>
+                        <p>Diseño personalizado según tus objetivos y estilo de vida</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-trophy service-icon"></i>
+                        </div>
+                        <h3>Nutrición deportiva</h3>
+                        <p>Optimización del rendimiento y recuperación para atletas</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-flower1 service-icon"></i>
+                        </div>
+                        <h3>Alimentación basada en plantas</h3>
+                        <p>Guía especializada para una alimentación vegetal equilibrada</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-lightbulb service-icon"></i>
+                        </div>
+                        <h3>Educación alimentaria</h3>
+                        <p>Herramientas para tomar decisiones nutricionales informadas</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="service-card h-100">
+                        <div class="service-icon-wrapper">
+                            <i class="bi bi-star service-icon"></i>
+                        </div>
+                        <h3>Cambio de hábitos</h3>
+                        <p>Acompañamiento para transformaciones sostenibles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Motivational Quote -->
+    <section class="quote-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <p class="quote-text text-center">"El mejor momento para cambiar tus hábitos alimentarios fue hace un año. El segundo mejor momento es ahora."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Carousel Section -->
+    <section class="testimonials py-5" id="testimonials">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <span class="section-label">Testimonios</span>
+                <h2 class="section-title">Lo que dicen nuestros pacientes</h2>
+            </div>
+            
+            <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Alejandra me ayudó a encontrar el equilibrio perfecto entre nutrición y vida diaria. Sus planes son realistas y fáciles de seguir. ¡He perdido 8 kilos en 3 meses de forma saludable!"
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">M</div>
+                                        <div class="author-info">
+                                            <div class="author-name">María González</div>
+                                            <div class="author-role">Paciente desde 2023</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 d-none d-md-block">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Como deportista, necesitaba optimizar mi rendimiento. Con el plan de Alejandra mejoré mis tiempos y mi recuperación. Profesional y muy comprometida con sus pacientes."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">C</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Carlos Martínez</div>
+                                            <div class="author-role">Triatleta</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Después de años intentando cambiar mis hábitos, finalmente encontré la guía adecuada. Alejandra me enseñó que la nutrición no es restricción, sino conocimiento y balance."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">L</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Laura Fernández</div>
+                                            <div class="author-role">Paciente desde 2024</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 d-none d-md-block">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Excelente atención personalizada. Alejandra se toma el tiempo de entender tus necesidades y objetivos. Los resultados son increíbles cuando sigues sus recomendaciones."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">A</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Ana Rodríguez</div>
+                                            <div class="author-role">Paciente desde 2023</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="carousel-item">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "El enfoque basado en plantas de Alejandra cambió completamente mi perspectiva sobre la alimentación. Me siento más energético y saludable que nunca."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">D</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Diego Sánchez</div>
+                                            <div class="author-role">Paciente desde 2024</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 d-none d-md-block">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Profesional muy capacitada y atenta. Sus planes nutricionales son fáciles de seguir y se adaptan perfectamente a mi estilo de vida. ¡100% recomendada!"
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">S</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Sofía López</div>
+                                            <div class="author-role">Paciente desde 2023</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="carousel-item">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-12 col-md-6">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "La antropometría ISAK II fue increíblemente precisa. Alejandra me ayudó a entender mi composición corporal y a trabajar de manera más efectiva hacia mis objetivos."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">J</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Juan Pérez</div>
+                                            <div class="author-role">Deportista</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 d-none d-md-block">
+                                <div class="testimonial-card h-100">
+                                    <div class="testimonial-rating">
+                                        <span>⭐⭐⭐⭐⭐</span>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Gracias a Alejandra aprendí a alimentarme correctamente sin renunciar a lo que me gusta. Sus consejos son prácticos y los resultados son visibles desde el primer mes."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <div class="author-avatar">E</div>
+                                        <div class="author-info">
+                                            <div class="author-name">Elena Torres</div>
+                                            <div class="author-role">Paciente desde 2024</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section py-5" id="contact">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="cta-title mb-3">¿Listo para comenzar?</h2>
+                    <p class="cta-subtitle mb-4">Agenda tu consulta y da el primer paso hacia una vida más saludable</p>
+                    <div class="cta-buttons d-flex flex-wrap justify-content-center gap-3">
+                        <button class="btn btn-primary btn-lg" onclick="openWhatsApp()">
+                            <i class="bi bi-whatsapp me-2"></i>Contactar por WhatsApp
+                        </button>
+                        <button class="btn btn-outline-light btn-lg" onclick="openEmail()">
+                            <i class="bi bi-envelope me-2"></i>Enviar email
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <div class="footer-brand">
+                        <div class="logo mb-2">
+                            <span class="logo-icon">🍊</span>
+                            <span class="logo-text ms-2">Saber <span class="logo-accent">Nutrición</span></span>
+                        </div>
+                        <p class="mb-1">Nutrición Clínica y Deportiva</p>
+                        <p class="mb-0">&copy; 2024 Saber Nutrición</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0 text-center">
+                    <div class="footer-social">
+                        <h5 class="footer-social-title mb-3">Seguime</h5>
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/sabernutricion" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram">
+                                <i class="bi bi-instagram"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sabernutricion" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/in/sabernutricion" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a href="#" onclick="openWhatsApp(); return false;" class="social-link" aria-label="WhatsApp">
+                                <i class="bi bi-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="footer-info">
+                        <p class="mb-1">Alejandra Kaimen</p>
+                        <p class="mb-1">MP 6063</p>
+                        <p class="mb-0">Certificada</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="#" class="whatsapp-float" onclick="openWhatsApp(); return false;" aria-label="Contactar por WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="index.js"></script>
+</body>
+</html>

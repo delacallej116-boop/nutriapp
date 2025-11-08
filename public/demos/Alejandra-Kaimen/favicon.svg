@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b35;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c5a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1b5e20;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2e7d32;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#ffffff"/>
+  
+  <!-- Orange -->
+  <circle cx="50" cy="50" r="32" fill="url(#orangeGrad)"/>
+  <path d="M 40 50 Q 50 38 60 50 Q 50 62 40 50" fill="#ff8c5a"/>
+  <path d="M 42 48 Q 50 40 58 48 Q 50 58 42 48" fill="#ffffff" opacity="0.3"/>
+  
+  <!-- Green leaf -->
+  <ellipse cx="68" cy="32" rx="7" ry="11" fill="url(#greenGrad)" transform="rotate(-35 68 32)"/>
+  <ellipse cx="72" cy="30" rx="5" ry="9" fill="#2e7d32"/>
+  <path d="M 65 28 Q 68 25 71 28" stroke="#0d3311" stroke-width="0.5" fill="none"/>
+</svg>

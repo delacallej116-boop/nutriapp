@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Fondo circular con color primario naranja -->
+  <circle cx="50" cy="50" r="48" fill="#E67E22" stroke="#D35400" stroke-width="2"/>
+  
+  <!-- Diseño de pesa/entrenamiento representando coaching deportivo -->
+  <rect x="35" y="40" width="30" height="8" rx="4" fill="#FFFBF7"/>
+  <circle cx="25" cy="44" r="8" fill="#FFFBF7"/>
+  <circle cx="75" cy="44" r="8" fill="#FFFBF7"/>
+  
+  <!-- Líneas de energía -->
+  <path d="M50 20 L50 35 M50 65 L50 80" stroke="#FFFBF7" stroke-width="3" stroke-linecap="round"/>
+  <path d="M30 30 L40 40 M70 30 L60 40" stroke="#FFFBF7" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M30 70 L40 60 M70 70 L60 60" stroke="#FFFBF7" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+
