@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // TODO: Replace with actual email address
             const email = 'contacto@vipnutricion.com'; // Replace with actual email
             const subject = encodeURIComponent('Solicitud de Plan Alimentario');
-            const body = encodeURIComponent('Hola Victoria,\n\nMe interesa solicitar un plan alimentario personalizado.\n\nGracias.');
+            const body = encodeURIComponent('Hola,\n\nMe interesa solicitar un plan alimentario personalizado.\n\nGracias.');
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         });
     }
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tiktokLink.addEventListener('click', function(e) {
             e.preventDefault();
             // TODO: Replace with actual TikTok URL
-            const tiktokUrl = 'https://www.tiktok.com/@vip.nutricion'; // Replace with actual URL
+            const tiktokUrl = '#'; // Replace with actual URL
             window.open(tiktokUrl, '_blank');
         });
     }

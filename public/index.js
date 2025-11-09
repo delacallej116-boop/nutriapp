@@ -6,46 +6,46 @@
 
 const demos = [
     {
-        name: "Ale Rosas",
-        image: null, // Ejemplo: 'images/demos/ale-rosas.jpg'
+        name: "María González",
+        image: null, // Ejemplo: 'images/demos/maria-gonzalez.jpg'
         gradient: "linear-gradient(135deg, #7dd3c0 0%, #5fb8a5 100%)",
         tags: ["Diseño natural 🌿", "Colores cálidos 🍑"],
-        url: "demos/Ale-Rosas/index.html"
+        url: "demos/Maria-Gonzalez/index.html"
     },
     {
-        name: "Alejandra Kaimen",
-        image: null, // Ejemplo: 'images/demos/alejandra-kaimen.jpg'
+        name: "Laura Martínez",
+        image: null, // Ejemplo: 'images/demos/laura-martinez.jpg'
         gradient: "linear-gradient(135deg, #f5a3b7 0%, #e88ba3 100%)",
         tags: ["Estilo moderno 🩺", "Minimalista ✨"],
-        url: "demos/Alejandra-Kaimen/index.html"
+        url: "demos/Laura-Martinez/index.html"
     },
     {
-        name: "Laura García",
-        image: null, // Ejemplo: 'images/demos/laura-garcia.jpg'
+        name: "Ana Rodríguez",
+        image: null, // Ejemplo: 'images/demos/ana-rodriguez.jpg'
         gradient: "linear-gradient(135deg, #ffd89b 0%, #ffc870 100%)",
         tags: ["Diseño natural 🌿", "Colores cálidos 🍑"],
-        url: "demos/Laura-Garcia/index.html"
+        url: "demos/Ana-Rodriguez/index.html"
     },
     {
-        name: "Mili Castiñeira",
-        image: null, // Ejemplo: 'images/demos/mili-castineira.jpg'
+        name: "Camila Fernández",
+        image: null, // Ejemplo: 'images/demos/camila-fernandez.jpg'
         gradient: "linear-gradient(135deg, #7dd3c0 0%, #5fb8a5 100%)",
         tags: ["Estilo moderno 🩺", "Profesional 💼"],
-        url: "demos/Mili-Castineira/index.html"
+        url: "demos/Camila-Fernandez/index.html"
     },
     {
-        name: "Sabrina Montero",
-        image: null, // Ejemplo: 'images/demos/sabrina-montero.jpg'
+        name: "Valentina Torres",
+        image: null, // Ejemplo: 'images/demos/valentina-torres.jpg'
         gradient: "linear-gradient(135deg, #f5a3b7 0%, #e88ba3 100%)",
         tags: ["Minimalista ✨", "Colores cálidos 🍑"],
-        url: "demos/Sabrina-Montero/index.html"
+        url: "demos/Valentina-Torres/index.html"
     },
     {
-        name: "Valentina Fresco",
-        image: null, // Ejemplo: 'images/demos/valentina-fresco.jpg'
+        name: "Isabella Romero",
+        image: null, // Ejemplo: 'images/demos/isabella-romero.jpg'
         gradient: "linear-gradient(135deg, #ffd89b 0%, #ffc870 100%)",
         tags: ["Diseño natural 🌿", "Estilo moderno 🩺"],
-        url: "demos/Valentina-Fresco/index.html"
+        url: "demos/Isabella-Romero/index.html"
     }
 ];
 
@@ -211,6 +211,9 @@ function setupScreenImages() {
         const placeholder = document.getElementById(placeholderId);
         
         if (image && placeholder) {
+            // Obtener src de data-src si existe, sino usar el src del array
+            const imageSrc = image.getAttribute('data-src') || src;
+            
             const img = new Image();
             img.onload = function() {
                 image.src = img.src;
@@ -219,11 +222,22 @@ function setupScreenImages() {
             };
             
             img.onerror = function() {
+                // Silenciar el error - simplemente mostrar el placeholder
                 image.classList.remove('loaded');
                 placeholder.classList.remove('hidden');
+                // No establecer src para evitar 404 en la consola
+                if (image.src) {
+                    image.removeAttribute('src');
+                }
             };
             
-            img.src = src;
+            // Solo intentar cargar si la imagen tiene data-src o src válido
+            if (imageSrc) {
+                img.src = imageSrc;
+            } else {
+                // Si no hay src, mostrar placeholder directamente
+                placeholder.classList.remove('hidden');
+            }
         }
     });
 }

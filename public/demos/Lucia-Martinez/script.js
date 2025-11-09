@@ -2,16 +2,16 @@
 function setupWhatsAppButton() {
     const whatsappBtn = document.getElementById('whatsappBtn');
     
-    // ⚠️ IMPORTANTE: Reemplaza con el número de WhatsApp de Sol Durand
+    // ⚠️ IMPORTANTE: Reemplaza con el número de WhatsApp
     // Formato: código país + número sin + ni espacios
     // Ejemplos:
     // - Argentina: 5491123456789
     // - México: 5215512345678
     // - Colombia: 573001234567
-    const phoneNumber = 'TU_NUMERO_AQUI'; // 🔴 CAMBIAR ESTO con el número de Sol Durand
+    const phoneNumber = 'TU_NUMERO_AQUI'; // 🔴 CAMBIAR ESTO con el número de WhatsApp
     
     // Mensaje predefinido
-    const message = encodeURIComponent('Hola Sol 👋 vi tu página web y me gustaría agendar una consulta.');
+    const message = encodeURIComponent('Hola 👋 vi tu página web y me gustaría agendar una consulta.');
     
     // URL de WhatsApp
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
