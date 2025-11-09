@@ -11,13 +11,21 @@ class PacienteService {
     async getPacientesByProfesional(profesionalId, options = {}) {
         const { search, status, sortBy, forceRefresh = false, page = 1, limit = 10 } = options;
         
+        // Normalizar el status: trim y convertir a string
+        const normalizedStatus = status ? String(status).trim() : '';
+        
+        console.log('🔍 PacienteService - Filtros recibidos:', { search, status, normalizedStatus, sortBy, page, limit });
+        console.log('🔍 PacienteService - Status original:', status, 'Type:', typeof status);
+        console.log('🔍 PacienteService - Status normalizado:', normalizedStatus, 'Type:', typeof normalizedStatus);
+        
         // Crear clave de caché única
-        const cacheKey = `${this.cachePrefix}_${profesionalId}_${search || 'all'}_${status || 'all'}_${sortBy || 'name'}`;
+        const cacheKey = `${this.cachePrefix}_${profesionalId}_${search || 'all'}_${normalizedStatus || 'all'}_${sortBy || 'name'}`;
         
         // Intentar obtener del caché primero (si no es refresh forzado)
         if (!forceRefresh) {
             const cached = cacheService.get(cacheKey);
             if (cached) {
+                console.log('💾 Resultado obtenido del caché para:', cacheKey);
                 return cached;
             }
         }
@@ -55,12 +63,22 @@ class PacienteService {
             params.push(searchPattern, searchPattern, searchPattern, searchPattern);
         }
         
-        if (status) {
-            if (status === 'activo') {
-                query += ` AND u.activo = 1`;
-            } else if (status === 'inactivo') {
-                query += ` AND u.activo = 0`;
-            }
+        // Filtrar por estado: por defecto solo activos, a menos que se especifique explícitamente
+        // Usar normalizedStatus en lugar de status
+        if (normalizedStatus === 'activo') {
+            query += ` AND u.activo = 1`;
+            console.log('✅ Filtro aplicado: solo pacientes activos');
+        } else if (normalizedStatus === 'inactivo') {
+            query += ` AND u.activo = 0`;
+            console.log('✅ Filtro aplicado: solo pacientes inactivos');
+        } else if (normalizedStatus === '' || normalizedStatus === null || normalizedStatus === undefined) {
+            // Si status está vacío, no filtrar por estado (mostrar todos)
+            // No agregar ningún filtro
+            console.log('✅ Sin filtro de estado: mostrando todos los pacientes');
+        } else {
+            // Por defecto (si no se especifica o es otro valor), solo mostrar pacientes activos
+            query += ` AND u.activo = 1`;
+            console.log('✅ Filtro por defecto aplicado: solo pacientes activos (status recibido:', normalizedStatus, ')');
         }
         
         query += ` GROUP BY u.id`;
@@ -84,6 +102,7 @@ class PacienteService {
         }
         
         // Obtener total de registros para paginación (consulta simplificada)
+        // Usar normalizedStatus en lugar de status
         const countQuery = `
             SELECT COUNT(*) as total
             FROM usuarios u
@@ -94,6 +113,7 @@ class PacienteService {
                 u.email LIKE ? OR 
                 u.telefono LIKE ?
             )` : ''}
+            ${normalizedStatus === 'activo' ? 'AND u.activo = 1' : normalizedStatus === 'inactivo' ? 'AND u.activo = 0' : normalizedStatus === '' || normalizedStatus === null || normalizedStatus === undefined ? '' : 'AND u.activo = 1'}
         `;
         
         const countResult = await Usuario.executeQuery(countQuery, params);

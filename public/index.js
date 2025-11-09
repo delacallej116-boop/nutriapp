@@ -244,17 +244,23 @@ function setupScreenImages() {
 
 // Función para manejar el navbar
 function setupNavbar() {
-    const navbar = document.querySelector('.navbar');
+    const navbar = document.getElementById('mainNavbar');
     const navLinks = document.querySelectorAll('.nav-link');
     
     // Efecto al hacer scroll
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
+    function handleScroll() {
+        if (window.scrollY > 100) {
             navbar.classList.add('scrolled');
         } else {
             navbar.classList.remove('scrolled');
         }
-    });
+    }
+    
+    // Ejecutar al cargar para verificar posición inicial
+    handleScroll();
+    
+    // Escuchar scroll
+    window.addEventListener('scroll', handleScroll);
     
     // Activar link según la sección visible
     const sections = document.querySelectorAll('section[id]');

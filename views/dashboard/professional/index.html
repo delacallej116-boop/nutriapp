@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="professional-dashboard.css?v=3">
     <link rel="stylesheet" href="home/home.css?v=1">
 </head>
@@ -953,6 +952,39 @@
                             <i class="fas fa-sign-out-alt me-2"></i>Sí, cerrar sesión
                         </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmar Eliminación de Paciente -->
+    <div class="modal fade" id="confirmDeletePatientModal" tabindex="-1" aria-labelledby="confirmDeletePatientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="confirmDeletePatientModalLabel">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>¿Estás seguro de que deseas eliminar a este paciente?</strong>
+                    </div>
+                    <p class="mb-2"><strong>Paciente:</strong> <span id="deletePatientName"></span></p>
+                    <p class="text-muted small mb-0">
+                        Esta acción marcará al paciente como inactivo y ocultará sus datos del sistema.
+                        Los datos no se eliminarán permanentemente y podrán ser recuperados si es necesario.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="confirmDeletePatientBtn">
+                        <i class="fas fa-trash me-2"></i>Eliminar Paciente
+                    </button>
                 </div>
             </div>
         </div>

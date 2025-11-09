@@ -43,13 +43,16 @@ function filterPacientesLocally(pacientes, searchTerm, status, sortBy) {
         );
     }
     
-    // Aplicar filtro de estado
+    // Aplicar filtro de estado: por defecto solo activos, a menos que se especifique explícitamente
     if (status) {
         if (status === 'activo') {
             filtered = filtered.filter(p => p.activo);
         } else if (status === 'inactivo') {
             filtered = filtered.filter(p => !p.activo);
         }
+    } else {
+        // Por defecto, solo mostrar pacientes activos
+        filtered = filtered.filter(p => p.activo);
     }
     
     // Aplicar ordenamiento
@@ -88,7 +91,7 @@ async function searchPacientesOptimized(searchTerm, status, sortBy) {
         // Actualizar variable global
         pacientesData = filtered;
         
-        renderSearchResults(filtered, stats, '');
+        renderSearchResults(filtered, stats, '', null, status);
         return;
     }
     
@@ -107,7 +110,7 @@ async function searchPacientesOptimized(searchTerm, status, sortBy) {
         // Actualizar variable global
         pacientesData = filtered;
         
-        renderSearchResults(filtered, stats, searchTerm);
+        renderSearchResults(filtered, stats, searchTerm, null, status);
         return;
     }
     
@@ -119,7 +122,7 @@ async function searchPacientesOptimized(searchTerm, status, sortBy) {
 // Función optimizada para búsqueda de pacientes
 async function searchPatientsOptimized() {
     const searchTerm = document.getElementById('patientSearch')?.value?.trim() || '';
-    const status = document.getElementById('statusFilter')?.value || '';
+    const status = document.getElementById('statusFilter')?.value || 'activo';
     const sortBy = document.getElementById('sortBy')?.value || 'name';
     
     console.log('🔍 Optimized search triggered:', { searchTerm, status, sortBy });
@@ -131,6 +134,40 @@ async function searchPatientsOptimized() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize dashboard
     initProfessionalDashboard();
+    
+    // Event listener para el botón de confirmar eliminación de paciente
+    const confirmDeletePatientBtn = document.getElementById('confirmDeletePatientBtn');
+    if (confirmDeletePatientBtn) {
+        confirmDeletePatientBtn.addEventListener('click', confirmDeletePatient);
+    }
+    
+    // Limpiar estado y backdrop cuando se cierra el modal
+    const deletePatientModal = document.getElementById('confirmDeletePatientModal');
+    if (deletePatientModal) {
+        deletePatientModal.addEventListener('hidden.bs.modal', function() {
+            // Limpiar backdrop si existe
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            
+            // Restaurar scroll del body
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            
+            // Restaurar botón si estaba deshabilitado
+            if (confirmDeletePatientBtn) {
+                confirmDeletePatientBtn.disabled = false;
+                confirmDeletePatientBtn.innerHTML = '<i class="fas fa-trash me-2"></i>Eliminar Paciente';
+            }
+            
+            // Limpiar variable solo si no se está procesando la eliminación
+            if (confirmDeletePatientBtn && !confirmDeletePatientBtn.disabled) {
+                pacienteToDeleteId = null;
+            }
+        });
+    }
 });
 
 // Initialize professional dashboard
@@ -374,8 +411,15 @@ async function loadPacientesContent(forceReload = false) {
         const token = localStorage.getItem('token');
         console.log('User ID:', user.id, 'Token exists:', !!token);
         
+        // Obtener el estado del filtro (por defecto 'activo')
+        const statusFilterElement = document.getElementById('statusFilter');
+        const statusFilter = statusFilterElement ? statusFilterElement.value : 'activo';
+        // Si statusFilter está vacío, enviar '' para mostrar todos los pacientes
+        const statusToSend = statusFilter === undefined || statusFilter === null ? 'activo' : statusFilter;
+        console.log('🔍 Carga inicial - StatusFilter:', statusFilter, 'Status a enviar:', statusToSend);
+        
         // Obtener pacientes desde la API (forzar actualización)
-        const response = await fetch(`/api/usuarios/profesional/${user.id}/pacientes?forceRefresh=true&page=${currentPage}&limit=${itemsPerPage}`, {
+        const response = await fetch(`/api/usuarios/profesional/${user.id}/pacientes?forceRefresh=true&status=${encodeURIComponent(statusToSend)}&page=${currentPage}&limit=${itemsPerPage}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -436,8 +480,9 @@ async function loadPacientesContent(forceReload = false) {
         dashboardDataLoadedFlags.pacientes = true; // Marcar como cargado
         console.log('💾 Local cache updated');
         
-        // Renderizar contenido usando la función unificada
-        renderSearchResults(pacientes, stats, '', result.pagination);
+        // Renderizar contenido usando la función unificada, manteniendo el statusFilter actual
+        const currentStatusFilter = statusToSend;
+        renderSearchResults(pacientes, stats, '', result.pagination, currentStatusFilter);
     
     } catch (error) {
         console.error('Error cargando pacientes:', error);
@@ -472,8 +517,13 @@ function handleSearchKeypress(event) {
 
 async function searchPatients() {
     const searchTerm = document.getElementById('patientSearch')?.value.trim() || '';
+    const status = document.getElementById('statusFilter')?.value || 'activo';
+    const sortBy = document.getElementById('sortBy')?.value || 'name';
     console.log('🔍 Searching for:', searchTerm);
     console.log('🔍 Search input element:', document.getElementById('patientSearch'));
+    
+    // Resetear a página 1 cuando se hace una nueva búsqueda
+    currentPage = 1;
     
     // Mostrar loading
     const section = document.getElementById('pacientes-section');
@@ -501,10 +551,24 @@ async function searchPatients() {
         console.log('🔍 User data:', user);
         console.log('🔍 Token exists:', !!token);
         
-        // Construir URL con parámetro de búsqueda
+        // Construir URL con parámetro de búsqueda y paginación
         let url = `/api/usuarios/profesional/${user.id}/pacientes`;
+        const params = new URLSearchParams();
         if (searchTerm) {
-            url += `?search=${encodeURIComponent(searchTerm)}`;
+            params.append('search', searchTerm);
+        }
+        // Siempre enviar el status: '' para todos, 'activo' o 'inactivo' para filtros específicos
+        // Si status no está definido, usar 'activo' como defecto
+        const statusToSend = status === undefined || status === null ? 'activo' : status;
+        params.append('status', statusToSend);
+        console.log('🔍 searchPatients - Status a enviar:', statusToSend, '(status original:', status, ')');
+        if (sortBy) {
+            params.append('sortBy', sortBy);
+        }
+        params.append('page', currentPage);
+        params.append('limit', itemsPerPage);
+        if (params.toString()) {
+            url += `?${params.toString()}`;
         }
         
         console.log('🔍 Making search request to:', url);
@@ -532,6 +596,16 @@ async function searchPatients() {
         // Actualizar variable global
         pacientesData = pacientes;
         
+        // Actualizar información de paginación
+        if (result.pagination) {
+            currentPage = result.pagination.currentPage;
+            totalPages = result.pagination.totalPages;
+            totalItems = result.pagination.totalItems;
+        } else {
+            totalItems = pacientes ? pacientes.length : 0;
+            totalPages = Math.ceil(totalItems / itemsPerPage);
+        }
+        
         // Usar las estadísticas de la API si están disponibles, sino calcularlas
         const stats = result.stats ? {
             total_pacientes: result.stats.total_pacientes,
@@ -547,8 +621,8 @@ async function searchPatients() {
             con_consultas: 0
         };
         
-        // Renderizar los resultados de búsqueda directamente
-        renderSearchResults(pacientes, stats, searchTerm);
+        // Renderizar los resultados de búsqueda con paginación, manteniendo el statusFilter actual
+        renderSearchResults(pacientes, stats, searchTerm, result.pagination, status);
         
     } catch (error) {
         console.error('Error en búsqueda:', error);
@@ -565,8 +639,14 @@ async function searchPatients() {
     }
 }
 
-function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
+function renderSearchResults(pacientes, stats, searchTerm, pagination = null, currentStatusFilter = null) {
     const section = document.getElementById('pacientes-section');
+    
+    // Obtener el statusFilter actual si no se proporciona
+    if (currentStatusFilter === null) {
+        const statusFilterElement = document.getElementById('statusFilter');
+        currentStatusFilter = statusFilterElement ? statusFilterElement.value : 'activo';
+    }
     
     // Usar parámetros de paginación si están disponibles, sino usar variables globales
     const paginationData = pagination || {
@@ -622,10 +702,9 @@ function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
             </div>
             <div class="col-md-2">
                 <select class="form-select" id="statusFilter">
-                    <option value="">Todos los estados</option>
-                    <option value="activo">Activo</option>
-                    <option value="inactivo">Inactivo</option>
-                    <option value="pendiente">Pendiente</option>
+                    <option value="activo" ${currentStatusFilter === 'activo' ? 'selected' : ''}>Activo</option>
+                    <option value="inactivo" ${currentStatusFilter === 'inactivo' ? 'selected' : ''}>Inactivo</option>
+                    <option value="" ${currentStatusFilter === '' ? 'selected' : ''}>Todos los estados</option>
                 </select>
             </div>
             <div class="col-md-3">
@@ -687,7 +766,7 @@ function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
                     </div>
                     <div class="stat-content">
                         <h3>Con Consultas</h3>
-                        <p id="upcomingAppointmentsCount">${stats.con_consultas || 0}</p>
+                        <p id="conConsultasCount">${stats.con_consultas || 0}</p>
                     </div>
                 </div>
             </div>
@@ -769,6 +848,9 @@ function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
                                             <button class="btn btn-sm btn-outline-success" data-patient-id="${paciente.id}" data-action="new-consultation" title="Nueva Consulta">
                                                 <i class="fas fa-plus"></i>
                                             </button>
+                                            <button class="btn btn-sm btn-outline-danger" data-patient-id="${paciente.id}" data-action="delete" title="Eliminar Paciente">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </div>
                             </td>
                         </tr>
@@ -793,8 +875,8 @@ function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
                 </table>
                 </div>
                 
-                <!-- Paginación -->
-                ${paginationData.totalItems > 0 ? `
+                <!-- Paginación - Solo mostrar si hay más de una página -->
+                ${paginationData.totalItems > 0 && paginationData.totalPages > 1 ? `
                     <div class="card-footer">
                         <div class="row align-items-center">
                             <div class="col-md-6">
@@ -828,6 +910,19 @@ function renderSearchResults(pacientes, stats, searchTerm, pagination = null) {
                             </div>
                         </div>
                     </div>
+                ` : paginationData.totalItems > 0 ? `
+                    <!-- Mostrar contador cuando hay resultados pero solo una página -->
+                    <div class="card-footer">
+                        <div class="row align-items-center">
+                            <div class="col-12">
+                                <div class="d-flex align-items-center">
+                                    <span class="text-muted">
+                                        Mostrando ${paginationData.totalItems} ${paginationData.totalItems === 1 ? 'paciente' : 'pacientes'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 ` : ''}
             </div>
         </div>
@@ -841,7 +936,10 @@ function setupSearchEventListeners() {
     // Event listener para el campo de búsqueda (Enter)
     const searchInput = document.getElementById('patientSearch');
     if (searchInput) {
-        searchInput.addEventListener('keypress', function(event) {
+        // Remover event listeners anteriores para evitar duplicados
+        const newSearchInput = searchInput.cloneNode(true);
+        searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+        newSearchInput.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 searchPatients();
             }
@@ -851,13 +949,33 @@ function setupSearchEventListeners() {
     // Event listener para el botón de búsqueda
     const searchBtn = document.getElementById('searchBtn');
     if (searchBtn) {
-        searchBtn.addEventListener('click', searchPatientsOptimized);
+        // Remover event listeners anteriores para evitar duplicados
+        const newSearchBtn = searchBtn.cloneNode(true);
+        searchBtn.parentNode.replaceChild(newSearchBtn, searchBtn);
+        newSearchBtn.addEventListener('click', searchPatientsOptimized);
     }
     
     // Event listener para el filtro de estado
     const statusFilter = document.getElementById('statusFilter');
     if (statusFilter) {
-        statusFilter.addEventListener('change', filterPatients);
+        console.log('🔧 Configurando event listener para statusFilter');
+        // Remover event listeners anteriores para evitar duplicados
+        const newStatusFilter = statusFilter.cloneNode(true);
+        // Preservar el valor actual
+        newStatusFilter.value = statusFilter.value;
+        statusFilter.parentNode.replaceChild(newStatusFilter, statusFilter);
+        newStatusFilter.addEventListener('change', function(event) {
+            console.log('🔍 StatusFilter cambió a:', event.target.value);
+            console.log('🔍 Llamando a filterPatients...');
+            try {
+                filterPatients();
+            } catch (error) {
+                console.error('❌ Error al ejecutar filterPatients:', error);
+            }
+        });
+        console.log('✅ Event listener agregado para statusFilter');
+    } else {
+        console.warn('⚠️  statusFilter no encontrado en el DOM');
     }
     
     // Event listener para el ordenamiento
@@ -925,6 +1043,10 @@ function setupPatientActionButtons() {
                 console.log('🔍 Action: new-consultation for patient:', patientId);
                 newConsultation(patientId);
                 break;
+            case 'delete':
+                console.log('🔍 Action: delete for patient:', patientId);
+                deletePatient(patientId);
+                break;
             default:
                 console.log('🔍 Unknown action:', action);
         }
@@ -932,11 +1054,18 @@ function setupPatientActionButtons() {
 }
 
 async function filterPatients() {
+    console.log('🚀 filterPatients() ejecutándose...');
     const searchTerm = document.getElementById('patientSearch')?.value.trim() || '';
-    const statusFilter = document.getElementById('statusFilter')?.value || '';
+    const statusFilterElement = document.getElementById('statusFilter');
+    const statusFilter = statusFilterElement ? statusFilterElement.value : 'activo';
     const sortBy = document.getElementById('sortBy')?.value || 'name';
     
     console.log('🔍 Filtering patients with:', { searchTerm, statusFilter, sortBy });
+    console.log('🔍 StatusFilter element value:', statusFilterElement?.value);
+    console.log('🔍 StatusFilter type:', typeof statusFilter);
+    
+    // Resetear a página 1 cuando se cambia el filtro
+    currentPage = 1;
     
     // Mostrar loading
     const section = document.getElementById('pacientes-section');
@@ -966,9 +1095,12 @@ async function filterPatients() {
         if (searchTerm) {
             params.push(`search=${encodeURIComponent(searchTerm)}`);
         }
-        if (statusFilter) {
-            params.push(`status=${encodeURIComponent(statusFilter)}`);
-        }
+        // Pasar el status siempre (puede ser 'activo', 'inactivo', o '' para todos)
+        // Si statusFilter está vacío, enviar '' para mostrar todos los pacientes
+        // Si no está definido, usar 'activo' como defecto
+        const statusToSend = statusFilter === undefined || statusFilter === null ? 'activo' : statusFilter;
+        console.log('🔍 Status a enviar al backend:', statusToSend, '(statusFilter original:', statusFilter, ')');
+        params.push(`status=${encodeURIComponent(statusToSend)}`);
         if (sortBy) {
             params.push(`sortBy=${encodeURIComponent(sortBy)}`);
         }
@@ -994,10 +1126,33 @@ async function filterPatients() {
         
         const result = await response.json();
         console.log('🔍 Filter Result:', result);
+        console.log('🔍 Filter Result - data length:', result.data?.length);
+        console.log('🔍 Filter Result - stats:', result.stats);
         const pacientes = result.data;
+        
+        console.log('🔍 Pacientes recibidos:', pacientes?.length, 'pacientes');
+        if (pacientes && pacientes.length > 0) {
+            console.log('🔍 Primer paciente:', pacientes[0]);
+            console.log('🔍 Pacientes activos en resultado:', pacientes.filter(p => p.activo).length);
+            console.log('🔍 Pacientes inactivos en resultado:', pacientes.filter(p => !p.activo).length);
+        }
         
         // Actualizar variable global
         pacientesData = pacientes;
+        
+        // Actualizar información de paginación con los datos de la respuesta
+        if (result.pagination) {
+            currentPage = result.pagination.currentPage || 1;
+            totalPages = result.pagination.totalPages || 1;
+            totalItems = result.pagination.totalItems || 0;
+            console.log('🔍 Paginación actualizada:', { currentPage, totalPages, totalItems });
+        } else {
+            // Si no hay paginación en la respuesta, calcularla
+            totalItems = pacientes ? pacientes.length : 0;
+            totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+            currentPage = 1;
+            console.log('🔍 Paginación calculada:', { currentPage, totalPages, totalItems });
+        }
         
         // Usar las estadísticas de la API si están disponibles, sino calcularlas
         const stats = result.stats ? {
@@ -1014,8 +1169,16 @@ async function filterPatients() {
             con_consultas: 0
         };
         
-        // Renderizar los resultados filtrados
-        renderSearchResults(pacientes, stats, searchTerm);
+        // Crear objeto de paginación para pasar a renderSearchResults
+        const paginationData = {
+            currentPage: currentPage,
+            totalPages: totalPages,
+            totalItems: totalItems,
+            itemsPerPage: itemsPerPage
+        };
+        
+        // Renderizar los resultados filtrados, pasando el statusFilter actual y la paginación correcta
+        renderSearchResults(pacientes, stats, searchTerm, paginationData, statusFilter);
         
     } catch (error) {
         console.error('Error aplicando filtros:', error);
@@ -1049,7 +1212,7 @@ async function resetFilters() {
     const sortBy = document.getElementById('sortBy');
     
     if (searchInput) searchInput.value = '';
-    if (statusFilter) statusFilter.value = '';
+    if (statusFilter) statusFilter.value = 'activo';
     if (sortBy) sortBy.value = 'name';
     
     // Mostrar loading
@@ -1078,8 +1241,15 @@ async function resetFilters() {
         console.log('🔄 User data:', user);
         console.log('🔄 Token exists:', !!token);
         
-        // Hacer petición sin ningún filtro para obtener todos los pacientes
-        const url = `/api/usuarios/profesional/${user.id}/pacientes`;
+        // Obtener el estado del filtro (por defecto 'activo')
+        const statusFilterElement = document.getElementById('statusFilter');
+        const statusFilter = statusFilterElement ? statusFilterElement.value : 'activo';
+        // Si statusFilter está vacío, enviar '' para mostrar todos los pacientes
+        const statusToSend = statusFilter === undefined || statusFilter === null ? 'activo' : statusFilter;
+        console.log('🔄 Reset - StatusFilter:', statusFilter, 'Status a enviar:', statusToSend);
+        
+        // Hacer petición con el filtro de estado actual
+        const url = `/api/usuarios/profesional/${user.id}/pacientes?status=${encodeURIComponent(statusToSend)}`;
         
         console.log('🔄 Making reset request to:', url);
         
@@ -1121,8 +1291,8 @@ async function resetFilters() {
             con_consultas: 0
         };
         
-        // Renderizar todos los pacientes sin filtros
-        renderSearchResults(pacientes, stats, '');
+        // Renderizar todos los pacientes sin filtros, manteniendo el statusFilter actual
+        renderSearchResults(pacientes, stats, '', null, statusToSend);
         
     } catch (error) {
         console.error('Error al restablecer filtros:', error);
@@ -1155,6 +1325,137 @@ function editPatient(patientId) {
     window.location.href = `/edit-patient?id=${patientId}`;
     
     console.log('🔧 Redirect command executed');
+}
+
+// Variable global para almacenar el ID del paciente a eliminar
+let pacienteToDeleteId = null;
+
+function deletePatient(patientId) {
+    console.log('🗑️ Solicitando eliminación de paciente ID:', patientId);
+    
+    // Obtener datos del paciente
+    const paciente = pacientesData.find(p => p.id == patientId);
+    if (!paciente) {
+        showAlert('Paciente no encontrado', 'danger');
+        return;
+    }
+    
+    // Guardar el ID del paciente a eliminar
+    pacienteToDeleteId = patientId;
+    
+    // Llenar el modal con la información del paciente
+    document.getElementById('deletePatientName').textContent = paciente.apellido_nombre;
+    
+    // Mostrar el modal
+    const modal = new bootstrap.Modal(document.getElementById('confirmDeletePatientModal'));
+    modal.show();
+}
+
+// Función para confirmar la eliminación (llamada desde el botón del modal)
+async function confirmDeletePatient() {
+    if (!pacienteToDeleteId) {
+        console.error('❌ No hay paciente seleccionado para eliminar');
+        return;
+    }
+    
+    const patientId = pacienteToDeleteId;
+    const paciente = pacientesData.find(p => p.id == patientId);
+    
+    if (!paciente) {
+        showAlert('Paciente no encontrado', 'danger');
+        // Cerrar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('confirmDeletePatientModal'));
+        if (modal) modal.hide();
+        return;
+    }
+    
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No se encontró token de autenticación');
+        }
+        
+        // Deshabilitar botón de confirmación y mostrar loading
+        const confirmBtn = document.getElementById('confirmDeletePatientBtn');
+        if (confirmBtn) {
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Eliminando...';
+        }
+        
+        const response = await fetch(`/api/usuarios/paciente/${patientId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al eliminar el paciente');
+        }
+        
+        if (data.success) {
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('confirmDeletePatientModal'));
+            if (modal) {
+                modal.hide();
+            }
+            
+            // Limpiar backdrop manualmente si existe
+            setTimeout(() => {
+                const backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+                
+                // Restaurar scroll del body
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }, 100);
+            
+            // Mostrar mensaje de éxito (solo una vez)
+            showAlert(`Paciente "${paciente.apellido_nombre}" eliminado exitosamente`, 'success');
+            
+            // Limpiar variable
+            pacienteToDeleteId = null;
+            
+            // Recargar la lista de pacientes
+            dashboardDataLoadedFlags.pacientes = false; // Resetear flag para forzar recarga
+            await loadPacientesContent(true);
+        } else {
+            throw new Error(data.message || 'No se pudo eliminar el paciente');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error eliminando paciente:', error);
+        showAlert(`Error al eliminar el paciente: ${error.message}`, 'danger');
+        
+        // Restaurar botón
+        const confirmBtn = document.getElementById('confirmDeletePatientBtn');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-trash me-2"></i>Eliminar Paciente';
+        }
+        
+        // Limpiar backdrop si existe (en caso de error)
+        setTimeout(() => {
+            const backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            
+            // Restaurar scroll del body
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }, 100);
+        
+        // Limpiar variable en caso de error
+        pacienteToDeleteId = null;
+    }
 }
 
 function newConsultation(patientId) {
@@ -2878,16 +3179,17 @@ function sendMessage(patientId) {
 }
 
 
-function filterPatients() {
-    const searchTerm = document.getElementById('patientSearch').value.toLowerCase();
-    const statusFilter = document.getElementById('statusFilter').value;
+// Función de filtrado local (NO USAR - usar la función async filterPatients en su lugar)
+function filterPatientsLocal() {
+    const searchTerm = document.getElementById('patientSearch')?.value.toLowerCase() || '';
+    const statusFilter = document.getElementById('statusFilter')?.value || '';
     const rows = document.querySelectorAll('#patientsTableBody tr');
     
     rows.forEach(row => {
-        const name = row.querySelector('.patient-details strong').textContent.toLowerCase();
-        const dni = row.querySelector('.patient-details small').textContent.toLowerCase();
-        const email = row.querySelector('.contact-info small').textContent.toLowerCase();
-        const status = row.querySelector('.badge').textContent.toLowerCase();
+        const name = row.querySelector('.patient-details strong')?.textContent.toLowerCase() || '';
+        const dni = row.querySelector('.patient-details small')?.textContent.toLowerCase() || '';
+        const email = row.querySelector('.contact-info small')?.textContent.toLowerCase() || '';
+        const status = row.querySelector('.badge')?.textContent.toLowerCase() || '';
         
         const matchesSearch = name.includes(searchTerm) || dni.includes(searchTerm) || email.includes(searchTerm);
         const matchesStatus = !statusFilter || status.includes(statusFilter);
@@ -5367,7 +5669,9 @@ async function changePage(newPage) {
     }
     
     currentPage = newPage;
-    await loadPacientesContent(false); // Cambio de página, usar caché si está disponible
+    // Forzar recarga cuando cambia la página para obtener los datos correctos
+    dashboardDataLoadedFlags.pacientes = false; // Resetear flag para permitir recarga
+    await loadPacientesContent(true); // Forzar recarga con la nueva página
 }
 
 // Exportar funciones de paginación

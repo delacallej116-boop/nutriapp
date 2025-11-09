@@ -706,6 +706,24 @@ function formatFecha(fecha) {
     });
 }
 
+// Formatear fecha en formato corto (DD/MM/YYYY) sin problemas de timezone
+function formatFechaCorta(fecha) {
+    // Parsear la fecha manualmente para evitar problemas de timezone
+    // La fecha viene en formato YYYY-MM-DD
+    const partes = fecha.split('-');
+    const year = parseInt(partes[0]);
+    const month = parseInt(partes[1]) - 1; // Los meses en JS van de 0-11
+    const day = parseInt(partes[2]);
+    
+    const fechaObj = new Date(year, month, day);
+    
+    return fechaObj.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
 // Funciones de modales
 function showAddDiaNoLaboralModal() {
     console.log('📅 Mostrando modal agregar día no laboral');
@@ -1562,7 +1580,7 @@ function deleteDiaNoLaboral(id) {
     }
     
     // Confirmar eliminación
-    const fechaFormateada = new Date(dia.fecha).toLocaleDateString('es-ES');
+    const fechaFormateada = formatFechaCorta(dia.fecha);
     const confirmMessage = `¿Estás seguro de que quieres eliminar el día no laboral del ${fechaFormateada}?\n\nMotivo: ${dia.motivo}\n\nEsta acción no se puede deshacer.`;
     
     if (confirm(confirmMessage)) {
@@ -1648,7 +1666,7 @@ async function actualizarDiaNoLaboral() {
         // Verificar si ya existe otro día no laboral para esta fecha (excluyendo el actual)
         const diaExistente = diasNoLaborales.find(d => d.fecha === fecha && d.id != id);
         if (diaExistente) {
-            const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES');
+            const fechaFormateada = formatFechaCorta(fecha);
             showModalAlert('editarDiaNoLaboralModal', 'editarDiaNoLaboralAlert', 'editarDiaNoLaboralAlertText', `Ya existe un día no laboral configurado para el ${fechaFormateada}. Por favor, elige otra fecha.`);
             return;
         }
@@ -1717,7 +1735,7 @@ async function actualizarDiaNoLaboral() {
             updateStatsDisplay();
             
             // Mostrar mensaje de éxito
-            const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES');
+            const fechaFormateada = formatFechaCorta(fecha);
             showSuccess(`Día no laboral del ${fechaFormateada} actualizado exitosamente`);
             
         } else {

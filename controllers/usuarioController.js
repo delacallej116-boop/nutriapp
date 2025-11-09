@@ -8,6 +8,9 @@ class UsuarioController {
             const { profesionalId } = req.params;
             const { search, status, sortBy, forceRefresh, page = 1, limit = 10 } = req.query;
             
+            console.log('🔍 UsuarioController - Query params recibidos:', { search, status, sortBy, forceRefresh, page, limit });
+            console.log('🔍 UsuarioController - Status type:', typeof status, 'Status value:', status);
+            
             if (!profesionalId || isNaN(profesionalId)) {
                 return res.status(400).json({
                     success: false,
