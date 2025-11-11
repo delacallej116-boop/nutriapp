@@ -296,12 +296,6 @@ function initSidebar() {
 function showSection(sectionName) {
     console.log('showSection called with:', sectionName);
     
-    // Special case: asistencia should redirect to dedicated page without showing inline section
-    if (sectionName === 'asistencia') {
-        loadSectionContent('asistencia');
-        return;
-    }
-    
     // Remove active class from all nav links
     const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
     navLinks.forEach(link => {
@@ -5588,22 +5582,74 @@ window.editarComidasPlan = editarComidasPlan;
 
 // ==================== GESTIÓN DE ASISTENCIA ====================
 
-// Función simplificada para redirigir a la página de gestión de asistencia
-function loadAsistenciaContent() {
-    console.log('📋 Redirigiendo a gestión de asistencia...');
-    window.location.href = '/asistencia';
+// Cargar contenido de asistencia (vista previa con estadísticas)
+async function loadAsistenciaContent() {
+    console.log('📋 Cargando vista previa de asistencia...');
+    
+    // Cargar estadísticas
+    await loadAsistenciaStats();
 }
 
-// Funciones eliminadas - ahora se manejan en la página dedicada de asistencia
+// Cargar estadísticas de asistencia
+async function loadAsistenciaStats() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('user'));
+        const token = localStorage.getItem('token');
+        
+        if (!userData || !token) {
+            console.error('No se encontraron datos de usuario');
+            return;
+        }
+
+        const profesionalId = userData.id;
+
+        const response = await fetch(`/api/asistencia/profesional/${profesionalId}/estadisticas`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Actualizar estadísticas en la vista
+            document.getElementById('asistenciaTotalConsultas').textContent = result.data.total_consultas || 0;
+            document.getElementById('asistenciaAsistieron').textContent = result.data.asistieron || 0;
+            document.getElementById('asistenciaNoAsistieron').textContent = result.data.no_asistieron || 0;
+            document.getElementById('asistenciaPendientes').textContent = result.data.pendientes_confirmacion || 0;
+        } else {
+            console.error('Error cargando estadísticas:', result.message);
+            // Mostrar valores por defecto
+            document.getElementById('asistenciaTotalConsultas').textContent = '0';
+            document.getElementById('asistenciaAsistieron').textContent = '0';
+            document.getElementById('asistenciaNoAsistieron').textContent = '0';
+            document.getElementById('asistenciaPendientes').textContent = '0';
+        }
+    } catch (error) {
+        console.error('Error cargando estadísticas de asistencia:', error);
+        // Mostrar valores por defecto en caso de error
+        document.getElementById('asistenciaTotalConsultas').textContent = '0';
+        document.getElementById('asistenciaAsistieron').textContent = '0';
+        document.getElementById('asistenciaNoAsistieron').textContent = '0';
+        document.getElementById('asistenciaPendientes').textContent = '0';
+    }
+}
 
 // Show asistencia help
-// Función de ayuda simplificada
 function showAsistenciaHelp() {
-    alert('Para una experiencia completa de gestión de asistencia, utiliza la página dedicada que se abrirá al hacer clic en "Gestión de Asistencia".');
+    alert('La sección de Gestión de Asistencia te permite:\n\n' +
+          '• Ver estadísticas de asistencia de tus consultas\n' +
+          '• Confirmar asistencia de pacientes\n' +
+          '• Marcar consultas como completadas o ausentes\n' +
+          '• Agregar notas sobre la asistencia\n\n' +
+          'Usa el botón "Ir a Gestión Completa" para acceder a todas las funcionalidades.');
 }
 
 // Exportar funciones globales
 window.showAsistenciaHelp = showAsistenciaHelp;
+window.loadAsistenciaStats = loadAsistenciaStats;
 
 // ==================== FUNCIONES DE PAGINACIÓN ====================
 

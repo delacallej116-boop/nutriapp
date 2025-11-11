@@ -478,11 +478,9 @@
                                     </h2>
                                     <p class="section-subtitle">Confirmar asistencia de pacientes a consultas</p>
                                 </div>
-                                <div class="btn-group">
-                                    <button class="btn btn-primary" onclick="window.open('../../asistencia/', '_blank')">
-                                        <i class="fas fa-external-link-alt me-2"></i>Abrir en Nueva Pestaña
-                                    </button>
-                                </div>
+                                <button class="btn btn-primary" onclick="window.location.href='/asistencia'">
+                                    <i class="fas fa-arrow-right me-2"></i>Ir a Gestión Completa
+                                </button>
                             </div>
                         </div>
 
@@ -605,23 +603,26 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-6 mb-3">
                                         <div class="d-grid">
-                                            <button class="btn btn-outline-primary" onclick="window.open('../../asistencia/', '_blank')">
+                                            <button class="btn btn-primary btn-lg" onclick="window.location.href='/asistencia'">
                                                 <i class="fas fa-check-circle me-2"></i>
-                                                Ver Consultas Pendientes
+                                                Ir a Gestión de Asistencia
                                             </button>
+                                            <small class="text-muted mt-2 text-center">
+                                                Accede a la gestión completa con filtros y herramientas avanzadas
+                                            </small>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <div class="d-grid">
                                             <button class="btn btn-outline-success" onclick="loadAsistenciaStats()">
-                                                <i class="fas fa-chart-bar me-2"></i>
+                                                <i class="fas fa-sync-alt me-2"></i>
                                                 Actualizar Estadísticas
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <div class="d-grid">
                                             <button class="btn btn-outline-info" onclick="showAsistenciaHelp()">
                                                 <i class="fas fa-question-circle me-2"></i>

@@ -259,25 +259,16 @@ class AsistenciaController {
                 });
             }
 
-            // Construir filtro de fechas
-            let fechaFilter = '';
-            const params = [profesionalId];
-
-            if (fechaInicio && fechaFin) {
-                fechaFilter = 'AND c.fecha BETWEEN ? AND ?';
-                params.push(fechaInicio, fechaFin);
-            } else {
-                // Últimos 30 días por defecto
-                fechaFilter = 'AND c.fecha >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)';
-            }
-
+            // Usar exactamente los mismos filtros que getConsultasPendientes
+            // para asegurar que las estadísticas reflejen las mismas consultas
+            // Filtros: fecha < CURDATE() y estado IN ('activo', 'ausente', 'completado')
             const query = `
                 SELECT 
                     COUNT(*) as total_consultas,
                     SUM(CASE WHEN estado = 'completado' THEN 1 ELSE 0 END) as asistieron,
                     SUM(CASE WHEN estado = 'ausente' THEN 1 ELSE 0 END) as no_asistieron,
                     SUM(CASE WHEN estado = 'cancelado' THEN 1 ELSE 0 END) as canceladas,
-                    SUM(CASE WHEN estado = 'activo' AND fecha < CURDATE() THEN 1 ELSE 0 END) as pendientes_confirmacion,
+                    SUM(CASE WHEN estado = 'activo' THEN 1 ELSE 0 END) as pendientes_confirmacion,
                     ROUND(
                         (SUM(CASE WHEN estado = 'completado' THEN 1 ELSE 0 END) / 
                          NULLIF(SUM(CASE WHEN estado IN ('completado', 'ausente') THEN 1 ELSE 0 END), 0)) * 100, 
@@ -285,20 +276,41 @@ class AsistenciaController {
                     ) as porcentaje_asistencia
                 FROM consultas c
                 WHERE c.profesional_id = ?
-                ${fechaFilter}
+                AND c.fecha < CURDATE()
+                AND c.estado IN ('activo', 'ausente', 'completado')
             `;
 
-            const stats = await executeQuery(query, params);
+            console.log('📊 Ejecutando query de estadísticas:', query);
+            console.log('📊 Parámetros:', [profesionalId]);
+            
+            const stats = await executeQuery(query, [profesionalId]);
             const estadisticas = stats[0];
+            
+            console.log('📊 Resultados de estadísticas:', estadisticas);
+            
+            // Verificar también el total real de consultas para comparar
+            const verifyQuery = `
+                SELECT 
+                    COUNT(*) as total_real,
+                    SUM(CASE WHEN estado = 'ausente' THEN 1 ELSE 0 END) as ausentes_real,
+                    SUM(CASE WHEN estado = 'completado' THEN 1 ELSE 0 END) as completados_real,
+                    SUM(CASE WHEN estado = 'activo' THEN 1 ELSE 0 END) as activos_real
+                FROM consultas c
+                WHERE c.profesional_id = ?
+                AND c.fecha < CURDATE()
+                AND c.estado IN ('activo', 'ausente', 'completado')
+            `;
+            const verifyStats = await executeQuery(verifyQuery, [profesionalId]);
+            console.log('📊 Verificación de estadísticas:', verifyStats[0]);
 
             res.json({
                 success: true,
                 data: {
-                    total_consultas: parseInt(estadisticas.total_consultas),
-                    asistieron: parseInt(estadisticas.asistieron),
-                    no_asistieron: parseInt(estadisticas.no_asistieron),
-                    canceladas: parseInt(estadisticas.canceladas),
-                    pendientes_confirmacion: parseInt(estadisticas.pendientes_confirmacion),
+                    total_consultas: parseInt(estadisticas.total_consultas) || 0,
+                    asistieron: parseInt(estadisticas.asistieron) || 0,
+                    no_asistieron: parseInt(estadisticas.no_asistieron) || 0,
+                    canceladas: parseInt(estadisticas.canceladas) || 0,
+                    pendientes_confirmacion: parseInt(estadisticas.pendientes_confirmacion) || 0,
                     porcentaje_asistencia: parseFloat(estadisticas.porcentaje_asistencia) || 0
                 }
             });

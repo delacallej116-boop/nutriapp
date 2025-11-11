@@ -16,14 +16,13 @@ class AsistenciaManager {
             limit: 10,
             totalItems: 0
         };
+        this.isFiltered = false; // Indica si hay filtros aplicados
         this.viewMode = 'list'; // 'list' o 'grid'
         
         this.init();
     }
 
     async init() {
-        console.log('🚀 Inicializando AsistenciaManager...');
-        
         // Verificar autenticación
         if (!this.checkAuth()) {
             this.redirectToLogin();
@@ -33,19 +32,19 @@ class AsistenciaManager {
         // Cargar datos del usuario
         this.loadUserInfo();
         
-        // Cargar consultas (que también actualizará las estadísticas)
+        // Cargar estadísticas primero (sobre todas las consultas)
+        await this.loadEstadisticas();
+        
+        // Cargar consultas
         await this.loadConsultasPendientes();
         
         // Configurar event listeners
         this.setupEventListeners();
-        
-        console.log('✅ AsistenciaManager inicializado correctamente');
     }
 
     checkAuth() {
         const token = localStorage.getItem('token');
         if (!token) {
-            console.log('❌ No hay token de autenticación');
             return false;
         }
 
@@ -53,8 +52,6 @@ class AsistenciaManager {
             const payload = JSON.parse(atob(token.split('.')[1]));
             this.profesionalId = payload.profesionalId || payload.id;
             this.token = token;
-            
-            console.log('✅ Usuario autenticado:', payload.email);
             return true;
         } catch (error) {
             console.error('❌ Error decodificando token:', error);
@@ -81,8 +78,6 @@ class AsistenciaManager {
 
     async loadEstadisticas() {
         try {
-            console.log('📊 Cargando estadísticas...');
-            
             const response = await fetch(`/api/asistencia/profesional/${this.profesionalId}/estadisticas`, {
                 headers: {
                     'Authorization': `Bearer ${this.token}`,
@@ -98,7 +93,6 @@ class AsistenciaManager {
             
             if (result.success) {
                 this.updateEstadisticas(result.data);
-                console.log('✅ Estadísticas cargadas:', result.data);
             } else {
                 throw new Error(result.message || 'Error cargando estadísticas');
             }
@@ -110,8 +104,6 @@ class AsistenciaManager {
     }
 
     updateEstadisticasFromConsultas(data) {
-        console.log('🔄 Actualizando estadísticas con datos:', data);
-        
         // Actualizar elementos de estadísticas con datos del backend
         const elements = {
             totalConsultas: data.total || 0,
@@ -120,15 +112,10 @@ class AsistenciaManager {
             pendientes: data.pendientes || 0
         };
 
-        console.log('📊 Elementos a actualizar:', elements);
-
         Object.keys(elements).forEach(key => {
             const element = document.getElementById(key);
             if (element) {
                 element.textContent = elements[key];
-                console.log(`✅ Actualizado ${key}: ${elements[key]}`);
-            } else {
-                console.warn(`⚠️ Elemento no encontrado: ${key}`);
             }
         });
 
@@ -172,7 +159,7 @@ class AsistenciaManager {
             }
         });
 
-        // Calcular porcentajes
+        // Calcular porcentajes basados en el total de consultas
         const total = elements.totalConsultas;
         if (total > 0) {
             const asistieronPercentage = Math.round((elements.asistieron / total) * 100);
@@ -187,6 +174,16 @@ class AsistenciaManager {
             if (noAsistieronPercentageElement) {
                 noAsistieronPercentageElement.textContent = `${noAsistieronPercentage}%`;
             }
+        } else {
+            // Si no hay consultas, mostrar 0%
+            const asistieronPercentageElement = document.getElementById('asistieronPercentage');
+            const noAsistieronPercentageElement = document.getElementById('noAsistieronPercentage');
+            if (asistieronPercentageElement) {
+                asistieronPercentageElement.textContent = '0%';
+            }
+            if (noAsistieronPercentageElement) {
+                noAsistieronPercentageElement.textContent = '0%';
+            }
         }
 
         // Actualizar contador de consultas
@@ -194,12 +191,16 @@ class AsistenciaManager {
         if (totalConsultasCountElement) {
             totalConsultasCountElement.textContent = `${total} consultas`;
         }
+
+        // Actualizar período (ahora es "Todas las consultas pasadas" en lugar de "Últimos 30 días")
+        const totalConsultasPeriodo = document.getElementById('totalConsultasPeriodo');
+        if (totalConsultasPeriodo) {
+            totalConsultasPeriodo.textContent = 'Todas las consultas pasadas';
+        }
     }
 
     async loadConsultasPendientes(page = 1) {
         try {
-            console.log('📋 Cargando consultas pendientes, página:', page);
-            
             const container = document.getElementById('consultasContainer');
             if (container) {
                 container.innerHTML = `
@@ -258,28 +259,17 @@ class AsistenciaManager {
                 
                 this.filteredConsultas = [...this.consultasData];
                 
+                // Asegurar que no está en modo filtrado al cargar inicialmente
+                this.isFiltered = false;
+                
                 // Actualizar información de paginación
                 this.pagination = result.data.pagination;
-                console.log('📄 Paginación actualizada:', this.pagination);
                 
-                // Debug: mostrar datos recibidos
-                console.log('📊 Datos recibidos del backend:', result.data);
-                console.log('📋 Consultas cargadas:', this.consultasData.length);
-                console.log('📄 Paginación:', this.pagination);
-                console.log('📈 Estadísticas:', {
-                    total: result.data.total,
-                    completadas: result.data.completadas,
-                    ausentes: result.data.ausentes,
-                    pendientes: result.data.pendientes
-                });
-                
-                // Actualizar estadísticas con los datos del backend
-                this.updateEstadisticasFromConsultas(result.data);
+                // NO actualizar estadísticas desde aquí porque solo reflejan la página actual
+                // Las estadísticas se cargan desde el endpoint de estadísticas que calcula sobre todas las consultas
                 
                 this.renderConsultas();
                 this.updateLastUpdateTime();
-                
-                console.log('✅ Consultas cargadas:', this.consultasData.length);
             } else {
                 throw new Error(result.message || 'Error cargando consultas');
             }
@@ -294,6 +284,13 @@ class AsistenciaManager {
         const container = document.getElementById('consultasContainer');
         if (!container) return;
 
+        // Si hay filtros aplicados, usar paginación local
+        if (this.isFiltered) {
+            this.renderConsultasFiltered();
+            return;
+        }
+
+        // Sin filtros, mostrar todas las consultas cargadas
         if (this.filteredConsultas.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
@@ -302,6 +299,7 @@ class AsistenciaManager {
                     <p>No se encontraron consultas con los filtros aplicados.</p>
                 </div>
             `;
+            this.renderPagination();
             return;
         }
 
@@ -340,18 +338,89 @@ class AsistenciaManager {
         this.renderPagination();
     }
 
-    renderPagination() {
-        console.log('🔄 Renderizando paginación, this.pagination:', this.pagination);
+    renderConsultasFiltered() {
+        const container = document.getElementById('consultasContainer');
+        if (!container) return;
+
+        // Calcular paginación local basada en resultados filtrados
+        const totalFiltered = this.filteredConsultas.length;
+        const limit = this.pagination.limit;
+        const totalPagesFiltered = Math.ceil(totalFiltered / limit);
+        const currentPage = this.pagination.currentPage;
         
+        // Asegurar que la página actual no exceda el total de páginas filtradas
+        if (currentPage > totalPagesFiltered && totalPagesFiltered > 0) {
+            this.pagination.currentPage = 1;
+        }
+
+        // Calcular índices para la página actual
+        const startIndex = (this.pagination.currentPage - 1) * limit;
+        const endIndex = startIndex + limit;
+        const consultasToShow = this.filteredConsultas.slice(startIndex, endIndex);
+
+        if (consultasToShow.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-calendar-check"></i>
+                    <h5>No hay consultas</h5>
+                    <p>No se encontraron consultas con los filtros aplicados en esta página.</p>
+                </div>
+            `;
+            // Actualizar paginación para reflejar resultados filtrados
+            this.pagination.totalPages = totalPagesFiltered;
+            this.pagination.totalItems = totalFiltered;
+            this.renderPagination();
+            return;
+        }
+
+        // Crear tabla compacta
+        let html = `
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-sort-numeric-up me-1"></i> #</th>
+                            <th><i class="fas fa-calendar me-1"></i> Fecha</th>
+                            <th><i class="fas fa-clock me-1"></i> Hora</th>
+                            <th><i class="fas fa-user me-1"></i> Paciente</th>
+                            <th><i class="fas fa-envelope me-1"></i> Email</th>
+                            <th><i class="fas fa-phone me-1"></i> Teléfono</th>
+                            <th><i class="fas fa-stethoscope me-1"></i> Motivo</th>
+                            <th><i class="fas fa-info-circle me-1"></i> Estado</th>
+                            <th><i class="fas fa-cogs me-1"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        consultasToShow.forEach((consulta, index) => {
+            html += this.renderConsultaRow(consulta, startIndex + index + 1);
+        });
+
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+
+        container.innerHTML = html;
+        
+        // Actualizar paginación para reflejar resultados filtrados
+        this.pagination.totalPages = totalPagesFiltered;
+        this.pagination.totalItems = totalFiltered;
+        
+        this.updateFilteredCount();
+        this.renderPagination();
+    }
+
+    renderPagination() {
         const container = document.getElementById('paginationContainer');
         if (!container) {
-            console.log('❌ Contenedor de paginación no encontrado');
             return;
         }
 
         // Verificar que this.pagination existe y tiene las propiedades necesarias
         if (!this.pagination || !this.pagination.currentPage) {
-            console.log('❌ Paginación no disponible o incompleta');
             container.innerHTML = '';
             return;
         }
@@ -369,22 +438,36 @@ class AsistenciaManager {
             return;
         }
 
+        const limit = this.pagination.limit;
+        const startItem = ((currentPage - 1) * limit) + 1;
+        const endItem = Math.min(currentPage * limit, totalItems);
+
         let html = `
             <nav aria-label="Paginación de consultas">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="pagination-info">
                         <small class="text-muted">
-                            Mostrando ${((currentPage - 1) * 10) + 1} - ${Math.min(currentPage * 10, totalItems)} de ${totalItems} consultas
+                            Mostrando ${startItem} - ${endItem} de ${totalItems} consultas
+                            ${this.isFiltered ? '<span class="badge bg-info ms-2">Filtrado</span>' : ''}
                         </small>
                     </div>
                     <ul class="pagination pagination-sm mb-0">
         `;
 
+        // Función para cambiar de página (diferente según si hay filtros o no)
+        const changePageFunction = this.isFiltered 
+            ? `asistenciaManager.changePageFiltered(${0})` // Se reemplazará el número
+            : `asistenciaManager.loadConsultasPendientes(${0})`; // Se reemplazará el número
+
         // Botón anterior
         if (currentPage > 1) {
+            const prevPage = currentPage - 1;
+            const onclickFunc = this.isFiltered 
+                ? `asistenciaManager.changePageFiltered(${prevPage})`
+                : `asistenciaManager.loadConsultasPendientes(${prevPage})`;
             html += `
                 <li class="page-item">
-                    <button class="page-link" onclick="asistenciaManager.loadConsultasPendientes(${currentPage - 1})">
+                    <button class="page-link" onclick="${onclickFunc}">
                         <i class="fas fa-chevron-left"></i>
                     </button>
                 </li>
@@ -404,9 +487,12 @@ class AsistenciaManager {
         const endPage = Math.min(totalPages, currentPage + 2);
 
         if (startPage > 1) {
+            const onclickFunc = this.isFiltered 
+                ? `asistenciaManager.changePageFiltered(1)`
+                : `asistenciaManager.loadConsultasPendientes(1)`;
             html += `
                 <li class="page-item">
-                    <button class="page-link" onclick="asistenciaManager.loadConsultasPendientes(1)">1</button>
+                    <button class="page-link" onclick="${onclickFunc}">1</button>
                 </li>
             `;
             if (startPage > 2) {
@@ -422,9 +508,12 @@ class AsistenciaManager {
                     </li>
                 `;
             } else {
+                const onclickFunc = this.isFiltered 
+                    ? `asistenciaManager.changePageFiltered(${i})`
+                    : `asistenciaManager.loadConsultasPendientes(${i})`;
                 html += `
                     <li class="page-item">
-                        <button class="page-link" onclick="asistenciaManager.loadConsultasPendientes(${i})">${i}</button>
+                        <button class="page-link" onclick="${onclickFunc}">${i}</button>
                     </li>
                 `;
             }
@@ -434,18 +523,25 @@ class AsistenciaManager {
             if (endPage < totalPages - 1) {
                 html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
             }
+            const onclickFunc = this.isFiltered 
+                ? `asistenciaManager.changePageFiltered(${totalPages})`
+                : `asistenciaManager.loadConsultasPendientes(${totalPages})`;
             html += `
                 <li class="page-item">
-                    <button class="page-link" onclick="asistenciaManager.loadConsultasPendientes(${totalPages})">${totalPages}</button>
+                    <button class="page-link" onclick="${onclickFunc}">${totalPages}</button>
                 </li>
             `;
         }
 
         // Botón siguiente
         if (currentPage < totalPages) {
+            const nextPage = currentPage + 1;
+            const onclickFunc = this.isFiltered 
+                ? `asistenciaManager.changePageFiltered(${nextPage})`
+                : `asistenciaManager.loadConsultasPendientes(${nextPage})`;
             html += `
                 <li class="page-item">
-                    <button class="page-link" onclick="asistenciaManager.loadConsultasPendientes(${currentPage + 1})">
+                    <button class="page-link" onclick="${onclickFunc}">
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </li>
@@ -467,6 +563,15 @@ class AsistenciaManager {
         `;
 
         container.innerHTML = html;
+    }
+
+    // Cambiar página cuando hay filtros aplicados (paginación local)
+    changePageFiltered(page) {
+        if (page < 1 || page > this.pagination.totalPages) {
+            return;
+        }
+        this.pagination.currentPage = page;
+        this.renderConsultasFiltered();
     }
 
     renderConsultaRow(consulta, numero) {
@@ -663,100 +768,213 @@ class AsistenciaManager {
             refreshBtn.onclick = () => this.loadConsultasPendientes();
         }
 
-        // Filtros
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                this.currentFilters.search = e.target.value;
-                this.applyFilters();
-            });
-        }
-
-        const estadoFilter = document.getElementById('estadoFilter');
-        if (estadoFilter) {
-            estadoFilter.addEventListener('change', (e) => {
-                this.currentFilters.estado = e.target.value;
-                this.applyFilters();
-            });
-        }
-
-        const fechaFilter = document.getElementById('fechaFilter');
-        if (fechaFilter) {
-            fechaFilter.addEventListener('change', (e) => {
-                this.currentFilters.fecha = e.target.value;
-                this.applyFilters();
-            });
-        }
+        // Los filtros NO se aplican automáticamente, solo cuando se presiona "Aplicar"
+        // Solo guardamos los valores en currentFilters cuando cambian, pero no aplicamos
 
         // Botón aplicar filtros
         const applyBtn = document.querySelector('button[onclick="applyFilters()"]');
         if (applyBtn) {
-            applyBtn.onclick = () => this.applyFilters();
+            applyBtn.onclick = async () => {
+                // Leer valores actuales de los filtros antes de aplicar
+                const searchInput = document.getElementById('searchInput');
+                const estadoFilter = document.getElementById('estadoFilter');
+                const fechaFilter = document.getElementById('fechaFilter');
+                
+                this.currentFilters.search = searchInput ? searchInput.value.trim() : '';
+                this.currentFilters.estado = estadoFilter ? estadoFilter.value : '';
+                this.currentFilters.fecha = fechaFilter ? fechaFilter.value : '';
+                
+                // Si hay filtros, cargar TODAS las consultas primero para poder filtrar correctamente
+                const hasFilters = this.currentFilters.search !== '' || 
+                                  this.currentFilters.estado !== '' || 
+                                  this.currentFilters.fecha !== '';
+                
+                if (hasFilters) {
+                    // Cargar todas las consultas (usando un límite alto) para poder filtrar
+                    await this.loadAllConsultas();
+                }
+                
+                this.applyFilters();
+            };
         }
 
-        // Botón limpiar búsqueda
+        // Botón limpiar búsqueda (solo limpia el campo de búsqueda)
         const clearBtn = document.querySelector('button[onclick="clearSearch()"]');
         if (clearBtn) {
-            clearBtn.onclick = () => this.clearSearch();
+            clearBtn.onclick = () => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+            };
+        }
+
+        // Botón limpiar todos los filtros (si existe)
+        const clearAllBtn = document.querySelector('button[onclick="clearAllFilters()"]');
+        if (clearAllBtn) {
+            clearAllBtn.onclick = () => this.clearAllFilters();
         }
     }
 
+    // Cargar todas las consultas sin paginación para filtros
+    async loadAllConsultas() {
+        try {
+            // Cargar con un límite muy alto para obtener todas las consultas
+            const response = await fetch(`/api/asistencia/profesional/${this.profesionalId}/pendientes?page=1&limit=10000`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                // Aplanar las consultas agrupadas en un array simple
+                const todasLasConsultas = [];
+                result.data.consultas.forEach(grupo => {
+                    grupo.consultas.forEach(consulta => {
+                        todasLasConsultas.push(consulta);
+                    });
+                });
+                
+                // Ordenar las consultas por estado, fecha y hora
+                todasLasConsultas.sort((a, b) => {
+                    const estadoOrder = { 'activo': 1, 'ausente': 2, 'completado': 3 };
+                    const estadoA = estadoOrder[a.estado] || 4;
+                    const estadoB = estadoOrder[b.estado] || 4;
+                    
+                    if (estadoA !== estadoB) {
+                        return estadoA - estadoB;
+                    }
+                    
+                    const fechaA = new Date(a.fecha);
+                    const fechaB = new Date(b.fecha);
+                    if (fechaA.getTime() !== fechaB.getTime()) {
+                        return fechaB - fechaA;
+                    }
+                    
+                    return b.hora.localeCompare(a.hora);
+                });
+                
+                // Reemplazar consultasData con todas las consultas
+                this.consultasData = todasLasConsultas;
+            }
+        } catch (error) {
+            console.error('❌ Error cargando todas las consultas:', error);
+            this.showError('Error cargando consultas: ' + error.message);
+        }
+    }
+
+
     applyFilters() {
-        console.log('🔍 Aplicando filtros:', this.currentFilters);
+        // Verificar si hay filtros activos
+        const hasFilters = this.currentFilters.search.trim() !== '' || 
+                          this.currentFilters.estado !== '' || 
+                          this.currentFilters.fecha !== '';
         
+        this.isFiltered = hasFilters;
+        
+        // Si no hay filtros, mostrar todas las consultas y recargar desde el servidor
+        if (!hasFilters) {
+            this.isFiltered = false;
+            this.loadConsultasPendientes(1);
+            return;
+        }
+        
+        // Filtrar las consultas
         this.filteredConsultas = this.consultasData.filter(consulta => {
+            let matches = true;
+            
             // Filtro de búsqueda
-            if (this.currentFilters.search) {
-                const searchTerm = this.currentFilters.search.toLowerCase();
-                if (!consulta.paciente_nombre.toLowerCase().includes(searchTerm) &&
-                    !consulta.paciente_email.toLowerCase().includes(searchTerm)) {
-                    return false;
+            if (this.currentFilters.search && this.currentFilters.search.trim() !== '') {
+                const searchTerm = this.currentFilters.search.toLowerCase().trim();
+                const pacienteNombre = (consulta.paciente_nombre || '').toLowerCase();
+                const pacienteEmail = (consulta.paciente_email || '').toLowerCase();
+                if (!pacienteNombre.includes(searchTerm) && !pacienteEmail.includes(searchTerm)) {
+                    matches = false;
                 }
             }
 
-            // Filtro de estado
-            if (this.currentFilters.estado && consulta.estado !== this.currentFilters.estado) {
-                return false;
+            // Filtro de estado - comparación estricta
+            if (this.currentFilters.estado && this.currentFilters.estado !== '') {
+                // Comparación estricta (case-sensitive)
+                if (String(consulta.estado).trim() !== String(this.currentFilters.estado).trim()) {
+                    matches = false;
+                }
             }
 
             // Filtro de fecha
-            if (this.currentFilters.fecha) {
-                const consultaDate = new Date(consulta.fecha);
-                const today = new Date();
-                
-                switch (this.currentFilters.fecha) {
-                    case 'hoy':
-                        if (consultaDate.toDateString() !== today.toDateString()) {
-                            return false;
+            if (this.currentFilters.fecha && this.currentFilters.fecha !== '') {
+                try {
+                    // Parsear fecha correctamente
+                    const fechaStr = consulta.fecha;
+                    let consultaDate;
+                    
+                    if (typeof fechaStr === 'string') {
+                        // Si viene como YYYY-MM-DD
+                        if (fechaStr.includes('T')) {
+                            consultaDate = new Date(fechaStr);
+                        } else {
+                            consultaDate = new Date(fechaStr + 'T00:00:00');
                         }
-                        break;
-                    case 'ayer':
-                        const yesterday = new Date(today);
-                        yesterday.setDate(yesterday.getDate() - 1);
-                        if (consultaDate.toDateString() !== yesterday.toDateString()) {
-                            return false;
-                        }
-                        break;
-                    case 'semana':
-                        const weekAgo = new Date(today);
-                        weekAgo.setDate(weekAgo.getDate() - 7);
-                        if (consultaDate < weekAgo) {
-                            return false;
-                        }
-                        break;
-                    case 'mes':
-                        const monthAgo = new Date(today);
-                        monthAgo.setMonth(monthAgo.getMonth() - 1);
-                        if (consultaDate < monthAgo) {
-                            return false;
-                        }
-                        break;
+                    } else {
+                        consultaDate = new Date(fechaStr);
+                    }
+                    
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    switch (this.currentFilters.fecha) {
+                        case 'hoy':
+                            consultaDate.setHours(0, 0, 0, 0);
+                            if (consultaDate.getTime() !== today.getTime()) {
+                                matches = false;
+                            }
+                            break;
+                        case 'ayer':
+                            const yesterday = new Date(today);
+                            yesterday.setDate(yesterday.getDate() - 1);
+                            consultaDate.setHours(0, 0, 0, 0);
+                            if (consultaDate.getTime() !== yesterday.getTime()) {
+                                matches = false;
+                            }
+                            break;
+                        case 'semana':
+                            const weekAgo = new Date(today);
+                            weekAgo.setDate(weekAgo.getDate() - 7);
+                            weekAgo.setHours(0, 0, 0, 0);
+                            consultaDate.setHours(0, 0, 0, 0);
+                            if (consultaDate < weekAgo) {
+                                matches = false;
+                            }
+                            break;
+                        case 'mes':
+                            const monthAgo = new Date(today);
+                            monthAgo.setMonth(monthAgo.getMonth() - 1);
+                            monthAgo.setHours(0, 0, 0, 0);
+                            consultaDate.setHours(0, 0, 0, 0);
+                            if (consultaDate < monthAgo) {
+                                matches = false;
+                            }
+                            break;
+                    }
+                } catch (error) {
+                    console.error('Error procesando filtro de fecha:', error, consulta.fecha);
+                    matches = false;
                 }
             }
 
-            return true;
+            return matches;
         });
 
+        // Resetear a página 1 cuando se aplican filtros
+        this.pagination.currentPage = 1;
+        
         this.renderConsultas();
     }
 
@@ -765,13 +983,41 @@ class AsistenciaManager {
         if (searchInput) {
             searchInput.value = '';
         }
-        this.currentFilters.search = '';
-        this.applyFilters();
+        // No aplicar filtros automáticamente, solo limpiar el campo
+    }
+
+    clearAllFilters() {
+        // Limpiar campos de filtro
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.value = '';
+        }
+        
+        const estadoFilter = document.getElementById('estadoFilter');
+        if (estadoFilter) {
+            estadoFilter.value = '';
+        }
+        
+        const fechaFilter = document.getElementById('fechaFilter');
+        if (fechaFilter) {
+            fechaFilter.value = '';
+        }
+        
+        // Resetear filtros
+        this.currentFilters = {
+            search: '',
+            estado: '',
+            fecha: ''
+        };
+        
+        // Desactivar modo filtrado
+        this.isFiltered = false;
+        
+        // Recargar desde el servidor para obtener paginación correcta
+        this.loadConsultasPendientes(1);
     }
 
     confirmarAsistenciaModal(consultaId, pacienteNombre, fecha, hora, motivo, email, telefono) {
-        console.log('📝 Abriendo modal de confirmación para consulta:', consultaId);
-        
         // Llenar datos del modal
         document.getElementById('modalPacienteNombre').textContent = pacienteNombre;
         document.getElementById('modalPacienteEmail').textContent = email || 'Sin email';
@@ -798,8 +1044,6 @@ class AsistenciaManager {
         }
 
         try {
-            console.log(`✅ Confirmando asistencia: ${estado} para consulta ${this.currentConsultaId}`);
-            
             const notas = document.getElementById('notasProfesional').value;
             
             const response = await fetch(`/api/asistencia/consulta/${this.currentConsultaId}/confirmar`, {
@@ -830,8 +1074,11 @@ class AsistenciaManager {
                 // Actualizar inmediatamente la fila específica en la tabla
                 this.updateConsultaRowInTable(this.currentConsultaId, estado);
                 
-                // Recargar datos completos (que también actualizará las estadísticas)
-                await this.loadConsultasPendientes();
+                // Actualizar las estadísticas (recalcular sobre todas las consultas)
+                await this.loadEstadisticas();
+                
+                // Recargar datos completos
+                await this.loadConsultasPendientes(this.pagination.currentPage);
                 
             } else {
                 throw new Error(result.message || 'Error confirmando asistencia');
@@ -844,8 +1091,6 @@ class AsistenciaManager {
     }
 
     verDetalles(consultaId) {
-        console.log('👁️ Ver detalles de consulta:', consultaId);
-        
         // Buscar la consulta en los datos locales
         const consulta = this.consultasData.find(c => c.id === consultaId);
         if (!consulta) {
@@ -928,8 +1173,6 @@ class AsistenciaManager {
         }
 
         try {
-            console.log(`🔄 Cambiando estado de consulta ${this.currentConsultaId} a: ${nuevoEstado}`);
-            
             const response = await fetch(`/api/asistencia/consulta/${this.currentConsultaId}/cambiar-estado`, {
                 method: 'PUT',
                 headers: {
@@ -955,8 +1198,11 @@ class AsistenciaManager {
                 // Actualizar la fila en la tabla
                 this.updateConsultaRowInTable(this.currentConsultaId, nuevoEstado);
                 
-                // Actualizar las estadísticas
+                // Actualizar las estadísticas (recalcular sobre todas las consultas)
                 await this.loadEstadisticas();
+                
+                // Recargar consultas para reflejar el cambio
+                await this.loadConsultasPendientes(this.pagination.currentPage);
                 
                 // Cerrar el modal
                 const modal = bootstrap.Modal.getInstance(document.getElementById('verDetallesModal'));
@@ -1009,12 +1255,9 @@ class AsistenciaManager {
 
     // Actualizar inmediatamente una fila específica en la tabla
     updateConsultaRowInTable(consultaId, nuevoEstado) {
-        console.log(`🔄 Actualizando fila de consulta ${consultaId} a estado: ${nuevoEstado}`);
-        
         // Buscar la fila en la tabla
         const row = document.querySelector(`tr[data-consulta-id="${consultaId}"]`);
         if (!row) {
-            console.warn(`⚠️ No se encontró la fila para consulta ${consultaId}`);
             return;
         }
         
@@ -1090,8 +1333,6 @@ class AsistenciaManager {
         
         // Actualizar la clase de la fila según el estado
         row.className = `consulta-row ${this.getRowClass(nuevoEstado)}`;
-        
-        console.log(`✅ Fila actualizada para consulta ${consultaId}`);
     }
     
     // Obtener clase CSS para la fila según el estado
@@ -1173,6 +1414,12 @@ function clearSearch() {
     }
 }
 
+function clearAllFilters() {
+    if (asistenciaManager) {
+        asistenciaManager.clearAllFilters();
+    }
+}
+
 function confirmarAsistencia(estado) {
     if (asistenciaManager) {
         asistenciaManager.confirmarAsistencia(estado);
@@ -1197,6 +1444,5 @@ function cambiarEstadoConsulta() {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Iniciando aplicación de gestión de asistencia...');
     asistenciaManager = new AsistenciaManager();
 });
