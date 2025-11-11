@@ -8,5 +8,7 @@ router.post('/login', AuthController.login);                    // Login de usua
 router.post('/logout', AuthController.logout);                  // Logout de usuario
 router.get('/verify', authenticateToken, AuthController.verifyToken); // Verificar token
 router.get('/me', authenticateToken, AuthController.getCurrentUser); // Obtener usuario actual
+router.post('/password-reset/request', AuthController.requestPasswordReset); // Solicitar recuperación
+router.post('/password-reset/reset', AuthController.resetPassword); // Resetear contraseña
 
 module.exports = router;

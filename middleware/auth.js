@@ -53,6 +53,14 @@ const authenticateProfessional = async (usuario, password) => {
             };
         }
 
+        // Verificar que el profesional tenga contraseña
+        if (!profesional.contrasena) {
+            return {
+                success: false,
+                message: 'El usuario no tiene contraseña configurada. Contacta al administrador.'
+            };
+        }
+
         const isValidPassword = await bcrypt.compare(password, profesional.contrasena);
         
         if (!isValidPassword) {

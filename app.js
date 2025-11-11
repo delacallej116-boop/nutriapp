@@ -145,6 +145,11 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'login', 'index.html'));
 });
 
+// Ruta de recuperación de contraseña
+app.get('/forgot-password', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'forgot-password', 'index.html'));
+});
+
 // Ruta de dashboard profesional
 app.get('/dashboard/professional', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'dashboard', 'professional', 'index.html'));

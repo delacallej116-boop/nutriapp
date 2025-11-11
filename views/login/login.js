@@ -99,10 +99,6 @@ async function handleLogin(event) {
     }
 }
 
-// Show forgot password
-function showForgotPassword() {
-    showAlert('Para recuperar tu contraseña, contacta al administrador del sistema', 'info');
-}
 
 // Show alert function
 function showAlert(message, type = 'info') {
@@ -110,9 +106,12 @@ function showAlert(message, type = 'info') {
     const existingAlerts = document.querySelectorAll('.custom-alert');
     existingAlerts.forEach(alert => alert.remove());
 
+    // Mapear 'error' a 'danger' para Bootstrap
+    const bootstrapType = type === 'error' ? 'danger' : type;
+    
     // Create alert element
     const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} custom-alert position-fixed`;
+    alertDiv.className = `alert alert-${bootstrapType} custom-alert position-fixed`;
     alertDiv.style.cssText = `
         top: 20px;
         right: 20px;
@@ -148,6 +147,7 @@ function getAlertIcon(type) {
     const icons = {
         'success': 'check-circle',
         'danger': 'exclamation-triangle',
+        'error': 'exclamation-triangle',
         'warning': 'exclamation-circle',
         'info': 'info-circle'
     };

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Sistema Nutricional</title>
+    <meta name="description" content="Recuperación de contraseña del sistema de gestión nutricional">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="forgot-password.css">
+</head>
+<body class="forgot-password-body">
+    <!-- Container -->
+    <div class="forgot-password-container">
+        <div class="container-fluid px-3">
+            <div class="row justify-content-center align-items-center min-vh-100">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                    <div class="forgot-password-card">
+                        <!-- Header -->
+                        <div class="forgot-password-header text-center mb-4">
+                            <div class="logo-container">
+                                <i class="fas fa-key logo-icon"></i>
+                                <h2 class="logo-text">Recuperar Contraseña</h2>
+                            </div>
+                            <p class="forgot-password-subtitle">Ingresa tus datos para restablecer tu contraseña</p>
+                        </div>
+
+                        <!-- Paso 1: Validación -->
+                        <div id="resetStep1" class="reset-step">
+                            <form id="passwordResetForm">
+                                <p class="text-muted mb-4 text-center">
+                                    Ingresa tu usuario o email y el código de registro que usaste al registrarte.
+                                </p>
+                                
+                                <div class="mb-3">
+                                    <label for="resetUsuarioOEmail" class="form-label">
+                                        <i class="fas fa-user me-2"></i>Usuario o Email
+                                    </label>
+                                    <input type="text" class="form-control" id="resetUsuarioOEmail" 
+                                           placeholder="Usuario o email" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="resetCodigoRegistro" class="form-label">
+                                        <i class="fas fa-key me-2"></i>Código de Registro
+                                    </label>
+                                    <input type="text" class="form-control" id="resetCodigoRegistro" 
+                                           placeholder="NUTRI-XXXX" required>
+                                    <small class="form-text text-muted">
+                                        El código que usaste al registrarte (ej: NUTRI-ADMIN)
+                                    </small>
+                                </div>
+
+                                <button type="button" class="btn btn-primary w-100 mb-3" id="resetNextButton" onclick="handlePasswordReset()">
+                                    <i class="fas fa-arrow-right me-2"></i>Validar y Continuar
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Paso 2: Nueva Contraseña -->
+                        <div id="resetStep2" class="reset-step" style="display: none;">
+                            <div class="alert alert-success mb-4">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span id="resetUsuarioNombre"></span>
+                            </div>
+                            
+                            <form id="newPasswordForm">
+                                <div class="mb-3">
+                                    <label for="resetNuevaContraseña" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Nueva Contraseña
+                                    </label>
+                                    <input type="password" class="form-control" id="resetNuevaContraseña" 
+                                           placeholder="Mínimo 6 caracteres" required minlength="6">
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="resetConfirmarContraseña" class="form-label">
+                                        <i class="fas fa-lock me-2"></i>Confirmar Contraseña
+                                    </label>
+                                    <input type="password" class="form-control" id="resetConfirmarContraseña" 
+                                           placeholder="Repite la contraseña" required minlength="6">
+                                </div>
+
+                                <button type="button" class="btn btn-success w-100 mb-3" id="resetConfirmButton" 
+                                        onclick="confirmPasswordReset()">
+                                    <i class="fas fa-check me-2"></i>Confirmar y Cambiar Contraseña
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="forgot-password-footer text-center">
+                            <a href="/login" class="text-decoration-none">
+                                <i class="fas fa-arrow-left me-2"></i>Volver al Login
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Elements -->
+    <div class="forgot-password-background">
+        <div class="bg-shape bg-shape-1"></div>
+        <div class="bg-shape bg-shape-2"></div>
+        <div class="bg-shape bg-shape-3"></div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    
+    <!-- Custom JS -->
+    <script src="forgot-password.js"></script>
+</body>
+</html>
+
